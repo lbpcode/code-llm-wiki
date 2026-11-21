@@ -12,12 +12,13 @@ A source-grounded engineering knowledge workflow for multi-repository, process-o
 - Optional CMake Graphviz DOT for build dependencies only.
 - AST deferred.
 - Strict quality gate: source evidence, independent LLM review, and human approval.
+- English Skill instructions with Simplified Chinese as the default generated Wiki/report language.
 
 ## Repository layout
 
 - `SKILL.md`: entry point and workflow router.
 - `skills/`: init, ingest, integrate, query, update, review, and lint.
-- `docs/`: architecture, schema, evidence, and quality gate.
+- `docs/`: architecture, schema, evidence, quality gate, language policy, and decisions.
 - `references/`: profile definitions, templates, and checklists.
 - `examples/`: illustrative examples only.
 
@@ -41,5 +42,6 @@ The host agent must provide repository/file access and write access to the desti
 - Claims must be scoped to the applicable Platform Profile and pinned source commit.
 - Unknown information stays Unknown; no invented facts.
 - Generated knowledge is provisional until independent review and human approval.
+- Generated human-readable Wiki content defaults to Simplified Chinese; source identifiers and machine-readable metadata remain unchanged.
 
-See `docs/architecture.md` and `docs/wiki-schema.md`.
+See `docs/architecture.md`, `docs/wiki-schema.md`, and `docs/language-policy.md`.
