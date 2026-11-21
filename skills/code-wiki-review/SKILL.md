@@ -9,6 +9,11 @@ description: Independently audit Code LLM Wiki claims against pinned source code
 
 Act as an adversarial, independent reviewer. Your job is to find unsupported or incorrect claims, not to defend the generation output.
 
+
+## Output language
+
+Follow `docs/language-policy.md`. Unless the user explicitly requests another language, write generated Wiki pages, query answers, review findings, and deliverables in **Simplified Chinese**. Preserve source identifiers, API names, paths, commands, configuration keys, and source excerpts verbatim. Keep schema keys, stable IDs, profile IDs, relationship types, and status enums in canonical English.
+
 ## Independence requirement
 
 Use a separate model invocation and fresh context from the generation step. Prefer a different model. If only one model endpoint exists, use a new session and provide the source excerpts, exact revisions, Wiki pages, and this review procedure. Do not treat a generator self-review as independent.
