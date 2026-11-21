@@ -9,6 +9,11 @@ description: Answer engineering questions using the Code LLM Wiki, preserving so
 
 Answer engineering questions from the accepted Wiki without silently turning incomplete knowledge into certainty.
 
+
+## Output language
+
+Follow `docs/language-policy.md`. Unless the user explicitly requests another language, write generated Wiki pages, query answers, review findings, and deliverables in **Simplified Chinese**. Preserve source identifiers, API names, paths, commands, configuration keys, and source excerpts verbatim. Keep schema keys, stable IDs, profile IDs, relationship types, and status enums in canonical English.
+
 ## Procedure
 
 1. Classify the question as system-level, process-level, interface, workflow, security, deployment, or platform comparison.
