@@ -9,6 +9,11 @@ description: Initialize a Code LLM Wiki from a source superproject containing mu
 
 Create the initial source inventory and Wiki skeleton for a multi-repository software system. Do not write substantive architecture claims before inspecting source repositories.
 
+
+## Output language
+
+Follow `docs/language-policy.md`. Unless the user explicitly requests another language, write generated Wiki pages, analysis notes, and deliverables in **Simplified Chinese**. Preserve source identifiers, API names, paths, commands, configuration keys, and source excerpts verbatim. Keep schema keys, stable IDs, profile IDs, relationship types, and status enums in canonical English.
+
 ## Inputs
 
 - Source superproject path/workspace.
