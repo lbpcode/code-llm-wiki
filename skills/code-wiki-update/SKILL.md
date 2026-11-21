@@ -9,6 +9,11 @@ description: Incrementally update Code LLM Wiki pages after source repository or
 
 Refresh only the knowledge affected by source changes while keeping every accepted claim tied to the exact revision that supports it.
 
+
+## Output language
+
+Follow `docs/language-policy.md`. Unless the user explicitly requests another language, write generated Wiki pages, query answers, review findings, and deliverables in **Simplified Chinese**. Preserve source identifiers, API names, paths, commands, configuration keys, and source excerpts verbatim. Keep schema keys, stable IDs, profile IDs, relationship types, and status enums in canonical English.
+
 ## Procedure
 
 1. Read the previous source manifest and page-source map.
