@@ -9,6 +9,11 @@ description: Validate Code LLM Wiki structure, metadata, links, source manifest,
 
 Perform a rule-based structural and provenance audit. This Skill does not require a custom TypeScript/Python runtime. Use the host agent's existing file listing, search, read, and Git capabilities.
 
+
+## Output language
+
+Follow `docs/language-policy.md`. Unless the user explicitly requests another language, write generated Wiki pages, query answers, review findings, and deliverables in **Simplified Chinese**. Preserve source identifiers, API names, paths, commands, configuration keys, and source excerpts verbatim. Keep schema keys, stable IDs, profile IDs, relationship types, and status enums in canonical English.
+
 ## Checks
 
 ### 1. Repository and manifest
