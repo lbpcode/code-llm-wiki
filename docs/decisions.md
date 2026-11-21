@@ -54,4 +54,10 @@ Use the user's IDE AI plugin / host agent to load Skills, invoke the configured 
 
 Do not implement direct model API calls, API clients, provider adapters, or inference services in this project. Model selection, authentication, and invocation remain the responsibility of the IDE plugin and the organization's AI environment.
 
-The plugin must provide the file, terminal, Git, and destination Wiki access needed by the selected workflow. Missing permissions or capabilities must be reported explicitly.
+## ADR-009: Mandatory IDE agent capabilities
+
+**Status:** Accepted for v0.1.0
+
+The IDE AI plugin / host agent must satisfy the mandatory requirements in docs/ide-plugin-requirements.md before the real-repository POC. These include Skill loading, simultaneous access to the source superproject and separate Wiki worktree, file operations, terminal/Git/CMake command execution where applicable, isolated independent review sessions, and human-controlled approval.
+
+These capabilities are acceptance requirements, not optional experiments. If the selected plugin cannot satisfy them, choose or configure a compatible IDE agent. Do not weaken the quality gate or introduce direct model API integration as a workaround.
