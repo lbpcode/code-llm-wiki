@@ -9,6 +9,11 @@ description: Synthesize reviewed process-level knowledge from multiple repositor
 
 Build the system-level view across independent processes and repositories without inventing relationships that individual repositories do not prove.
 
+
+## Output language
+
+Follow `docs/language-policy.md`. Unless the user explicitly requests another language, write generated Wiki pages, analysis notes, and deliverables in **Simplified Chinese**. Preserve source identifiers, API names, paths, commands, configuration keys, and source excerpts verbatim. Keep schema keys, stable IDs, profile IDs, relationship types, and status enums in canonical English.
+
 ## Preconditions
 
 - Source manifest exists and pins all relevant repositories.
