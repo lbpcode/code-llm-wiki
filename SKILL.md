@@ -20,6 +20,14 @@ Use this repository as a portable Skill/Prompt workflow. Do not assume a custom 
 9. CMake DOT is optional build-dependency evidence only. AST is deferred.
 10. No generated page is accepted without independent LLM review and human approval.
 
+## Output language policy
+
+Unless the user explicitly requests another language, all generated Wiki pages, architecture documentation, analysis/integration reports, update summaries, query answers, and review reports MUST use **Simplified Chinese**.
+
+Keep Skill instructions and reusable prompt templates in this repository in English. Preserve source identifiers, API names, symbols, paths, commands, configuration keys, enum values, commit SHAs, and source excerpts exactly as they appear in the source. Keep schema keys, stable IDs, profile IDs, relationship types, and status enums in canonical English. Use Chinese for human-readable explanations and titles, retaining established English technical terms where appropriate.
+
+See docs/language-policy.md for the complete rules. Every individual workflow Skill must follow this policy even when invoked without the root Skill.
+
 ## Route the task
 
 - Initialize a source superproject/Wiki pair: use skills/code-wiki-init/SKILL.md.
