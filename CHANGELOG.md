@@ -11,3 +11,4 @@
 - Defer AST extraction to a later phase.
 - Define strict quality gates: structural/provenance checks, independent LLM review, and human approval.
 - Provide portable Skill/Prompt workflows without a custom TypeScript runtime.
+- Define English Skill instructions and Simplified Chinese as the default generated Wiki/report language, preserving source identifiers and machine-readable metadata.
