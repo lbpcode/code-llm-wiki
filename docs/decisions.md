@@ -4,9 +4,9 @@
 
 **Status:** Accepted for v0.1.0
 
-Use portable Agent Skills and prompts with the host agent's existing repository/file capabilities and the organization's existing OpenAI-compatible API.
+Use portable Agent Skills and prompts as the product interface. The Skills are loaded and executed by an IDE AI plugin / host agent. Reuse the host's existing model and workspace capabilities rather than introducing a separate application runtime.
 
-Do not add a TypeScript runtime, LangChain/LangGraph, MCP server, vector database, or custom agent framework in phase one. A model API alone does not provide filesystem/Git access; the host environment must supply those capabilities.
+Do not add a TypeScript runtime, LangChain/LangGraph, MCP server, vector database, custom agent framework, or model orchestration backend in phase one. The host environment must provide the required file, terminal, and Git capabilities.
 
 ## ADR-002: Process-centric knowledge model
 
@@ -45,3 +45,13 @@ Require source evidence, independent LLM review in a separate invocation/context
 **Status:** Accepted for v0.1.0
 
 Store generated engineering knowledge in a separate Private Git repository. The source superproject remains the source of truth. Wiki updates are proposed as diffs and merged only after human approval.
+
+## ADR-008: IDE plugin as model execution host
+
+**Status:** Accepted for v0.1.0
+
+Use the user's IDE AI plugin / host agent to load Skills, invoke the configured model, and access the source and destination workspaces. The specific IDE, plugin, model, and provider are not fixed by Code LLM Wiki.
+
+Do not implement direct model API calls, API clients, provider adapters, or inference services in this project. Model selection, authentication, and invocation remain the responsibility of the IDE plugin and the organization's AI environment.
+
+The plugin must provide the file, terminal, Git, and destination Wiki access needed by the selected workflow. Missing permissions or capabilities must be reported explicitly.
