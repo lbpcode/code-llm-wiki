@@ -23,31 +23,38 @@ A separate Git repository containing Markdown knowledge, source manifests, revie
 
 The Wiki is derived knowledge, not a replacement for source code. Every generated update is reviewed through a branch/PR or an equivalent human approval workflow.
 
-## 3. IDE plugin as execution host
+## 3. IDE plugin as mandatory execution host
 
-Code LLM Wiki is delivered as portable Skills and Prompt instructions and is intended to run inside an IDE AI plugin or its host agent (for example, an IDE-integrated coding assistant). The exact IDE, plugin, model, and provider are not fixed by this project.
+Code LLM Wiki is delivered as portable Skills and Prompt instructions and is intended to run inside an IDE AI plugin or its host agent. The IDE, plugin, model, and provider are not fixed by this project.
 
-The IDE plugin / host agent is responsible for:
-- loading and invoking the Skills and Prompt instructions;
-- providing model selection, authentication, and model invocation;
-- reading the source superproject, submodules, documentation, and AGENTS.md files;
-- inspecting repository state and running permitted commands such as Git and CMake;
-- creating or editing Markdown in the separate Engineering Wiki repository;
-- starting a separate review session or selecting an independent reviewer model when supported.
+The plugin is not merely a convenience. It is the execution environment and **must** satisfy the requirements in docs/ide-plugin-requirements.md before a real-repository POC begins.
 
-This repository does **not** implement a model API client, provider adapter, inference service, or model orchestration backend. Model connectivity is an IDE/plugin and organizational AI-environment concern, not a Code LLM Wiki component.
+Mandatory capabilities include:
+- loading and invoking the root Skill and individual workflow Skills;
+- reading the source superproject, initialized submodules, documentation, and AGENTS.md files;
+- accessing the separate Engineering Wiki Git worktree at the same time;
+- listing, searching, reading, creating, and editing files in the authorized workspaces;
+- executing permitted local commands, especially Git and, when applicable, CMake;
+- inspecting source revisions and diffs, and preparing proposed Wiki changes without modifying source repositories;
+- starting a fresh, isolated LLM review session for the independent review Skill;
+- presenting results for human approval rather than silently committing, pushing, or merging.
 
-The plugin must have explicit access to both the source workspace and the destination Wiki worktree. A Skill only provides instructions; it does not grant file, terminal, Git, network, or repository permissions. If a required capability is unavailable, the workflow must report the limitation rather than claim completion.
+If multiple models are available, the reviewer model should be selectable independently. If only one model is available, a fresh isolated session with that model is the minimum acceptable configuration. Session/context isolation is mandatory.
+
+This repository does not implement a model API client, provider adapter, inference service, or model orchestration backend. Model selection, authentication, and invocation remain the responsibility of the IDE plugin and the organization's AI environment.
+
+A Skill only provides instructions; it does not grant file, terminal, Git, network, or repository permissions. If a mandatory capability is missing, the plugin is not compatible with the planned workflow. Select/configure a compatible IDE agent rather than weakening the requirements or adding direct model API integration.
 
 ## 4. Logical workflow
 
-1. **Source inventory** discovers the superproject, submodules, AGENTS.md files, repository revisions, and declared process/profile mappings.
-2. **Repository ingestion** analyzes one repository or process at a time and creates process-level knowledge with evidence.
-3. **System integration** reconciles process pages and creates cross-process architecture, interfaces, dependencies, workflows, and platform comparisons.
-4. **Validation** checks manifest/page consistency, links, evidence references, profile scope, and contradictions.
-5. **Independent review** challenges claims against source evidence using a separate model invocation/session.
-6. **Human approval** accepts, requests changes, or rejects the proposed Wiki diff.
-7. **Incremental update** uses changed repository commits and page-source mappings to identify affected knowledge.
+1. **Compatibility gate** confirms the IDE plugin passes every mandatory capability check before real-repository ingestion.
+2. **Source inventory** discovers the superproject, submodules, AGENTS.md files, repository revisions, and declared process/profile mappings.
+3. **Repository ingestion** analyzes one repository or process at a time and creates process-level knowledge with evidence.
+4. **System integration** reconciles process pages and creates cross-process architecture, interfaces, dependencies, workflows, and platform comparisons.
+5. **Validation** checks manifest/page consistency, links, evidence references, profile scope, and contradictions.
+6. **Independent review** challenges claims against source evidence using a fresh, isolated session.
+7. **Human approval** accepts, requests changes, or rejects the proposed Wiki diff.
+8. **Incremental update** uses changed repository commits and page-source mappings to identify affected knowledge.
 
 ## 5. Knowledge model
 
@@ -127,7 +134,7 @@ If CMake configuration is unavailable or fails, record the reason and continue w
 
 Phase one does not include AST/Tree-sitter/Clang extraction, a TypeScript runtime, LangChain/LangGraph, MCP server, vector database, custom indexing service, model API client, provider adapter, inference service, or automatic code changes.
 
-The IDE plugin / host agent supplies model execution and existing file/Git capabilities. Do not add another model invocation layer inside Code LLM Wiki unless a later, explicit design decision changes this boundary.
+The IDE plugin / host agent supplies model execution and the mandatory workspace capabilities. Do not add another model invocation layer inside Code LLM Wiki unless a later, explicit design decision changes this boundary.
 
 ## 11. Trust boundary
 
