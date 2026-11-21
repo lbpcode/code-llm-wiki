@@ -5,7 +5,7 @@ description: Build and maintain a source-grounded engineering Wiki for multi-rep
 
 # Code LLM Wiki — entry skill
 
-Use this repository as a portable Skill/Prompt workflow. Do not assume a custom runtime, TypeScript application, LangChain, MCP server, vector database, or AST indexer.
+Use this repository as a portable Skill/Prompt workflow loaded and executed by an IDE AI plugin or host agent. Do not assume a custom runtime, TypeScript application, model API client, LangChain, MCP server, vector database, or AST indexer.
 
 ## Project invariants
 
@@ -20,13 +20,19 @@ Use this repository as a portable Skill/Prompt workflow. Do not assume a custom 
 9. CMake DOT is optional build-dependency evidence only. AST is deferred.
 10. No generated page is accepted without independent LLM review and human approval.
 
+## Execution environment
+
+The IDE AI plugin / host agent is responsible for loading this Skill, invoking its configured model, reading the source workspace, inspecting Git state, and writing to the separate Engineering Wiki repository. The IDE, plugin, model, and provider are not fixed by this project.
+
+Code LLM Wiki does not directly call model APIs and does not provide a model API client, provider adapter, or inference service. The plugin must supply the required file, terminal, Git, and destination-repository permissions. If a capability is missing, report it explicitly; do not claim the operation succeeded.
+
 ## Output language policy
 
 Unless the user explicitly requests another language, all generated Wiki pages, architecture documentation, analysis/integration reports, update summaries, query answers, and review reports MUST use **Simplified Chinese**.
 
 Keep Skill instructions and reusable prompt templates in this repository in English. Preserve source identifiers, API names, symbols, paths, commands, configuration keys, enum values, commit SHAs, and source excerpts exactly as they appear in the source. Keep schema keys, stable IDs, profile IDs, relationship types, and status enums in canonical English. Use Chinese for human-readable explanations and titles, retaining established English technical terms where appropriate.
 
-See docs/language-policy.md for the complete rules. Every individual workflow Skill must follow this policy even when invoked without the root Skill.
+See docs/language-policy.md for the complete rules. Every individual workflow Skill must follow this language policy even when invoked without the root Skill.
 
 ## Route the task
 
@@ -43,7 +49,3 @@ See docs/language-policy.md for the complete rules. Every individual workflow Sk
 Init → Ingest per repository/process → Integrate → Lint → Independent Review → Human Approval → Git merge.
 
 Query is read-only by default. Update produces a proposed diff and must pass the same quality gate.
-
-## Missing capabilities
-
-If the host agent cannot read files, inspect Git state, or write to the destination repository, state which operation is unavailable. A model API alone cannot inspect a local repository or persist a Wiki.
