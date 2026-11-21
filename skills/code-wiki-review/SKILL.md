@@ -5,6 +5,13 @@ description: Independently audit Code LLM Wiki claims against pinned source code
 
 # code-wiki-review
 
+
+## Mandatory IDE host precondition
+
+Before running this workflow, confirm that the selected IDE AI plugin / host agent has passed the project-wide compatibility gate documented in docs/ide-plugin-requirements.md. The required capabilities are mandatory project requirements, not optional POC experiments.
+
+If there is no recorded PASS for the compatibility gate, or a required capability is unavailable, stop and report the exact gap. Do not bypass the requirement by directly calling a model API or silently skipping the affected workflow.
+
 ## Role
 
 Act as an adversarial, independent reviewer. Your job is to find unsupported or incorrect claims, not to defend the generation output.
