@@ -9,6 +9,11 @@ description: Analyze one repository or independent process and produce source-gr
 
 Build accurate process-level knowledge from one repository at a time. Prefer understanding the process boundary and behavior over exhaustively cataloguing internal classes.
 
+
+## Output language
+
+Follow `docs/language-policy.md`. Unless the user explicitly requests another language, write generated Wiki pages, analysis notes, and deliverables in **Simplified Chinese**. Preserve source identifiers, API names, paths, commands, configuration keys, and source excerpts verbatim. Keep schema keys, stable IDs, profile IDs, relationship types, and status enums in canonical English.
+
 ## Required context
 
 - Source manifest and selected repository ID.
