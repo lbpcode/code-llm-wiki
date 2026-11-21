@@ -7,7 +7,8 @@ A source-grounded engineering knowledge workflow for multi-repository, process-o
 - Process-centric knowledge model with System-level synthesis.
 - Phase-one Platform Profiles: QNX, Android, and Linux (TBOX).
 - Deployment context is bound to each Platform Profile.
-- Portable Agent Skills and prompts; reuse the host agent and existing OpenAI-compatible API.
+- Portable Agent Skills and prompts, loaded and executed by an IDE AI plugin / host agent.
+- No model API client, inference service, or model-provider integration is implemented by this project; model selection, authentication, and invocation remain the responsibility of the IDE plugin and the organization's AI environment.
 - Markdown knowledge stored in a separate Git repository.
 - Optional CMake Graphviz DOT for build dependencies only.
 - AST deferred.
@@ -24,15 +25,16 @@ A source-grounded engineering knowledge workflow for multi-repository, process-o
 
 ## Quick start
 
-1. Expose the root skill and individual skills to the host agent.
-2. Open the source superproject containing Git submodules.
-3. Run `code-wiki-init` to inventory repositories, AGENTS.md files, pinned commits, and profiles.
-4. Run `code-wiki-ingest` per repository/process.
-5. Run `code-wiki-integrate` for cross-process knowledge.
-6. Run `code-wiki-lint` and an independent `code-wiki-review`.
-7. Obtain human approval before merging into the Engineering Wiki repository.
+1. Install or expose the root Skill and individual Skills to the IDE AI plugin / host agent.
+2. Open the source superproject containing Git submodules in the IDE workspace.
+3. Ensure the plugin can read the workspace, inspect Git state, and write to the separate Engineering Wiki repository.
+4. Run `code-wiki-init` to inventory repositories, AGENTS.md files, pinned commits, and profiles.
+5. Run `code-wiki-ingest` per repository/process.
+6. Run `code-wiki-integrate` for cross-process knowledge.
+7. Run `code-wiki-lint` and an independent `code-wiki-review`.
+8. Obtain human approval before merging into the Engineering Wiki repository.
 
-The host agent must provide repository/file access and write access to the destination Wiki. A model API alone cannot read local files or persist Git commits. This project does not add TypeScript Runtime, LangChain, MCP, a vector database, or a custom agent framework.
+The IDE plugin / host agent supplies model execution and workspace capabilities. A Skill is an instruction package; it does not itself grant filesystem, terminal, Git, or repository write permissions. This project does not add a TypeScript runtime, LangChain, MCP, a vector database, a custom agent framework, or a model API client.
 
 ## Key rules
 
