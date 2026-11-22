@@ -2,118 +2,165 @@
 
 ## 1. Design principles
 
-- Process is the primary knowledge entity.
-- System is the cross-process synthesis layer.
+- Process is the primary knowledge entity; System is the cross-process synthesis layer.
 - Repository is a source container, not a synonym for Process.
-- Platform Profile is an atomic OS/deployment scope.
-- Claims must be traceable to a pinned source revision.
-- Shared/common claims require evidence that supports every profile in their declared scope.
-- Unknown, inferred, stale, and contradicted information must remain distinguishable.
+- Repository ↔ Process is many-to-many.
+- Process ↔ Platform Profile applicability is recorded independently from Repository inventory.
+- Claims are atomic and mapped to exact evidence records.
+- Page-Source Map supports reverse impact analysis for incremental updates.
+- Claim truth status, evidence status, change approval status, and publication status are separate domains.
+- Unknown, inferred, stale, and contradicted information remains explicit.
+- Human edits and accepted history are preserved.
 
 ## 2. Entities
 
-| Entity | Required identity | Description |
+| Entity | Stable identity | Purpose |
 |---|---|---|
-| System | system_id | Complete software system |
-| Repository | repository_id | Git repository and pinned revision |
-| Process | process_id | Independent process/service |
-| Interface | interface_id | Contract or communication boundary |
+| System | system_id | Complete software system assembled from repositories/processes |
+| Repository | repository_id | Git repository and pinned source revision |
+| Process | process_id | Independent process/service and its responsibility boundary |
+| Interface | interface_id | Contract between processes or with an external system |
 | Workflow | workflow_id | Multi-step or lifecycle behavior |
-| Platform Profile | profile_id | Atomic OS/deployment configuration |
-| Decision | decision_id | Recorded architecture or technical decision |
-| Claim | claim_id | Atomic factual statement with evidence |
+| Platform Profile | profile_id | Atomic OS/deployment scope |
+| Decision | decision_id | Architecture or engineering decision |
+| Claim | claim_id | Atomic factual statement with scope and evidence |
+| Evidence | evidence_id | Exact source locator at a pinned revision |
+| Change Set | change_id | Proposed set of Wiki changes moving through quality gates |
+| Review Report | review_id | Lint or independent LLM review result |
+| Human Decision | decision_id | Immutable human approval/change-request/rejection record |
+| Page-Source Map Entry | page_id | Reverse mapping from Wiki page to claims and source revisions |
 
-## 3. Relationships
+## 3. Repository / Process / Profile mapping
 
-A Repository can implement multiple Processes. A Process can span multiple Repositories. A Process can run on one or more explicitly declared Platform Profiles.
+Do not represent all applicability using a Repository-level profile list.
 
-System relationships must distinguish build dependencies, runtime dependencies, communication relationships, startup ordering, and interface provision/consumption.
+### Repository-to-Process mapping
 
-Never infer one relationship type from another.
+Each mapping records:
+- repository_id;
+- process_id;
+- status: confirmed / candidate / unknown / rejected;
+- evidence_refs;
+- responsibility_note;
+- confirmed_by / confirmed_at when human-confirmed.
 
-## 4. Page organization
+### Process-to-Profile mapping
+
+Each mapping records:
+- process_id;
+- profile_id;
+- support_status: supported_verified / present_unverified / unsupported_verified / unknown;
+- evidence_refs;
+- constraints and notes.
+
+A repository can implement several processes with different profile support. A process can span repositories. Repository-level profile observations are inventory hints, not proof that every process in the repository supports that profile.
+
+## 4. Relationship semantics
+
+Use explicit relationship types:
+
+- implements: Repository implements Process.
+- build_depends_on: build target depends on another target/library.
+- runtime_depends_on: process requires another process/service at runtime.
+- communicates_with: processes exchange information through an identified interface.
+- starts_before: startup ordering is explicitly configured or evidenced.
+- provides_interface / consumes_interface: interface roles.
+- runs_on: Process is supported by a Platform Profile.
+
+Every relationship record includes relationship_id, from_id, relationship_type, to_id, profile_ids, evidence_refs, status, constraints, and notes. Never infer one relationship type from another. A CMake target edge is build_depends_on only.
+
+## 5. Page organization
 
     wiki/
       index.md
       system/
-      processes/
-        <process-id>/
-          overview.md
-          common/
-          profiles/
-            <profile-id>/
+      processes/<process-id>/
+        overview.md
+        common/
+        profiles/<profile-id>/
+      repositories/
       interfaces/
       workflows/
       platform-profiles/
       decisions/
 
-The common directory is only for claims proven to apply across all profiles listed for that process. Otherwise, put the claim under a specific profile.
+Only create profile pages for confirmed/in-scope profiles. Do not create empty pages for unsupported combinations. The common directory is only for claims supported across every applicable profile.
 
-## 5. Page metadata
+## 6. Page metadata
 
-Every substantive page should begin with metadata equivalent to:
+Every substantive page begins with metadata equivalent to:
 
     ---
-    id: process-a.lifecycle.qnx
-    title: Process A lifecycle on QNX
-    type: process-profile
-    process_id: process-a
-    profile_id: qnx
+    id: process.telemetry.overview
+    title: 遥测进程概览
+    type: process
+    process_id: telemetry
+    profile_ids: [qnx, android]
     status: draft
+    change_id: change-2026-001
+    source_manifest_version: 1
     source_revisions:
-      - repository_id: process-a-repo
-        commit: <full-commit-sha>
-    last_reviewed: YYYY-MM-DD
+      - repository_id: telemetry-repo
+        commit: <full-40-character-commit-sha>
+    claim_ids:
+      - telemetry.responsibility.001
+    last_reviewed: null
     ---
 
-Use stable IDs. Do not use branch names as source identity; record full commit SHAs.
+Use stable IDs. Keep machine-readable keys, IDs, profile IDs, relationship types, and status enums in canonical English. Human-readable titles and descriptions use Simplified Chinese by default.
 
-## 6. Claim representation
+## 7. Claim representation
 
-For important claims, include:
-- Claim ID.
-- Statement.
-- Scope: system, process, interface, workflow, or profile.
-- Status: verified, inferred, unknown, stale, or contradicted.
-- Evidence references.
-- Assumptions and limitations, if any.
+For each material statement record:
+- claim_id;
+- atomic statement;
+- scope_type and scope_id;
+- profile_ids;
+- status: verified / inferred / unknown / stale / contradicted;
+- evidence_refs with supports / contradicts / qualifies relation;
+- reasoning and assumptions for inferred claims;
+- limitations and last_verified_at.
 
-Keep claims atomic. A paragraph containing several independent facts should be split or have evidence mapped to each claim.
+A page-level source list does not replace Claim-Evidence mapping. See docs/claim-evidence-model.md and references/claim-template.md.
 
-## 7. Evidence reference
+## 8. Evidence reference
 
-A source reference must identify:
-- repository_id;
-- full commit SHA;
-- repository-relative path;
-- line range, symbol, configuration key, or document heading;
-- profile scope;
-- evidence type.
+Each evidence record identifies repository_id, full commit SHA, repository-relative path, locator type/value, profile scope, evidence type, evidence status, and checked timestamp. Excerpts are optional and must be redacted if sensitive.
 
-See docs/source-evidence.md.
+See docs/source-evidence.md and docs/claim-evidence-model.md.
 
-## 8. Status semantics
+## 9. Page-Source Map
 
-| Status | Meaning |
-|---|---|
-| verified | Direct source evidence supports the claim |
-| inferred | Explicit derivation from cited evidence |
-| unknown | Insufficient evidence to decide |
-| stale | Source revision changed and claim has not been revalidated |
-| contradicted | Available evidence conflicts with the claim |
+Every substantive page is mapped to:
+- page_id and path;
+- claim_ids;
+- source repository IDs, full commit SHAs, relevant paths, and evidence IDs;
+- dependent page IDs;
+- last reviewed change and Wiki commit.
 
-Do not convert inferred or unknown claims into verified claims through repeated summarization.
+This reverse index is required for reliable incremental updates. See references/page-source-map-template.md.
 
-## 9. Cross-profile rules
+## 10. State domains
+
+Keep these independent:
+- Claim status: verified / inferred / unknown / stale / contradicted.
+- Evidence status: valid / unverified / stale / inaccessible / conflicting / redacted.
+- Change status: draft / lint_failed / pending_llm_review / llm_changes_requested / pending_human_review / human_changes_requested / approved / approval_stale / published / rejected / superseded.
+- LLM decision: PASS / REVISE / REJECT.
+- Human decision: approve / request_changes / reject.
+
+See docs/state-machine.md for transition rules and invariants.
+
+## 11. Cross-profile rules
 
 - A profile-specific claim must name its profile.
 - A common claim must be supported in every applicable profile.
 - If behavior differs, record the difference instead of forcing a common statement.
-- If a profile has not been inspected, its behavior is unknown, not identical.
-- Do not create profiles outside the approved phase-one list without an explicit project decision.
+- If a profile has not been inspected, its behavior is unknown.
+- Do not create profiles outside qnx, android, linux-tbox without an explicit project decision.
 
-## 10. Relationship record
+## 12. Change and approval metadata
 
-A relationship should include from entity, relationship type, to entity, profile scope, evidence references, confidence/status, and constraints.
+Each candidate Change Set records change_id, base_wiki_commit, candidate_wiki_commit or diff_digest, changed pages/claims, source manifest version/digest, relevant source revisions, Lint report, independent Review report, current change status, and human decision reference.
 
-A build graph edge must be represented as build_depends_on, never runtime_depends_on.
+Human approval binds to the exact candidate snapshot. Any material change invalidates the approval. See docs/human-review.md and references/human-decision-template.md.
