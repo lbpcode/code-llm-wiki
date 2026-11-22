@@ -77,6 +77,7 @@ Init
 ## Report and template index
 
 - Claim / Evidence: `references/claim-template.md`
+- Change Set: `references/change-set-template.md`
 - Platform Profile: `references/platform-profile-template.md`
 - Architecture Decision: `references/architecture-decision-template.md`
 - Source Manifest: `references/source-manifest-template.md`
