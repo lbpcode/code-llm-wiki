@@ -48,7 +48,8 @@ Candidate Process pages may be used to draft candidate System pages only if thei
 - Profile-specific startup/lifecycle workflows.
 - Cross-profile differences and explicit unknowns.
 - Integration conflicts and open questions.
-- Integration report and proposed diff.\n- Lint report and automatically delegated independent Review report, or explicit BLOCKED/NOT RUN result.
+- Integration report and proposed diff.
+- Lint report and automatically delegated independent Review report, or explicit BLOCKED/NOT RUN result.
 
 ## Failure behavior
 
