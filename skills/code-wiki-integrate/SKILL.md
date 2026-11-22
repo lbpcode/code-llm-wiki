@@ -11,7 +11,7 @@ Build the system-level view across independent processes and repositories withou
 
 ## Normative references
 
-Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/failure-handling.md, and docs/language-policy.md. Use references/system-template.md, references/interface-template.md, references/workflow-template.md, and references/integration-report-template.md.
+Follow docs/skill-contracts.md, docs/independent-review-execution.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/failure-handling.md, and docs/language-policy.md. Use references/system-template.md, references/interface-template.md, references/workflow-template.md, and references/integration-report-template.md.
 
 ## Preconditions
 
@@ -38,7 +38,7 @@ Candidate Process pages may be used to draft candidate System pages only if thei
 9. Compare QNX, Android, and Linux-TBOX only where both sides of the comparison have been inspected.
 10. Identify contradictions between Process pages, source configuration, interface definitions, and System-level claims.
 11. Update System pages, relationship records, Interface/Workflow pages, and Page-Source Map dependencies.
-12. Run Lint and independent Review. Keep results as a proposed diff until human approval.
+12. Run Lint. If Lint PASS, the orchestrator MUST automatically delegate a fresh host-native Review Subagent using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Wait for a completed, snapshot-bound report. Do not ask the user to open a second conversation. If Subagent delegation/isolation is unavailable, mark Review NOT RUN and the Change Set BLOCKED. Keep results as a proposed diff until human approval.
 
 ## Outputs
 
@@ -48,7 +48,7 @@ Candidate Process pages may be used to draft candidate System pages only if thei
 - Profile-specific startup/lifecycle workflows.
 - Cross-profile differences and explicit unknowns.
 - Integration conflicts and open questions.
-- Integration report and proposed diff.
+- Integration report and proposed diff.\n- Lint report and automatically delegated independent Review report, or explicit BLOCKED/NOT RUN result.
 
 ## Failure behavior
 
