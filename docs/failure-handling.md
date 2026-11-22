@@ -39,9 +39,9 @@ A failure in one independent repository may allow work on other repositories to 
 |---|---|---|---|
 | Lint finds blocking structural/provenance errors | Change `lint_failed`; fix and rerun | Do not invoke human approval as a bypass | Lint findings with exact paths/locations; return to draft |
 | Lint cannot execute a required check | Result `PARTIAL` / check `NOT RUN`; candidate remains blocked | Do not convert unavailable checks to PASS | Record capability limitation; restore capability or obtain an explicit scope decision if the check is truly out of scope |
-| Host lacks native Subagent delegation / isolation cannot be proven | Review `NOT RUN`; Change Set remains `BLOCKED` | Do not ask the user to open a manual second session; do not fall back to same-context review | Report the missing host capability; enable native Subagent delegation before retrying |
-| Subagent invocation fails, times out, or returns no completed report | Review `NOT RUN`; Change Set remains `BLOCKED` | Do not treat an accepted/running invocation as a completed review; do not use same-context fallback | Preserve invocation error/run ID; retry with a new isolated Subagent after the host issue is resolved |
-| Subagent report snapshot binding does not match candidate/source revisions | Reject report as invalid; Review `NOT RUN`; Change Set remains `BLOCKED` | Do not reuse report against another candidate or source snapshot | Rebuild immutable Review Package and launch a new Subagent invocation |
+| Host lacks native Subagent delegation / isolation cannot be proven | Review execution status `NOT_RUN`; Review decision null; Change Status remains `pending_llm_review`; Run outcome `BLOCKED` | Do not write `BLOCKED` into Change Status; do not ask the user to open a manual second session or fall back to same-context review | Report the missing host capability; enable native Subagent delegation before retrying |
+| Subagent invocation fails, times out, or returns no completed report | Review execution status `NOT_RUN`; Review decision null; Change Status remains `pending_llm_review`; Run outcome `BLOCKED` | Do not write `BLOCKED` into Change Status; do not treat an accepted/running invocation as a completed review or use same-context fallback | Preserve invocation error/run ID; retry with a new isolated Subagent after the host issue is resolved |
+| Subagent report snapshot binding does not match candidate/source revisions | Review execution status `INVALID`; Review decision null; Change Status remains `pending_llm_review`; Run outcome `BLOCKED` | Do not write `BLOCKED` into Change Status or reuse the report against another candidate/source snapshot | Rebuild immutable Review Package and launch a new Subagent invocation |
 | LLM Review returns REVISE | Change `llm_changes_requested` | Do not proceed to human approval | Preserve report; fix findings; rerun Lint and automatically delegate a new independent Review Subagent |
 | LLM Review returns REJECT | Change `rejected` | Do not relabel the same candidate PASS | Preserve rejection report; a new attempt requires a new change ID |
 | BLOCKER or MAJOR finding exists | PASS prohibited | Do not override with numeric score or waiver | Resolve finding or reject candidate |
@@ -66,11 +66,11 @@ A failure in one independent repository may allow work on other repositories to 
 
 ## 6. Run outcome
 
-Use one overall run outcome:
+Use one overall run outcome, stored separately from Change Set status:
 
 - `PASS`: all required in-scope work and checks completed with no blocking findings.
 - `PARTIAL`: some independent scopes or optional checks could not complete; limitations are explicit.
-- `BLOCKED`: a required prerequisite or quality gate prevents safe continuation.
+- `BLOCKED`: a required prerequisite or quality gate prevents safe continuation. The Change Set retains its current canonical status; for a post-Lint Review block this is `pending_llm_review`.
 - `FAIL`: a required deterministic check found a violation that has not been corrected.
 
-A PARTIAL or BLOCKED run cannot create accepted Wiki knowledge. A failed optional CMake DOT attempt alone does not make an otherwise complete ingestion fail.
+`BLOCKED` is not a Change Set status, Review execution status, or LLM review decision. A PARTIAL or BLOCKED run cannot create accepted Wiki knowledge. A failed optional CMake DOT attempt alone does not make an otherwise complete ingestion fail.
