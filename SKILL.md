@@ -5,7 +5,7 @@ description: Build and maintain a source-grounded engineering Wiki for multi-rep
 
 # Code LLM Wiki — entry skill
 
-Use this repository as a portable Skill/Prompt workflow loaded and executed by an IDE AI plugin or host agent. Do not assume a custom runtime, TypeScript application, model API client, LangChain, MCP server, vector database, or AST indexer.
+This repository provides a portable set of Skills and Prompts for building and maintaining a source-grounded engineering Wiki. Keep the workflow lightweight and centered on knowledge quality.
 
 ## Project invariants
 
@@ -19,20 +19,6 @@ Use this repository as a portable Skill/Prompt workflow loaded and executed by a
 8. Build dependency, runtime dependency, IPC relationship, and startup ordering must never be conflated.
 9. CMake DOT is optional build-dependency evidence only. AST is deferred.
 10. No generated page is accepted without independent LLM review and human approval.
-
-## Mandatory IDE agent capability gate
-
-Before executing any workflow, ensure the IDE AI plugin / host agent satisfies all mandatory requirements in docs/ide-plugin-requirements.md. These are project requirements, not optional POC experiments.
-
-At minimum, the host must load Skills, access the source superproject and all required submodules, access the separate Engineering Wiki worktree, read/write authorized files, execute permitted Git/CMake commands, and create an isolated independent review session. It must present proposed changes for human approval.
-
-If a required capability is unavailable, stop before generating or accepting Wiki knowledge. Report the exact missing capability. Do not work around the limitation by directly calling a model API; direct API integration is outside this project's scope.
-
-## Execution environment
-
-The IDE AI plugin / host agent is responsible for loading this Skill, invoking its configured model, reading the source workspace, inspecting Git state, and writing to the separate Engineering Wiki repository. The IDE, plugin, model, and provider are not fixed by this project.
-
-Code LLM Wiki does not directly call model APIs and does not provide a model API client, provider adapter, or inference service. The plugin must supply the required file, terminal, Git, and destination-repository permissions. If a capability is missing, report it explicitly; do not claim the operation succeeded.
 
 ## Output language policy
 
@@ -54,6 +40,6 @@ See docs/language-policy.md for the complete rules. Every individual workflow Sk
 
 ## Required workflow
 
-Compatibility Gate → Init → Ingest per repository/process → Integrate → Lint → Independent Review → Human Approval → Git merge.
+Init → Ingest per repository/process → Integrate → Lint → Independent Review → Human Approval → Wiki Update.
 
 Query is read-only by default. Update produces a proposed diff and must pass the same quality gate.
