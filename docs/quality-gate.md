@@ -99,4 +99,5 @@ Templates:
 - references/update-report-template.md
 - references/lint-report-template.md
 - references/review-report-template.md
+- references/human-review-summary-template.md
 - references/human-decision-template.md
