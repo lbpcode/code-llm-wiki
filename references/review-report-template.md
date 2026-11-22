@@ -3,6 +3,9 @@
 ## Review metadata
 
 - Review ID:
+- Execution status: NOT_RUN / RUNNING / COMPLETED / INVALID
+- Run outcome: PASS / PARTIAL / BLOCKED / FAIL
+- Change Status:
 - Timestamp:
 - Candidate change ID:
 - Candidate Wiki commit / diff digest:
@@ -16,6 +19,7 @@
 - Fresh context: true / false:
 - Generator transcript inherited: true / false:
 - Read-only: true / false:
+- Review decision: PASS / REVISE / REJECT / null
 
 ## Independence declaration
 
@@ -51,12 +55,15 @@ Severity: BLOCKER / MAJOR / MINOR / INFO.
 
 List each claim that cannot be verified, with the source inspection needed to resolve it.
 
-## Recommendation
+## Review decision
 
-- PASS: no BLOCKER or MAJOR findings.
-- REVISE: fixable issues remain.
-- REJECT: fundamental reliability problems exist.
-- NOT RUN: the host could not provide an isolated Subagent invocation, the invocation failed, or snapshot binding could not be verified.
+Set a decision only when execution status is `COMPLETED` and the orchestrator has validated isolation and exact snapshot binding:
+
+- `PASS`: no BLOCKER or MAJOR findings.
+- `REVISE`: fixable issues remain.
+- `REJECT`: fundamental reliability problems exist.
+
+For `NOT_RUN` or `INVALID`, leave the review decision null. If review is blocked after Lint PASS, keep Change Status at `pending_llm_review` and set Run outcome to `BLOCKED`. `BLOCKED` is a run outcome, not a review decision.
 
 ## Reviewer limitations
 
