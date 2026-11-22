@@ -5,47 +5,54 @@ description: Synthesize reviewed process-level knowledge from multiple repositor
 
 # code-wiki-integrate
 
-
 ## Goal
 
 Build the system-level view across independent processes and repositories without inventing relationships that individual repositories do not prove.
 
+## Normative references
 
-## Output language
-
-Follow `docs/language-policy.md`. Unless the user explicitly requests another language, write generated Wiki pages, analysis notes, and deliverables in **Simplified Chinese**. Preserve source identifiers, API names, paths, commands, configuration keys, and source excerpts verbatim. Keep schema keys, stable IDs, profile IDs, relationship types, and status enums in canonical English.
+Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/failure-handling.md, and docs/language-policy.md. Use references/system-template.md, references/interface-template.md, references/workflow-template.md, and references/integration-report-template.md.
 
 ## Preconditions
 
-- Source manifest exists and pins all relevant repositories.
-- Process pages exist for the processes in scope.
-- Each process page has source evidence and a review status.
-- Platform Profile applicability is known or explicitly marked Unknown.
+- Source Manifest pins the relevant repositories.
+- Repository-to-Process and Process-to-Profile mappings have explicit status.
+- Process pages exist for the in-scope processes.
+- Each input page has a content/review status and Claim-Evidence mapping.
+- Required source revisions and relevant interface evidence are accessible.
 
-If these conditions are not met, produce an integration gap report instead of presenting a complete system architecture.
+If prerequisites are missing, produce an integration gap report rather than presenting a complete System architecture.
+
+Candidate Process pages may be used to draft candidate System pages only if their unapproved status is preserved and every derived claim remains traceable. Published/reviewed Process pages are preferred inputs.
 
 ## Procedure
 
-1. Read the system inventory and all relevant Process pages.
-2. Resolve each process ID to its implementing repositories and pinned commits.
-3. Compare interface providers and consumers. Verify both sides where possible.
-4. Classify each relationship precisely: build_depends_on, runtime_depends_on, communicates_with, provides_interface/consumes_interface, or starts_before.
-5. Create a relationship only when evidence supports its type and direction. Otherwise record a candidate relationship as unverified or an open question.
-6. Build system architecture and process maps.
-7. Analyze startup, shutdown, suspend/resume, recovery, and data-flow workflows separately for each applicable Platform Profile.
-8. Compare QNX, Android, and Linux-TBOX only where both sides of the comparison have been inspected.
-9. Identify contradictions between process pages, configuration, interface definitions, and system-level claims.
-10. Update system pages and cross-page references.
-11. Run lint and independent review. Keep the result as a proposed change until human approval.
+1. Read the System inventory, Source Manifest, Page-Source Map, and all relevant Process pages.
+2. Resolve each Process ID to its implementing repositories and pinned commits.
+3. Verify Repository-to-Process and Process-to-Profile mappings; do not infer profile support from repository inventory.
+4. Compare interface providers and consumers. Verify both sides where possible.
+5. Classify each relationship precisely: build_depends_on, runtime_depends_on, communicates_with, provides_interface/consumes_interface, starts_before, or runs_on.
+6. Create a relationship only when evidence supports its type, direction, endpoints, and profile scope. Otherwise record it as candidate/unknown.
+7. Build System architecture and process maps with Claim-Evidence references.
+8. Analyze startup, shutdown, suspend/resume, recovery, and data-flow workflows separately for each applicable Platform Profile.
+9. Compare QNX, Android, and Linux-TBOX only where both sides of the comparison have been inspected.
+10. Identify contradictions between Process pages, source configuration, interface definitions, and System-level claims.
+11. Update System pages, relationship records, Interface/Workflow pages, and Page-Source Map dependencies.
+12. Run Lint and independent Review. Keep results as a proposed diff until human approval.
 
-## Output
+## Outputs
 
-- System overview and process inventory.
+- System overview and Process inventory.
 - Evidence-backed architecture and relationship map.
-- Interface catalog.
+- Interface catalog with provider/consumer evidence.
 - Profile-specific startup/lifecycle workflows.
-- Cross-profile differences and unknowns.
+- Cross-profile differences and explicit unknowns.
 - Integration conflicts and open questions.
+- Integration report and proposed diff.
+
+## Failure behavior
+
+Follow docs/failure-handling.md. Missing Process pages, inaccessible repositories, one-sided interfaces, unresolved mappings, or contradictory evidence must appear in the report. Continue only independent scopes; return PARTIAL/BLOCKED when coverage is incomplete. Never infer a complete System architecture from partial inputs.
 
 ## Critical rule
 
