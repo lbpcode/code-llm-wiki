@@ -10,9 +10,11 @@ The workflow MUST NOT use one status field to represent both the truth of a clai
 | Evidence status | One source locator | Can this exact source reference be resolved and trusted at its pinned revision? |
 | Page content status | One Wiki page | Is this page a candidate, accepted, stale, or superseded? |
 | Change status | One proposed Wiki change set | Where is this candidate in the quality and approval workflow? |
-| Review decision | One LLM review run | What is the independent review outcome? |
+| Review execution status | One independent LLM review attempt | Was the isolated reviewer launched and did it return a valid, snapshot-bound report? |
+| Review decision | One valid, completed LLM review report | What is the independent review outcome? |
 | Human decision | One human decision record | What did the authorized human decide? |
 | Publication status | One accepted Wiki revision | Is this revision part of the accepted/published Wiki history? |
+| Run outcome | One workflow execution | Did this execution pass, partially complete, become blocked, or fail? |
 
 Never infer one state domain from another. A `verified` claim does not mean its page is approved. A `PASS` review does not mean a change is published.
 
@@ -84,7 +86,7 @@ Canonical values:
 |---|---|---|
 | `draft` | Candidate is being generated or revised | `lint_failed`, `pending_llm_review`, `rejected` |
 | `lint_failed` | Deterministic checks found blocking errors | `draft`, `rejected` |
-| `pending_llm_review` | Lint passed and independent review is requested | `llm_changes_requested`, `pending_human_review`, `rejected` |
+| `pending_llm_review` | Lint passed; awaiting a valid independent review result. If review cannot run, the Change Set stays here while the run outcome is BLOCKED. | `llm_changes_requested`, `pending_human_review`, `rejected` |
 | `llm_changes_requested` | Reviewer returned REVISE | `draft`, `rejected` |
 | `pending_human_review` | Independent review returned PASS; awaiting a human | `human_changes_requested`, `approved`, `rejected` |
 | `human_changes_requested` | Human requested changes | `draft`, `rejected` |
@@ -102,7 +104,7 @@ Canonical values:
 | draft → pending_llm_review | Full required Lint scope returns PASS |
 | lint_failed → draft | Blocking Lint findings have been corrected |
 | pending_llm_review → llm_changes_requested | Independent reviewer returns REVISE |
-| pending_llm_review → pending_human_review | Independent reviewer returns PASS with no BLOCKER/MAJOR findings |
+| pending_llm_review → pending_human_review | Review execution status is COMPLETED, the report is valid and bound to the exact candidate/source snapshot, and the reviewer returns PASS with no BLOCKER/MAJOR findings |
 | pending_llm_review → rejected | Independent reviewer returns REJECT |
 | llm_changes_requested → draft | Findings are acknowledged and a revised candidate is prepared |
 | pending_human_review → human_changes_requested | Human records request_changes |
@@ -114,9 +116,24 @@ Canonical values:
 | approval_stale → draft | Impact is re-evaluated and a new candidate is prepared |
 | published → superseded | A later accepted revision replaces it |
 
-A required check that is NOT RUN or PARTIAL cannot satisfy the Lint PASS guard. LLM Review must run independently; a missing independent context leaves the change blocked. Human approval is never inferred from an LLM decision.
+### Review execution status and run outcome
 
-A failed or unavailable check MUST NOT be represented as PASS. If a required check cannot run, the candidate remains blocked or the check result is PARTIAL; it cannot advance to human approval.
+Review execution status is separate from both Change Set status and the LLM review decision. Use exactly:
+
+- `NOT_RUN`: no valid isolated Review Subagent execution completed. This includes an unavailable host capability, failed/timed-out invocation, or no completed report.
+- `RUNNING`: the host has launched the isolated Subagent and the invocation has not completed.
+- `COMPLETED`: a report was returned and the orchestrator validated reviewer isolation, required scope, and exact candidate/source snapshot binding.
+- `INVALID`: a report was returned but failed validation (for example, wrong snapshot, unproven isolation, reviewer write access, or missing mandatory scope).
+
+The LLM review decision is a separate field and has exactly `PASS`, `REVISE`, or `REJECT`. It MUST be null unless Review execution status is `COMPLETED` with a valid report. `NOT_RUN`, `RUNNING`, and `INVALID` are not review decisions.
+
+Run outcome is execution-level and has exactly `PASS`, `PARTIAL`, `BLOCKED`, or `FAIL`, as defined in docs/failure-handling.md. `BLOCKED` means a required prerequisite or gate prevents safe continuation; it is never a Change Set status or an LLM review decision.
+
+If Lint has not returned a full required-scope PASS, do not transition the Change Set to `pending_llm_review`: keep it `draft` (or `lint_failed` when blocking Lint findings exist) and set the run outcome to `PARTIAL` or `BLOCKED` as appropriate. After Lint PASS, the Change Set enters `pending_llm_review`. If the Review Subagent cannot be launched or a valid report cannot be obtained, keep Change Status at `pending_llm_review`, set Review execution status to `NOT_RUN` or `INVALID`, set Review decision to null, and set Run outcome to `BLOCKED`. Do not advance to human review.
+
+A required check that is NOT RUN or PARTIAL cannot satisfy the Lint PASS guard. LLM Review must run independently; a missing independent context leaves the run blocked, not the Change Set status. Human approval is never inferred from an LLM decision.
+
+A failed or unavailable check MUST NOT be represented as PASS. If a required check cannot run, the candidate remains at its current Change Set status and the run is `PARTIAL` or `BLOCKED`; it cannot advance to human approval.
 
 ## 6. Review decisions
 
@@ -154,7 +171,7 @@ Invariants:
 - Every review/approval is bound to exact revisions and scope.
 - Any material change after approval invalidates that approval.
 - No Skill may approve its own generated content or silently publish/merge it.
-- A missing, failed, or non-isolated automatic Review Subagent invocation is NOT RUN/BLOCKED, never PASS; there is no manual-session or same-context fallback.
+- A missing, failed, or non-isolated automatic Review Subagent invocation sets Review execution status to `NOT_RUN` or `INVALID`, Review decision to null, and Run outcome to `BLOCKED`; Change Status remains `pending_llm_review`. There is no manual-session or same-context fallback.
 
 ## 8. Approval binding and invalidation
 
