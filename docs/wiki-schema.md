@@ -22,12 +22,12 @@
 | Interface | interface_id | Contract between processes or with an external system |
 | Workflow | workflow_id | Multi-step or lifecycle behavior |
 | Platform Profile | profile_id | Atomic OS/deployment scope |
-| Decision | decision_id | Architecture or engineering decision |
+| Architecture Decision | adr_id | Recorded architecture or engineering decision |
 | Claim | claim_id | Atomic factual statement with scope and evidence |
 | Evidence | evidence_id | Exact source locator at a pinned revision |
 | Change Set | change_id | Proposed set of Wiki changes moving through quality gates |
 | Review Report | review_id | Lint or independent LLM review result |
-| Human Decision | decision_id | Immutable human approval/change-request/rejection record |
+| Human Decision | human_decision_id | Immutable human approval/change-request/rejection record |
 | Page-Source Map Entry | page_id | Reverse mapping from Wiki page to claims and source revisions |
 
 ## 3. Repository / Process / Profile mapping
@@ -150,6 +150,6 @@ See docs/state-machine.md for transition rules and invariants.
 
 ## 12. Change and approval metadata
 
-Each candidate Change Set records change_id, base_wiki_commit, candidate_wiki_commit or diff_digest, changed pages/claims, source manifest version/digest, relevant source revisions, Lint report, independent Review report, current change status, and human decision reference.
+Each candidate Change Set records change_id, base_wiki_commit, candidate_wiki_commit or diff_digest, changed pages/claims, source manifest version/digest, relevant source revisions, Lint report, independent Review report, current change status, and human_decision_id.
 
 Human approval binds to the exact candidate snapshot. Any material change invalidates the approval. See docs/human-review.md and references/human-decision-template.md.
