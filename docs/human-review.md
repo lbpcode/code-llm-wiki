@@ -2,15 +2,15 @@
 
 ## 1. Responsibility boundary
 
-The three quality gates have different responsibilities:
+The three quality gates have different responsibilities. Independent LLM Review is automatically delegated to a fresh, read-only Subagent by the orchestrator; it is not a manual second-session workflow:
 
 | Gate | Owner | Responsibility | Can approve publication? |
 |---|---|---|---|
 | Source-evidence / Lint | Workflow Skill / available deterministic checks | Structure, provenance, locator, schema, link, and consistency checks | No |
-| Independent LLM Review | Separate model invocation and fresh context | Challenge factual claims, evidence fit, scope, omissions, and contradictions | No |
+| Independent LLM Review | Automatically delegated host-native Subagent with fresh context | Challenge factual claims, evidence fit, scope, omissions, and contradictions | No |
 | Human Review | Authorized human reviewer | Judge engineering correctness, usefulness, unresolved risk, and exact proposed diff | Yes, for the reviewed snapshot |
 
-An LLM PASS is not a human approval. A human approval does not excuse missing required evidence or a skipped independent review.
+An LLM PASS is not a human approval. A human approval does not excuse missing required evidence or a skipped independent review. The orchestrator must automatically launch and await the Subagent; the user is not asked to manually open another conversation. If the host cannot delegate an isolated Subagent, the Change Set remains BLOCKED.
 
 ## 2. Required review package
 
