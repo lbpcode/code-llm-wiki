@@ -14,7 +14,7 @@ An LLM PASS is not a human approval. A human approval does not excuse missing re
 
 ## 2. Required review package
 
-Before human review, present one immutable candidate package containing:
+Before human review, present one immutable candidate package using references/human-review-summary-template.md. It must contain:
 
 - change ID and purpose;
 - base Wiki commit and candidate Wiki commit, or exact patch digest;
