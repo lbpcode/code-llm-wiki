@@ -55,7 +55,7 @@ Keep Skill instructions and reusable prompt templates in this repository in Engl
 
 Init → Ingest per repository/process → Integrate → Lint → Automatic Independent Review Subagent → Human Review → Explicitly Authorized Publication.
 
-Query is read-only by default. Update produces a proposed diff and must pass the same quality gates. After Lint PASS, the orchestrator MUST automatically delegate a fresh Subagent invocation using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Do not ask the user to open a second conversation or copy a prompt. If the host lacks native Subagent delegation or cannot prove isolation, mark Review NOT RUN and the Change Set BLOCKED; there is no manual-session or same-context fallback. A missing check is NOT RUN, not PASS. A partial run cannot be published.
+Query is read-only by default. Update produces a proposed diff and must pass the same quality gates. After Lint PASS, the orchestrator MUST automatically delegate a fresh Subagent invocation using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Do not ask the user to open a second conversation or copy a prompt. If the host lacks native Subagent delegation or cannot prove isolation, set Review execution status to NOT_RUN, leave Review decision null, keep Change Status at pending_llm_review, and set Run outcome to BLOCKED; there is no manual-session or same-context fallback. A missing check is NOT RUN, not PASS. A partial run cannot be published.
 
 ## Safety and authority
 
