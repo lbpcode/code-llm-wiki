@@ -14,7 +14,7 @@
 - **增量更新**：通过 Page-Source Map 反向定位受源码变化影响的页面和 Claim。
 - **构建关系**：可选使用 CMake Graphviz DOT 辅助分析 Target 级依赖。
 - **AST**：第一阶段暂不引入。
-- **质量门禁**：Lint → 独立 LLM Review → Human Review → 显式授权发布。
+- **质量门禁**：Lint → 自动委派独立 Review Subagent → Human Review → 显式授权发布。
 - **状态管理**：Claim、Evidence、Change Set、Review、Human Decision 和 Publication 状态分开管理。
 - **输出语言**：Skill 指令以英文维护；Wiki 和报告默认简体中文。
 
@@ -25,7 +25,7 @@ Init
   -> Ingest (per Repository / Process)
   -> Integrate (System-level)
   -> Lint
-  -> Independent Review
+  -> Automatic Independent Review Subagent
   -> Human Approval
   -> Explicit Publication
   -> Incremental Update
@@ -36,7 +36,7 @@ Init
 - `integrate`：整合多个 Process，形成 System 级架构知识。
 - `query`：默认只查询已发布知识，显式区分推断、未知和过期内容。
 - `update`：根据源码变化和 Page-Source Map 生成候选更新。
-- `review`：在独立上下文中复核知识结论、证据和关系。
+- `review`：由入口 Skill 自动委派独立 Subagent，在新上下文中复核知识结论、证据和关系；不支持手动新建会话的回退流程。
 - `lint`：检查结构、链接、证据、映射、状态和一致性。
 
 ## 仓库结构
@@ -70,6 +70,7 @@ Init
 - [Skill Contracts](docs/skill-contracts.md)
 - [Source Evidence](docs/source-evidence.md)
 - [Strict Quality Gate](docs/quality-gate.md)
+- [Automatic Independent Review Execution](docs/independent-review-execution.md)
 - [Human Review and Publication](docs/human-review.md)
 - [Language Policy](docs/language-policy.md)
 - [Architecture Decisions](docs/decisions.md)
@@ -84,6 +85,7 @@ Init
 - Page-Source Map: `references/page-source-map-template.md`
 - Repository / Process / System / Interface / Workflow / Platform Profile: `references/*-template.md`
 - Init / Ingestion / Integration / Update / Lint / Review: `references/*-report-template.md`
+- Automatic Review Subagent Task: `references/review-agent-task-template.md`
 - Human Review Summary: `references/human-review-summary-template.md`
 - Human Decision: `references/human-decision-template.md`
 
