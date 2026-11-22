@@ -1,19 +1,22 @@
 # Independent Review Checklist
 
-## A. Provenance
+## A. Provenance and Claim-Evidence
 
-- [ ] Every material claim has a source reference.
+- [ ] Every material claim is atomic and has a stable Claim ID.
+- [ ] Every material claim maps to specific supporting/contradicting/qualifying evidence.
 - [ ] Repository IDs and full commit SHAs are valid.
 - [ ] Paths and line/symbol/configuration locators resolve at the pinned revision.
-- [ ] Evidence actually supports the exact claim.
+- [ ] Evidence supports the exact claim, profile, and relationship type.
 - [ ] No fabricated files, symbols, commits, or line numbers.
+- [ ] Sensitive source excerpts are omitted or safely redacted.
 
 ## B. Process understanding
 
 - [ ] Process responsibility and boundaries are clear.
-- [ ] Repository-to-process mapping is evidence-based.
+- [ ] Repository-to-Process mapping is evidence-based and many-to-many.
+- [ ] Process-to-Profile support is recorded separately from repository inventory.
 - [ ] Lifecycle covers startup, initialization, ready, shutdown, and recovery where applicable.
-- [ ] Interfaces identify provider, consumer, mechanism, and contract.
+- [ ] Interfaces identify provider, consumer, mechanism, contract, and profile variants.
 - [ ] Runtime dependencies are not inferred from build dependencies.
 - [ ] Important error paths, timeouts, and constraints are not omitted.
 
@@ -27,24 +30,38 @@
 
 ## D. System integration
 
-- [ ] Every cross-process edge has a relationship type.
+- [ ] Every cross-process edge has a relationship type and evidence.
 - [ ] IPC claims have interface/configuration/implementation evidence.
 - [ ] Startup ordering has startup configuration or runtime evidence.
 - [ ] CMake DOT edges are labeled as build dependencies only.
-- [ ] Conflicts between process pages and system pages are resolved or explicitly recorded.
+- [ ] Both sides of important interfaces are checked where possible.
+- [ ] Conflicts between Process pages and System pages are resolved or explicitly recorded.
 
-## E. Quality
+## E. State and incremental update
 
-- [ ] No unsupported certainty or invented rationale.
-- [ ] No stale source references presented as verified.
-- [ ] No material contradiction with accepted Wiki knowledge.
-- [ ] Unknowns and assumptions are explicit.
+- [ ] Claim and Evidence statuses are not confused with approval status.
+- [ ] Page-Source Map links pages to claims, source paths/revisions, and dependent pages.
+- [ ] Stale evidence invalidates affected claims/pages until revalidated.
+- [ ] Approval is bound to the exact candidate diff/commit and relevant source snapshot.
+- [ ] Any material post-approval change invalidates approval.
+- [ ] AI updates preserve human edits and stop on overlapping conflicts.
+
+## F. Quality and independence
+
+- [ ] Lint checks and NOT RUN checks are explicitly reported.
+- [ ] Independent LLM review used a separate invocation and fresh context.
+- [ ] Reviewer independently inspected source evidence.
+- [ ] No unsupported certainty, invented rationale, or material contradiction.
 - [ ] Findings are classified BLOCKER, MAJOR, MINOR, or INFO.
 - [ ] BLOCKER/MAJOR findings prevent PASS.
+- [ ] Reviewer limitations and uninspected scope are explicit.
 
-## F. Approval
+## G. Human approval and publication
 
-- [ ] Independent LLM review was performed in a separate invocation/context.
-- [ ] Review report is stored with the proposed change.
-- [ ] Human reviewer inspected the diff and evidence.
-- [ ] Human approval is recorded before merge.
+- [ ] Human reviewer inspected exact Wiki Diff and changed pages.
+- [ ] Source Manifest and relevant source revisions were inspected.
+- [ ] Claim-Evidence mapping and both gate reports were inspected.
+- [ ] Human decision is approve / request_changes / reject.
+- [ ] Decision record binds reviewer, timestamp, diff/Wiki commit, source snapshot, reports, comments, and waivers.
+- [ ] Publication waits for explicit human authorization.
+- [ ] Rejected candidates and prior decisions remain in audit history.
