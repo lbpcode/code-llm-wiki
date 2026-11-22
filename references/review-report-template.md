@@ -3,9 +3,9 @@
 ## Review metadata
 
 - Review ID:
-- Execution status: NOT_RUN / RUNNING / COMPLETED / INVALID
-- Run outcome: PASS / PARTIAL / BLOCKED / FAIL
-- Change Status:
+- Execution status (orchestrator-validated): NOT_RUN / RUNNING / COMPLETED / INVALID
+- Run outcome (orchestrator-owned): PASS / PARTIAL / BLOCKED / FAIL
+- Change Status (orchestrator-owned):
 - Timestamp:
 - Candidate change ID:
 - Candidate Wiki commit / diff digest:
@@ -23,7 +23,7 @@
 
 ## Independence declaration
 
-Record whether the reviewer was launched by a host-native Subagent delegation in a fresh context, without inheriting the generator transcript, and with read-only access. If any mandatory condition is false or unverified, result is NOT RUN and no PASS is issued.
+Record whether the reviewer was launched by a host-native Subagent delegation in a fresh context, without inheriting the generator transcript, and with read-only access. If no valid isolated invocation completed, execution status is NOT_RUN. If a report was returned but any mandatory condition is false or cannot be verified, execution status is INVALID. Neither status permits a Review decision.
 
 ## Review scope
 
@@ -63,7 +63,7 @@ Set a decision only when execution status is `COMPLETED` and the orchestrator ha
 - `REVISE`: fixable issues remain.
 - `REJECT`: fundamental reliability problems exist.
 
-For `NOT_RUN` or `INVALID`, leave the review decision null. If review is blocked after Lint PASS, keep Change Status at `pending_llm_review` and set Run outcome to `BLOCKED`. `BLOCKED` is a run outcome, not a review decision.
+For `NOT_RUN` or `INVALID`, leave the review decision null. If review is blocked after Lint PASS, keep Change Status at `pending_llm_review` and set Run outcome to `BLOCKED`. `BLOCKED` is a run outcome, not a review decision. The Subagent supplies its findings and recommendation; the orchestrator owns the validated execution status and overall run outcome.
 
 ## Reviewer limitations
 
