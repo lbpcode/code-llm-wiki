@@ -76,7 +76,7 @@ Page content transitions:
 
 A rejected candidate never changes an already accepted page. A proposed deletion keeps the current accepted page until the deletion Change Set is approved and published; the old page then becomes superseded or is retained as a historical page.
 
-## 6. Change-set status
+## 5. Change-set status
 
 Canonical values:
 
