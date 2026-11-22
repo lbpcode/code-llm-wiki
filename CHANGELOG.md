@@ -12,7 +12,7 @@
 - Define Lint → independent LLM Review → Human Review → explicitly authorized Publication gates.
 - Bind human approval to the exact candidate diff/Wiki revision and relevant Source Manifest/source revisions; define approval invalidation.
 - Define failure handling for partial repository failures, commit mismatches, inaccessible sources, evidence conflicts, review failures, human edits, stale claims, and sensitive data.
-- Add Change Set, Init, Ingestion, Integration, Update, Lint, Independent Review, Human Decision, Claim, Evidence, Page-Source Map, Interface, Workflow, Platform Profile, and Architecture Decision templates.
+- Add Change Set, Init, Ingestion, Integration, Update, Lint, Independent Review, Human Review Summary, Human Decision, Repository, Claim, Evidence, Page-Source Map, Interface, Workflow, Platform Profile, and Architecture Decision templates.
 - Include optional CMake Graphviz DOT as build-dependency evidence; defer AST extraction.
 - Provide portable Skill/Prompt workflows without a custom TypeScript runtime.
 - Define English Skill instructions and Simplified Chinese as the default generated Wiki/report language, preserving source identifiers and machine-readable metadata.
