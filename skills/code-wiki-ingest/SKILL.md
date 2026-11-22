@@ -1,59 +1,66 @@
 ---
 name: code-wiki-ingest
-description: Analyze one repository or independent process and produce source-grounded Process Wiki pages with lifecycle, interfaces, dependencies, security, deployment, and Platform Profile differences.
+description: Analyze one repository or independent process and produce source-grounded Process Wiki pages with atomic claims, evidence mappings, lifecycle, interfaces, dependencies, security, deployment, and Platform Profile differences.
 ---
 
 # code-wiki-ingest
 
-
 ## Goal
 
-Build accurate process-level knowledge from one repository at a time. Prefer understanding the process boundary and behavior over exhaustively cataloguing internal classes.
+Build accurate process-level knowledge from pinned source revisions. Prefer understanding process boundaries and behavior over exhaustively cataloguing internal classes.
 
+## Normative references
 
-## Output language
+Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/source-evidence.md, docs/state-machine.md, docs/failure-handling.md, and docs/language-policy.md. Use references/process-template.md, references/claim-template.md, and references/ingestion-report-template.md.
 
-Follow `docs/language-policy.md`. Unless the user explicitly requests another language, write generated Wiki pages, analysis notes, and deliverables in **Simplified Chinese**. Preserve source identifiers, API names, paths, commands, configuration keys, and source excerpts verbatim. Keep schema keys, stable IDs, profile IDs, relationship types, and status enums in canonical English.
+## Required inputs
 
-## Required context
-
-- Source manifest and selected repository ID.
-- Pinned repository commit.
+- Source Manifest and selected repository ID(s).
+- Exact pinned full commit SHA for each selected repository.
 - Repository AGENTS.md files and applicable parent instructions.
-- Known process ID(s) and applicable Platform Profile(s).
+- Known or candidate Process ID(s).
+- Process-to-Profile applicability and its evidence/status.
+- Authorized Wiki destination and base revision.
 
-If the commit or profile scope is missing, stop and report the gap rather than guessing.
+If the source commit does not match the manifest, stop ingestion for that repository. If process/profile mapping is uncertain, keep it candidate/unknown; do not guess.
 
 ## Procedure
 
-1. Read all applicable AGENTS.md files and key project documentation.
-2. Confirm the source repository and commit match the manifest.
+1. Read all applicable AGENTS.md files and key maintained project documentation.
+2. Confirm repository identity, working tree state, and exact source commit against the manifest.
 3. Identify executable entry points, process/service definitions, startup configuration, build targets, public interfaces, and deployment artifacts.
-4. Establish which process or processes the repository implements. A repository may contain multiple executables or services.
-5. Analyze process responsibility, boundaries, lifecycle, interfaces, runtime dependencies, data flow, security, deployment, and constraints.
-6. Inspect profile-specific source/configuration separately for QNX, Android, and Linux-TBOX. Only analyze profiles that are present or explicitly in scope.
+4. Establish which process or processes the repository implements. Analyze each Process separately even if several live in one repository.
+5. Analyze responsibility, boundaries, lifecycle, interfaces, runtime dependencies, data flow, security, deployment, resource constraints, and failure behavior.
+6. Inspect QNX, Android, and Linux-TBOX separately, but only for profiles present or explicitly in scope. Record Process-to-Profile support status and evidence.
 7. Separate common behavior from profile-specific behavior. A claim is common only when evidence supports every applicable profile.
-8. Inspect CMake usage. If the repository uses CMake and the host environment can configure it with a representative existing toolchain/configuration, generate CMake Graphviz DOT. Record commit and configure context. If configuration is unavailable, report that; continue without DOT.
-9. Treat DOT only as build-target dependency evidence. Do not infer runtime dependencies, IPC, or startup order from it.
+8. Inspect CMake usage. If CMake is used and a representative existing toolchain/configuration is available, generate Graphviz DOT. Record commit and configure context. If unavailable or generation fails, record the reason and continue unrelated analysis.
+9. Treat DOT only as build-target dependency evidence. Never infer runtime dependencies, IPC, startup order, or call flow from it.
 10. Do not run AST/Tree-sitter/Clang extraction in v0.1.0.
-11. Draft pages using references/process-template.md and docs/wiki-schema.md.
-12. Attach source evidence to every material claim. Mark inferences and unknowns explicitly.
-13. Update the page-source map and source manifest only for sources actually inspected.
-14. Run code-wiki-lint and request independent code-wiki-review before proposing acceptance.
+11. Split material statements into atomic Claims. Map each Claim to exact Evidence records with repository, full commit, path, locator, evidence type, profile scope, and supports/contradicts/qualifies relation.
+12. Mark each Claim verified, inferred, unknown, stale, or contradicted. Inferred claims require explicit reasoning; unknown claims require a gap description.
+13. Inspect both sides of interfaces when possible. A one-sided interface remains candidate/unknown.
+14. Create Process pages and substantial Interface/Workflow candidates using the templates. Update Page-Source Map entries only for sources actually inspected.
+15. Run Lint and request independent Review. Keep all generated content as a candidate diff until human approval.
 
-## Required output
+## Required outputs
 
-- Process overview.
-- Common knowledge, if genuinely common.
-- One profile-specific section/page for each confirmed profile.
-- Interface and workflow pages where cross-component contracts are substantial.
-- Evidence index and unresolved questions.
-- Proposed diff; do not self-approve or merge.
+- Process overview and boundary.
+- Profile-specific sections/pages for confirmed or explicitly in-scope profiles.
+- Atomic Claim-Evidence records.
+- Interface/Workflow candidates where needed.
+- Page-Source Map entries.
+- Ingestion report with coverage, failures, unknowns, and open questions.
+- Proposed Wiki diff.
+
+## Failure behavior
+
+Follow docs/failure-handling.md. A failure in one repository may allow independent repositories to continue, but the report must be PARTIAL. A commit mismatch, missing required context, unresolved conflict, or sensitive-data exposure blocks the affected scope. Do not summarize only README and call it complete.
 
 ## Prohibited shortcuts
 
-- Do not summarize only README and call it complete.
-- Do not infer one process from one repository.
+- Do not equate one repository with one process.
+- Do not infer platform support from names, directories, macros, or build targets.
 - Do not infer runtime relationships from CMake.
-- Do not assume a process runs on a profile because a directory or macro name suggests it.
 - Do not invent startup order, IPC semantics, permission behavior, or suspend/resume support.
+- Do not copy secrets into Wiki pages or evidence excerpts.
+- Do not overwrite human-authored content or self-approve the candidate.
