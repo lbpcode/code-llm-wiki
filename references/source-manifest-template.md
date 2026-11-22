@@ -2,46 +2,68 @@
 
 The manifest is the provenance index for an ingestion run. Replace placeholders only with values discovered from the real superproject and repositories. Never invent repository names, commits, processes, or profile applicability.
 
-    schema_version: 1
-    system:
-      id: <stable-system-id>
-      name: <display-name>
-    superproject:
-      repository_id: <stable-repository-id>
-      path: .
-      commit: <full-commit-sha>
-      branch: <informational-branch-name>
-    platform_profiles:
-      - id: qnx
-        os: QNX
-        deployment_context: unknown
-      - id: android
-        os: Android
-        deployment_context: unknown
-      - id: linux-tbox
-        os: Linux
-        deployment_context: TBOX
-    repositories:
-      - id: <repository-id>
-        path: <submodule-path>
-        remote: <canonical-repository-url-or-omitted>
-        commit: <full-commit-sha>
-        branch: <informational-branch-name>
-        agents_files:
-          - AGENTS.md
-        process_ids:
-          - <process-id>
-        platform_profile_ids:
-          - qnx
-          - android
+```yaml
+schema_version: 1
+manifest_id: <stable-manifest-id>
+generated_at: <ISO-8601-timestamp>
+system:
+  id: <stable-system-id>
+  name: <display-name>
+superproject:
+  repository_id: <stable-repository-id>
+  path: .
+  commit: <full-40-character-commit-sha>
+  branch: <informational-branch-name>
+platform_profiles:
+  - id: qnx
+    os: QNX
+    deployment_context: unknown
+  - id: android
+    os: Android
+    deployment_context: unknown
+  - id: linux-tbox
+    os: Linux
+    deployment_context: TBOX
+repositories:
+  - id: <repository-id>
+    path: <submodule-path>
+    remote: <canonical-repository-url-or-omitted>
+    commit: <full-40-character-commit-sha>
+    branch: <informational-branch-name>
+    checkout_status: matches_pin # matches_pin | mismatch | uninitialized | inaccessible
+    agents_files:
+      - AGENTS.md
+processes:
+  - id: <process-id>
+    display_name: <display-name>
+    lifecycle_status: active # active | candidate | deprecated_candidate | retired_confirmed
+repository_process_mappings:
+  - repository_id: <repository-id>
+    process_id: <process-id>
+    status: confirmed # confirmed | candidate | unknown | rejected
+    evidence_refs:
+      - <evidence-id>
+    responsibility_note: "<bounded responsibility>"
+process_profile_mappings:
+  - process_id: <process-id>
+    profile_id: qnx
+    support_status: supported_verified # supported_verified | present_unverified | unsupported_verified | unknown
+    evidence_refs:
+      - <evidence-id>
+    constraints: []
+```
 
 ## Rules
 
-- Pin every repository to the exact commit checked out by the superproject/submodule.
-- Record the superproject commit and each submodule commit independently.
+- Pin the superproject and every relevant repository to the exact full commit SHA inspected.
+- Record submodule checkout state and expected pin; a mismatch blocks ingestion for that repository.
+- Record AGENTS.md paths that were actually discovered and read.
+- Repository-to-Process and Process-to-Profile are separate mappings.
+- A repository may implement multiple processes; a process may span multiple repositories.
+- Process profile support must not be inferred from repository-level profile observations.
+- Use `confirmed` only with direct evidence or explicit project-owner confirmation.
+- Use `unknown` when evidence is insufficient; do not fill gaps with guesses.
 - The remote URL is optional; never include credentials in it.
-- A repository can implement multiple processes; a process can span multiple repositories.
-- Only list profiles supported by evidence or explicitly confirmed project metadata.
-- Unknown deployment context stays unknown.
 - Keep secrets and environment-specific credentials out of the manifest.
 - Update the manifest only after the corresponding source revision has been inspected.
+- Approval binds to the manifest version/digest and relevant source revisions. See docs/human-review.md.
