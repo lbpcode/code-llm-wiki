@@ -71,6 +71,14 @@ Do not assume QNX means IVI or Android means IVI. Those associations must come f
 
     wiki/
       index.md
+      _meta/
+        source-manifest.yaml
+        page-source-map.yaml
+        claims/<claim-id>.yaml
+        evidence/<evidence-id>.yaml
+        changes/<change-id>/
+          change-set.yaml
+          reports-and-decisions.md
       system/
         overview.md
         architecture.md
