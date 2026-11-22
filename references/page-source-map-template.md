@@ -8,7 +8,7 @@ pages:
   - page_id: <stable-page-id>
     path: wiki/processes/<process-id>/overview.md
     page_type: process
-    content_status: draft # draft | approved | published | stale | superseded
+    content_status: candidate # candidate | accepted | stale | superseded
     claim_ids:
       - <claim-id-1>
       - <claim-id-2>
@@ -28,6 +28,7 @@ pages:
 
 ## Rules
 
+- Page content status is candidate / accepted / stale / superseded. Change Set approval status is tracked separately.
 - Update only after the page and referenced sources have been inspected.
 - List paths at the granularity needed for impact analysis; avoid a generic repository-wide dependency unless the page truly depends on the entire repository.
 - Include downstream page dependencies such as Process → Interface → Workflow → System.
