@@ -6,12 +6,6 @@ description: Analyze one repository or independent process and produce source-gr
 # code-wiki-ingest
 
 
-## Mandatory IDE host precondition
-
-Before running this workflow, confirm that the selected IDE AI plugin / host agent has passed the project-wide compatibility gate documented in docs/ide-plugin-requirements.md. The required capabilities are mandatory project requirements, not optional POC experiments.
-
-If there is no recorded PASS for the compatibility gate, or a required capability is unavailable, stop and report the exact gap. Do not bypass the requirement by directly calling a model API or silently skipping the affected workflow.
-
 ## Goal
 
 Build accurate process-level knowledge from one repository at a time. Prefer understanding the process boundary and behavior over exhaustively cataloguing internal classes.
