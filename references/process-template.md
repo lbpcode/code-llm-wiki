@@ -1,15 +1,18 @@
 # Process Wiki Page Template
 
-Use this template as a structure, not as a requirement to invent content. Omit sections with no evidence and record material gaps as Unknown.
+Use this template as a structure, not as a requirement to invent content. Omit sections with no evidence and record material gaps as Unknown. Every material statement must map to a Claim ID and exact Evidence.
 
 ## Metadata
 
 - Process ID:
 - Display name:
+- Lifecycle status: active / candidate / deprecated_candidate / retired_confirmed
 - Implementing repositories:
-- Supported Platform Profiles:
+- Supported Platform Profiles and support status:
+- Source Manifest version:
 - Source revisions:
-- Status:
+- Wiki content status:
+- Change ID:
 - Last reviewed:
 
 ## 1. Overview
@@ -19,7 +22,8 @@ Use this template as a structure, not as a requirement to invent content. Omit s
 - What this process owns:
 - What it explicitly does not own:
 - Entry point/executable:
-- Evidence:
+- Repository mapping evidence:
+- Claim IDs:
 
 ## 2. Architecture
 
@@ -27,7 +31,7 @@ Use this template as a structure, not as a requirement to invent content. Omit s
 - Important internal components only where they clarify process behavior:
 - Main execution threads/event loops when evidenced:
 - Configuration and feature guards:
-- Evidence:
+- Claim IDs and evidence:
 
 ## 3. Lifecycle
 
@@ -40,7 +44,7 @@ For each applicable profile:
 - restart/recovery;
 - suspend/resume behavior;
 - failure and timeout handling;
-- evidence.
+- evidence and unknowns.
 
 ## 4. Interfaces
 
@@ -52,7 +56,10 @@ For each interface:
 - connection/setup sequence;
 - error handling and compatibility;
 - profile scope;
-- evidence.
+- evidence on provider and consumer sides;
+- Claim IDs.
+
+Use references/interface-template.md for substantial contracts.
 
 ## 5. Dependencies
 
@@ -63,7 +70,7 @@ Separate:
 - startup ordering;
 - external services/devices.
 
-Never infer runtime dependency from CMake linkage alone.
+For each relationship record from, type, to, profile, evidence, status, and constraints. Never infer runtime dependency from CMake linkage alone.
 
 ## 6. Data Flow
 
@@ -77,8 +84,8 @@ Never infer runtime dependency from CMake linkage alone.
 
 ## 7. Platform Profiles
 
-Create a separate subsection/page for every confirmed profile:
-- profile;
+Create a separate subsection/page for every confirmed or explicitly in-scope profile:
+- profile and support status;
 - implementation differences;
 - OS APIs;
 - IPC;
@@ -87,6 +94,8 @@ Create a separate subsection/page for every confirmed profile:
 - lifecycle;
 - resource constraints;
 - evidence.
+
+Keep uninspected profiles Unknown.
 
 ## 8. Security
 
@@ -97,6 +106,8 @@ Create a separate subsection/page for every confirmed profile:
 - trust boundaries;
 - security-sensitive configuration;
 - evidence.
+
+Do not copy secret values into the Wiki.
 
 ## 9. Deployment
 
@@ -111,8 +122,15 @@ Create a separate subsection/page for every confirmed profile:
 
 ## 10. Constraints and Open Questions
 
-Separate verified constraints, inferred constraints, and unresolved questions.
+Separate verified constraints, inferred constraints, unresolved questions, source conflicts, and uninspected scope.
 
-## 11. Evidence Index
+## 11. Claim-Evidence Index
 
-Map each important claim to repository, full commit SHA, path, locator, and profile.
+Map every material claim to repository, full commit SHA, path, locator, evidence type, and profile.
+
+## 12. Update and Review Metadata
+
+- Page-Source Map entry:
+- Affected dependent pages:
+- Last accepted change:
+- Current review status:
