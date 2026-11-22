@@ -165,8 +165,10 @@ Keep these independent:
 - Evidence status: valid / unverified / stale / inaccessible / conflicting / redacted.
 - Page content status: candidate / accepted / stale / superseded.
 - Change status: draft / lint_failed / pending_llm_review / llm_changes_requested / pending_human_review / human_changes_requested / approved / approval_stale / published / rejected / superseded.
-- LLM decision: PASS / REVISE / REJECT.
+- Review execution status: NOT_RUN / RUNNING / COMPLETED / INVALID.
+- LLM review decision: PASS / REVISE / REJECT (only for a valid COMPLETED review; otherwise null).
 - Human decision: approve / request_changes / reject.
+- Run outcome: PASS / PARTIAL / BLOCKED / FAIL (execution-level; BLOCKED is not a Change status).
 
 See docs/state-machine.md for transition rules and invariants.
 
@@ -180,6 +182,6 @@ See docs/state-machine.md for transition rules and invariants.
 
 ## 13. Change and approval metadata
 
-Each candidate Change Set records change_id, base_wiki_commit, candidate_wiki_commit or diff_digest, changed pages/claims, source manifest version/digest, relevant source revisions, Lint report, independent Review report, current change status, and human_decision_id.
+Each candidate Change Set records change_id, base_wiki_commit, candidate_wiki_commit or diff_digest, changed pages/claims, source manifest version/digest, relevant source revisions, Lint report, independent Review report, current change status, review_execution_status, review_decision (null unless a valid review completed), review_invocation_id when available, run_outcome, and human_decision_id. `BLOCKED` belongs only to run_outcome; it MUST NOT be written to the Change Set `status` field.
 
 Human approval binds to the exact candidate snapshot. Any material change invalidates the approval. See docs/human-review.md and references/human-decision-template.md.
