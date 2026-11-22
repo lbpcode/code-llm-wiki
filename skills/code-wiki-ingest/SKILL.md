@@ -40,7 +40,7 @@ If the source commit does not match the manifest, stop ingestion for that reposi
 12. Mark each Claim verified, inferred, unknown, stale, or contradicted. Inferred claims require explicit reasoning; unknown claims require a gap description.
 13. Inspect both sides of interfaces when possible. A one-sided interface remains candidate/unknown.
 14. Create Process pages and substantial Interface/Workflow candidates using the templates. Update Page-Source Map entries only for sources actually inspected.
-15. Run Lint. If Lint PASS, the orchestrator MUST automatically delegate a fresh host-native Review Subagent using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Wait for a completed, snapshot-bound report. Do not ask the user to open a second conversation. If Subagent delegation/isolation is unavailable, mark Review NOT RUN and the Change Set BLOCKED. Keep all generated content as a candidate diff until human approval.
+15. Run Lint. If Lint PASS, the orchestrator MUST automatically delegate a fresh host-native Review Subagent using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Wait for a completed, snapshot-bound report. Do not ask the user to open a second conversation. If Subagent delegation/isolation is unavailable, set Review execution status to NOT_RUN, leave Review decision null, keep Change Status at pending_llm_review, and set Run outcome to BLOCKED. Keep all generated content as a candidate diff until human approval.
 
 ## Required outputs
 
@@ -51,7 +51,7 @@ If the source commit does not match the manifest, stop ingestion for that reposi
 - Page-Source Map entries.
 - Ingestion report with coverage, failures, unknowns, and open questions.
 - Proposed Wiki diff.
-- Lint report and automatically delegated independent Review report, or explicit BLOCKED/NOT RUN result.
+- Lint report and independent Review report; if delegation is blocked, record Review execution status, null Review decision, unchanged Change Status, and Run outcome BLOCKED.
 
 ## Failure behavior
 
