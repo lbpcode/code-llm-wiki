@@ -35,15 +35,15 @@ Record only known values:
 
 ## 4. Process applicability
 
-A process may run on one, two, or all three profiles. Record only confirmed support.
+Do not assign platform support solely at Repository level. A repository may contain multiple processes with different platform coverage.
 
-For each process/profile pair, distinguish:
-- supported and verified;
-- present but not fully analyzed;
-- unsupported with evidence;
-- unknown.
+For each Process/Profile pair, distinguish:
+- `supported_verified`: implementation/configuration evidence or explicit owner confirmation proves support;
+- `present_unverified`: relevant source exists but support/behavior has not been fully checked;
+- `unsupported_verified`: bounded inspection proves the process is not supported on this profile;
+- `unknown`: insufficient evidence to decide.
 
-Do not infer support from a directory name, build option, or old document alone.
+A mapping also records evidence references, constraints, and the inspected source revisions. Do not infer support from a directory name, build option, macro, or old document alone.
 
 ## 5. Common versus profile-specific knowledge
 
