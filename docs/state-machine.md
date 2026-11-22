@@ -94,7 +94,7 @@ Canonical values:
 | `rejected` | Candidate was rejected; it is immutable audit history | terminal |
 | `superseded` | A later accepted revision replaces this published revision | terminal |
 
-Transition guards:
+### Transition guards:
 
 | Transition | Required condition |
 |---|---|
@@ -118,7 +118,7 @@ A required check that is NOT RUN or PARTIAL cannot satisfy the Lint PASS guard. 
 
 A failed or unavailable check MUST NOT be represented as PASS. If a required check cannot run, the candidate remains blocked or the check result is PARTIAL; it cannot advance to human approval.
 
-## 7. Review decisions
+## 6. Review decisions
 
 LLM review uses exactly:
 
@@ -136,7 +136,7 @@ Human decisions use exactly:
 
 Only an authorized human can create a human decision. LLM PASS is a recommendation, not an approval.
 
-## 8. Gate order and invariants
+## 7. Gate order and invariants
 
 1. Generate candidate pages and reports.
 2. Run structural/provenance Lint.
@@ -156,7 +156,7 @@ Invariants:
 - No Skill may approve its own generated content or silently publish/merge it.
 - A missing independent review session is NOT RUN/BLOCKED, never PASS.
 
-## 9. Approval binding and invalidation
+## 8. Approval binding and invalidation
 
 Each approval record MUST bind:
 - change_id;
@@ -171,7 +171,7 @@ Each approval record MUST bind:
 
 Approval becomes stale if the approved Wiki diff/candidate commit, reviewed page scope, relevant source revision, relevant manifest mapping, review report, or impact set changes. An unrelated source repository update need not invalidate approval if the approved scope's source snapshot and dependencies are demonstrably unchanged. Record that impact assessment; when uncertain, invalidate conservatively.
 
-## 10. Re-review scope
+## 9. Re-review scope
 
 After a change request or stale approval:
 - rerun Lint over the complete candidate Wiki structure and all affected references;
