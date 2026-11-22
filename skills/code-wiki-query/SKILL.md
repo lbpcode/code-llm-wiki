@@ -1,41 +1,49 @@
 ---
 name: code-wiki-query
-description: Answer engineering questions using the Code LLM Wiki, preserving source provenance, Process boundaries, and Platform Profile scope.
+description: Answer engineering questions using the accepted Code LLM Wiki, preserving source provenance, Process boundaries, Platform Profile scope, and uncertainty.
 ---
 
 # code-wiki-query
 
-
 ## Goal
 
-Answer engineering questions from the accepted Wiki without silently turning incomplete knowledge into certainty.
+Answer engineering questions from accepted Wiki knowledge without silently turning incomplete, stale, or unreviewed content into certainty.
 
+## Normative references
 
-## Output language
+Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, and docs/language-policy.md.
 
-Follow `docs/language-policy.md`. Unless the user explicitly requests another language, write generated Wiki pages, query answers, review findings, and deliverables in **Simplified Chinese**. Preserve source identifiers, API names, paths, commands, configuration keys, and source excerpts verbatim. Keep schema keys, stable IDs, profile IDs, relationship types, and status enums in canonical English.
+## Default trust policy
+
+- Query published Wiki content by default.
+- Exclude draft, pending, rejected, superseded, stale, and contradicted claims from unqualified factual answers.
+- Do not treat a verified Claim as proof that its page/change is approved; check page/change publication status separately.
+- If the user explicitly asks to inspect candidate or historical content, label its state and revision clearly.
+- Distinguish verified facts, inferences, unknowns, and conflicts.
 
 ## Procedure
 
 1. Classify the question as system-level, process-level, interface, workflow, security, deployment, or platform comparison.
-2. Identify the relevant Process IDs and Platform Profile(s).
-3. Read the relevant Wiki pages and their source references.
-4. Check page status and source revision freshness. Do not rely on stale pages as current facts.
-5. Answer with the applicable profile scope and distinguish verified facts from inferences.
-6. Cite repository, commit, path, and line/symbol/configuration locator for important claims.
-7. If the Wiki does not contain enough evidence, say exactly what is unknown and identify the source that must be inspected.
-8. Do not modify the Wiki during a query unless the user explicitly requests an update.
+2. Identify relevant Process IDs and Platform Profile(s).
+3. Read the relevant published Wiki pages, Claim-Evidence records, and source references.
+4. Check page/change publication status, Claim status, Evidence status, and source revision freshness.
+5. Answer with applicable scope and distinguish facts from inference.
+6. Cite repository, full commit, path, and line/symbol/configuration locator for material claims.
+7. If evidence is insufficient, say exactly what is unknown and identify the source or profile that must be inspected.
+8. If sources conflict, disclose the conflict; do not choose a side without a documented resolution.
+9. Do not modify the Wiki during a query unless the user explicitly requests an update.
 
 ## Cross-platform questions
 
-Compare QNX, Android, and Linux-TBOX only for profiles represented in the source manifest and backed by reviewed pages. Never assume an uninspected profile behaves like another profile.
+Compare QNX, Android, and Linux-TBOX only for profiles represented in the Source Manifest and backed by reviewed/published pages. Never assume an uninspected profile behaves like another profile.
 
 ## Output format
 
 - Direct answer.
 - Relevant Process/Profile scope.
-- Evidence.
-- Constraints, exceptions, and unknowns.
+- Verified evidence and source locators.
+- Inferences and assumptions.
+- Constraints, exceptions, conflicts, and unknowns.
 - Optional follow-up investigation.
 
-Do not cite a Wiki summary as if it were the original source. Preserve the underlying source evidence.
+Do not cite a Wiki summary as if it were the original source. Preserve underlying source provenance.
