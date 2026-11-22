@@ -18,7 +18,7 @@ This repository provides a portable set of Skills and Prompts for building and m
 7. Claim status, Evidence status, Change status, Review decision, Human decision, and Publication status are separate domains.
 8. Build dependency, runtime dependency, IPC relationship, and startup ordering must never be conflated.
 9. CMake DOT is optional build-dependency evidence only. AST is deferred.
-10. No generated page is accepted without Lint, independent LLM Review, and human approval.
+10. No generated page is accepted without Lint, automatically delegated independent LLM Review through a host-native Subagent, and human approval.
 11. Approval binds to an exact Wiki diff/revision and relevant Source Manifest/source revisions; material changes invalidate it.
 12. Human edits and accepted history must be preserved. Conflicts stop automatic application.
 
@@ -31,6 +31,7 @@ All Skills MUST follow:
 - docs/skill-contracts.md
 - docs/failure-handling.md
 - docs/quality-gate.md
+- docs/independent-review-execution.md
 - docs/human-review.md
 - docs/language-policy.md
 
@@ -47,14 +48,14 @@ Keep Skill instructions and reusable prompt templates in this repository in Engl
 - Synthesize multiple processes: use skills/code-wiki-integrate/SKILL.md.
 - Answer an engineering question: use skills/code-wiki-query/SKILL.md.
 - Refresh knowledge after source changes: use skills/code-wiki-update/SKILL.md.
-- Perform strict semantic review: use skills/code-wiki-review/SKILL.md.
+- Perform strict semantic review: the orchestrator automatically delegates skills/code-wiki-review/SKILL.md to an isolated Subagent; do not invoke it as same-context self-review.
 - Check structure, links, manifests, evidence, and state consistency: use skills/code-wiki-lint/SKILL.md.
 
 ## Required quality workflow
 
-Init → Ingest per repository/process → Integrate → Lint → Independent Review → Human Review → Explicitly Authorized Publication.
+Init → Ingest per repository/process → Integrate → Lint → Automatic Independent Review Subagent → Human Review → Explicitly Authorized Publication.
 
-Query is read-only by default. Update produces a proposed diff and must pass the same quality gates. A missing check is NOT RUN, not PASS. A partial run cannot be published.
+Query is read-only by default. Update produces a proposed diff and must pass the same quality gates. After Lint PASS, the orchestrator MUST automatically delegate a fresh Subagent invocation using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Do not ask the user to open a second conversation or copy a prompt. If the host lacks native Subagent delegation or cannot prove isolation, mark Review NOT RUN and the Change Set BLOCKED; there is no manual-session or same-context fallback. A missing check is NOT RUN, not PASS. A partial run cannot be published.
 
 ## Safety and authority
 
