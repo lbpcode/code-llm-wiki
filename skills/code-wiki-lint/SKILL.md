@@ -6,15 +6,9 @@ description: Validate Code LLM Wiki structure, metadata, links, source manifest,
 # code-wiki-lint
 
 
-## Mandatory IDE host precondition
-
-Before running this workflow, confirm that the selected IDE AI plugin / host agent has passed the project-wide compatibility gate documented in docs/ide-plugin-requirements.md. The required capabilities are mandatory project requirements, not optional POC experiments.
-
-If there is no recorded PASS for the compatibility gate, or a required capability is unavailable, stop and report the exact gap. Do not bypass the requirement by directly calling a model API or silently skipping the affected workflow.
-
 ## Goal
 
-Perform a rule-based structural and provenance audit. This Skill does not require a custom TypeScript/Python runtime. Use the host agent's existing file listing, search, read, and Git capabilities.
+Perform a rule-based structural and provenance audit. This Skill does not require a custom TypeScript/Python runtime. Use available file listing, search, read, and Git operations.
 
 
 ## Output language
@@ -72,6 +66,6 @@ Return PASS / FAIL / PARTIAL, checks performed and checks not executable, findin
 
 ## Capability honesty
 
-If the host agent cannot list files, inspect Git revisions, or resolve source locators, report those checks as NOT RUN. Do not claim a deterministic check passed when the required operation was unavailable.
+If file listing, Git revision inspection, or source locator resolution is unavailable, report those checks as NOT RUN. Do not claim a deterministic check passed when the required operation was unavailable.
 
 This Skill is a rule-driven prompt workflow, not a compiled linter. A future optional script may automate repeatable checks, but it is out of scope for v0.1.0.
