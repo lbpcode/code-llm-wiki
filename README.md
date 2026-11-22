@@ -55,7 +55,7 @@ Init
 - CMake DOT 只能作为构建关系证据，不能据此推断运行时关系。
 - 平台共性必须有证据支撑；未知内容标记为 Unknown。
 - 重要 Claim 必须有逐条 Claim-Evidence 映射。
-- 未通过 Lint、独立 Review 和人工批准的候选内容不得作为正式知识。
+- 未通过 Lint、独立 Review、人工批准并显式发布的候选内容不得作为正式知识。
 - 人工审批绑定精确 Diff、Wiki revision 和相关 Source Manifest/source revisions；内容变化使审批失效。
 - 增量更新不得覆盖未经确认的人工修订。
 - 失败、跳过、不可访问和未执行的检查必须显式报告，不能伪装成 PASS。
