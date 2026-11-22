@@ -1,51 +1,57 @@
 # Code LLM Wiki
 
-A source-grounded engineering knowledge workflow for multi-repository, process-oriented software systems.
+一套以 **Skill / Prompt** 驱动的代码知识沉淀工作流，面向由多个独立进程/服务仓库组成的工程系统。
 
-## v0.1.0
+核心目标：从 Superproject、Git Submodules、源码和现有工程文档中提取有证据支撑的知识，以 Process 为基本单元组织，再整合成 System 级架构知识，最终沉淀到独立 Wiki 仓库。
 
-- Process-centric knowledge model with System-level synthesis.
-- Phase-one Platform Profiles: QNX, Android, and Linux (TBOX).
-- Deployment context is bound to each Platform Profile.
-- Portable Agent Skills and prompts, loaded and executed by an IDE AI plugin / host agent.
-- No model API client, inference service, or model-provider integration is implemented by this project; model selection, authentication, and invocation remain the responsibility of the IDE plugin and the organization's AI environment.
-- The IDE agent must satisfy the mandatory capability gate in docs/ide-plugin-requirements.md, including multi-repository access, separate Wiki worktree access, terminal/Git operations, and an isolated review session.
-- Markdown knowledge stored in a separate Git repository.
-- Optional CMake Graphviz DOT for build dependencies only.
-- AST deferred.
-- Strict quality gate: source evidence, independent LLM review, and human approval.
-- English Skill instructions with Simplified Chinese as the default generated Wiki/report language.
+## v0.1.0 设计范围
 
-## Repository layout
+- **知识模型**：Process 为核心，System 为跨进程知识整合层。
+- **仓库关系**：Repository 与 Process 为多对多关系。
+- **平台范围**：QNX、Android、Linux（TBOX）。
+- **平台建模**：通过 Platform Profile 区分平台共性和特有实现。
+- **源码证据**：重要结论关联仓库、commit 和源码位置。
+- **构建关系**：可选使用 CMake Graphviz DOT 辅助分析 Target 级依赖。
+- **AST**：第一阶段暂不引入。
+- **质量门禁**：源码证据、独立 LLM 复核、人工批准。
+- **输出语言**：Skill 指令以英文维护；Wiki 和报告默认简体中文。
 
-- SKILL.md: entry point and workflow router.
-- skills/: init, ingest, integrate, query, update, review, and lint.
-- docs/: architecture, schema, evidence, quality gate, language policy, IDE plugin requirements, and decisions.
-- references/: profile definitions, templates, and checklists.
-- examples/: illustrative examples only.
+## 工作流
 
-## Quick start
+```text
+Init
+  -> Ingest (per Repository / Process)
+  -> Integrate (System-level)
+  -> Lint
+  -> Independent Review
+  -> Human Approval
+  -> Wiki Update
+```
 
-1. Select/configure an IDE AI plugin / host agent that passes docs/ide-plugin-requirements.md.
-2. Open a workspace that provides simultaneous access to the source superproject and the separate Engineering Wiki worktree.
-3. Ensure the plugin can load the root Skill and individual Skills, read files, run permitted commands, and inspect Git state.
-4. Confirm it can start an isolated review session for code-wiki-review.
-5. Run the compatibility gate before the real-repository POC.
-6. Run code-wiki-init to inventory repositories, AGENTS.md files, pinned commits, and profiles.
-7. Run code-wiki-ingest per repository/process, then code-wiki-integrate for cross-process knowledge.
-8. Run code-wiki-lint and an independent code-wiki-review.
-9. Obtain human approval before committing, pushing, or merging Wiki changes.
+- `init`：盘点 Superproject、Submodules、AGENTS.md、commit 和平台信息。
+- `ingest`：分析单个 Repository / Process，生成带源码证据的知识页面。
+- `integrate`：整合多个 Process，形成 System 级架构知识。
+- `query`：基于 Wiki 和源码证据回答工程问题。
+- `update`：根据源码变化生成候选知识更新。
+- `review`：独立复核知识结论、证据和关系。
+- `lint`：检查结构、链接、证据、平台范围和一致性。
 
-The IDE plugin / host agent supplies model execution and workspace capabilities. A Skill is an instruction package; it does not itself grant filesystem, terminal, Git, or repository write permissions. This project does not add a TypeScript runtime, LangChain, MCP, a vector database, a custom agent framework, or a model API client.
+## 仓库结构
 
-## Key rules
+- `SKILL.md`：入口 Skill 与工作流路由。
+- `skills/`：7 个独立工作流 Skill。
+- `docs/`：架构、知识 Schema、证据规范、质量门禁、语言规范和设计决策。
+- `references/`：平台定义、知识模板、清单和审核规范。
+- `examples/`：示例材料。
 
-- Repository and Process are distinct; their relationship can be many-to-many.
-- Build dependencies, runtime dependencies, IPC, and startup ordering are different relationship types.
-- CMake DOT is build-graph evidence, not runtime architecture evidence.
-- Claims must be scoped to the applicable Platform Profile and pinned source commit.
-- Unknown information stays Unknown; no invented facts.
-- Generated knowledge is provisional until independent review and human approval.
-- Generated human-readable Wiki content defaults to Simplified Chinese; source identifiers and machine-readable metadata remain unchanged.
+## 核心约束
 
-See docs/architecture.md, docs/wiki-schema.md, docs/language-policy.md, and docs/ide-plugin-requirements.md.
+- 不按目录结构机械划分 Process。
+- 区分 Build Dependency、Runtime Dependency、IPC 和 Startup Ordering。
+- CMake DOT 只能作为构建关系证据，不能据此推断运行时关系。
+- 平台共性必须有证据支撑；未知内容标记为 Unknown。
+- 生成内容在通过独立复核和人工批准前，只是候选知识。
+- Wiki 与源码分开存储，并记录对应的源码版本。
+- 增量更新不得覆盖未经确认的人工修订。
+
+详见 `docs/architecture.md`、`docs/wiki-schema.md`、`docs/source-evidence.md`、`docs/quality-gate.md` 和 `docs/language-policy.md`。
