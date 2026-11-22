@@ -28,11 +28,13 @@ repositories:
   - id: <repository-id>
     path: <submodule-path>
     remote: <canonical-repository-url-or-omitted>
-    commit: <full-40-character-commit-sha>
-    branch: <informational-branch-name>
+    expected_commit: <full-40-character-superproject-pinned-sha>
+    checked_out_commit: <full-40-character-actual-sha-or-null>
     checkout_status: matches_pin # matches_pin | mismatch | uninitialized | inaccessible
+    branch: <informational-branch-name>
     agents_files:
-      - AGENTS.md
+      - path: AGENTS.md
+        read_status: read # read | not_found | inaccessible | not_read
 processes:
   - id: <process-id>
     display_name: <display-name>
@@ -56,8 +58,9 @@ process_profile_mappings:
 ## Rules
 
 - Pin the superproject and every relevant repository to the exact full commit SHA inspected.
-- Record submodule checkout state and expected pin; a mismatch blocks ingestion for that repository.
-- Record AGENTS.md paths that were actually discovered and read.
+- For submodules, record both the expected pinned commit and actual checked-out commit. A mismatch blocks ingestion for that repository.
+- For standalone source repositories, record the inspected commit as both expected_commit and checked_out_commit when applicable.
+- Record AGENTS.md paths and whether each was read, absent, or inaccessible.
 - Repository-to-Process and Process-to-Profile are separate mappings.
 - A repository may implement multiple processes; a process may span multiple repositories.
 - Process profile support must not be inferred from repository-level profile observations.
