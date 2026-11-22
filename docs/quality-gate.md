@@ -52,7 +52,7 @@ Lint result is PASS / FAIL / PARTIAL. Every check is PASS / FAIL / NOT RUN with 
 
 After Lint PASS, the orchestrator MUST automatically delegate a fresh Subagent invocation using `references/review-agent-task-template.md` and `skills/code-wiki-review/SKILL.md`. The reviewer must be a separate model invocation and fresh context from generation. Prefer a different model when available.
 
-The host must expose native Subagent/Agent delegation and return a completed result. The Skill package does not create a new model context by itself. The reviewer must not inherit the Generation Agent transcript or hidden reasoning. There is no manual new-session or same-context fallback. If the host cannot launch the Subagent or prove isolation, Review is NOT RUN and the Change Set remains BLOCKED.
+The host must expose native Subagent/Agent delegation and return a completed result. The Skill package does not create a new model context by itself. The reviewer must not inherit the Generation Agent transcript or hidden reasoning. There is no manual new-session or same-context fallback. If the host cannot launch the Subagent or prove isolation, set Review execution status to `NOT_RUN` (or `INVALID` for a returned but invalid report), keep Review decision null, leave Change Status at `pending_llm_review`, and set Run outcome to `BLOCKED`.
 
 The reviewer must:
 - receive exact source revisions, relevant source excerpts, candidate pages, Claim-Evidence mapping, Page-Source Map, and prior findings;
@@ -61,7 +61,7 @@ The reviewer must:
 - challenge broad terms such as always, never, all platforms, required, and guaranteed;
 - report exact claim, evidence, problem, severity, and correction.
 
-If independent context cannot be established, report NOT RUN and block the Change Set before human approval. Generator self-review is not independent. The orchestrator must wait for the completed Subagent report and validate its candidate/source snapshot binding. See docs/independent-review-execution.md, references/review-agent-task-template.md, and references/review-report-template.md.
+If independent context cannot be established, report Review execution status `NOT_RUN` and Review decision null; keep Change Status at `pending_llm_review` and set Run outcome to `BLOCKED` before human approval. Generator self-review is not independent. The orchestrator must wait for the completed Subagent report and validate its candidate/source snapshot binding. See docs/independent-review-execution.md, references/review-agent-task-template.md, and references/review-report-template.md.
 
 ## 7. Severity
 
