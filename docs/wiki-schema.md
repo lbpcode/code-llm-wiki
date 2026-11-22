@@ -146,6 +146,7 @@ Use the following default layout in the Engineering Wiki repository:
           update-report.md
           lint-report.md
           independent-review.md
+          human-review-summary.md
           human-decision.md
       system/
       processes/
