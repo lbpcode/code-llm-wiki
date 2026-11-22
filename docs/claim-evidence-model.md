@@ -15,7 +15,7 @@ For v0.1.0, store:
 
 Human-readable Wiki pages reference stable Claim IDs in frontmatter or inline metadata. Do not duplicate the full Claim/Evidence record into multiple pages; link to the canonical record.
 
-For approval binding, compute `source_manifest_digest` as SHA-256 over the exact UTF-8 bytes (LF line endings) of the committed `wiki/_meta/source-manifest.yaml`. Compute `diff_digest` as SHA-256 over the exact patch bytes for the recorded base/candidate Wiki commits. Store both digests in the Change Set and Human Decision record; do not embed a self-referential digest inside the manifest.
+For approval binding, compute `source_manifest_digest` as SHA-256 over the exact UTF-8 bytes (LF line endings) of the committed `wiki/_meta/source-manifest.yaml`. Compute `diff_digest` as SHA-256 over the exact output bytes of `git diff --binary --no-ext-diff --no-renames <base_wiki_commit> <candidate_wiki_commit>`. Store both digests in the Change Set and Human Decision record; do not embed a self-referential digest inside the manifest.
 
 ## 3. Claim
 
