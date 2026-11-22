@@ -15,7 +15,7 @@ Every independently invokable Skill MUST follow this contract:
 9. Never self-approve, bypass required review, or publish without explicit human authorization.
 10. Retain prior accepted content and human edits; stop on unresolved conflicts.
 
-The detailed shared rules live in docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/quality-gate.md, docs/human-review.md, and docs/failure-handling.md.
+The detailed shared rules live in docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/quality-gate.md, docs/human-review.md, and docs/failure-handling.md. Use references/init-report-template.md, references/ingestion-report-template.md, references/integration-report-template.md, references/update-report-template.md, references/lint-report-template.md, and references/review-report-template.md for run reports.
 
 ## 2. Skill contract matrix
 
@@ -89,10 +89,10 @@ Review must run in a separate model invocation and fresh context. The reviewer m
 
 ## 4. Handoff rules
 
-- init hands a pinned manifest and candidate mappings to ingest.
-- ingest hands reviewed Process pages and Claim-Evidence mappings to integrate.
+- init hands a pinned manifest and candidate mappings to ingest; its report uses references/init-report-template.md.
+- ingest hands Process pages with explicit review/content status and Claim-Evidence mappings to integrate; candidate pages remain visibly unapproved.
 - integrate hands candidate System pages to lint and review.
-- update hands an impact-scoped candidate diff to lint and review.
+- update hands an impact-scoped candidate diff and references/update-report-template.md report to lint and review.
 - lint must pass before independent review is considered complete.
 - review PASS is required before human review.
 - human approval is handled under docs/human-review.md; no Skill substitutes for it.
