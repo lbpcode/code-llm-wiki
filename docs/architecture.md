@@ -22,6 +22,8 @@ Contains the top-level repository, Git submodules, project documentation, and re
 
 A separate Git repository containing Markdown knowledge, Source Manifest, Claim-Evidence records, Page-Source Map, review reports, human decision records, and update history. It is not embedded as a submodule in the source superproject by default.
 
+The default metadata layout is defined in docs/wiki-schema.md: keep `source-manifest.yaml`, `page-source-map.yaml`, individual Claim/Evidence records, and per-change reports/decisions under `wiki/_meta/`; keep human-readable pages under their entity directories.
+
 The Wiki is derived knowledge, not a replacement for source code. Every generated update is proposed as a diff and passes evidence validation, independent review, and human approval before publication.
 
 ## 3. Knowledge production workflow
