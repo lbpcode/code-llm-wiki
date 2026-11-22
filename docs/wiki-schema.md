@@ -140,8 +140,10 @@ Use the following default layout in the Engineering Wiki repository:
         evidence/<evidence-id>.yaml
         changes/<change-id>/
           change-set.yaml
+          init-report.md
           ingestion-report.md
           integration-report.md
+          update-report.md
           lint-report.md
           independent-review.md
           human-decision.md
