@@ -88,12 +88,13 @@ The reviewer report MUST record:
 
 Do not include hidden chain-of-thought. Provide concise findings and verifiable evidence only.
 
-The orchestrator MUST reject a report as invalid and set Review execution status to `INVALID`, Review decision to null, and Run outcome to `BLOCKED` if:
-- the host cannot establish a fresh independent invocation;
-- the report is missing or identifies the wrong candidate/source snapshot;
+If no isolated invocation can be launched, the invocation fails or times out, or no completed report is returned, set Review execution status to `NOT_RUN`, Review decision to null, keep Change Status at `pending_llm_review`, and set Run outcome to `BLOCKED`.
+
+If a report is returned but fails validation, the orchestrator MUST reject it and set Review execution status to `INVALID`, Review decision to null, keep Change Status at `pending_llm_review`, and set Run outcome to `BLOCKED`. Invalid-report conditions include:
+- the report does not establish a fresh independent invocation / isolation;
+- the report identifies the wrong candidate or source snapshot;
 - the reviewer modified the candidate or source;
-- the report omits mandatory scope without declaring a limitation;
-- the invocation failed, timed out, or returned no completed result.
+- the report omits mandatory scope without declaring a limitation.
 
 ## 7. Retry and state rules
 
