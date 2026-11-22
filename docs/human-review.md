@@ -54,7 +54,7 @@ A rejected candidate is immutable audit history. Do not silently reopen or rewri
 
 A human approval record MUST include:
 
-- `decision_id`;
+- `human_decision_id`;
 - `change_id`;
 - `decision`;
 - `reviewer` (human identity as configured by the project);
