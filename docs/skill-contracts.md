@@ -23,7 +23,7 @@ The detailed shared rules live in docs/wiki-schema.md, docs/claim-evidence-model
 |---|---|---|---|---|
 | init | Source superproject, Wiki destination, Git/submodule state | Source Manifest, repository inventory, candidate mappings, Wiki skeleton, init report | Creates inventory and skeleton in authorized Wiki only | Missing source access, unsafe Git state, unresolved source snapshot; unresolved mappings stay candidate/unknown |
 | ingest | Manifest, repository ID, pinned commit, process/profile scope, applicable instructions | Process pages, claims/evidence, page-source map entries, ingestion report | Candidate Wiki pages only | Commit mismatch, missing required scope, inaccessible repository, sensitive data exposure |
-| integrate | Reviewed Process pages, manifest, profile mappings, interface evidence | System pages, relationship records, interface/workflow pages, integration report | Candidate System-level Wiki pages only | Missing prerequisites or unresolved critical relationship evidence; produce gap report instead |
+| integrate | Process pages with explicit review/content status, manifest, profile mappings, interface evidence | System pages, relationship records, interface/workflow pages, integration report | Candidate System-level Wiki pages only | Missing prerequisites or unresolved critical relationship evidence; produce gap report instead |
 | query | User question, accepted Wiki snapshot, relevant page/source references | Answer with scope, citations, uncertainty, and gaps | Read-only | No accepted evidence; report unknown rather than fabricate |
 | update | Previous manifest/map, current source revisions, Git diff/history | Impact map, stale claims, proposed page diff, update report | Candidate changes only; preserve human edits | Cannot establish old/new revisions, conflict with human edits, or impact scope unknown |
 | lint | Candidate Wiki tree, schema, manifest, map, source access where available | PASS/FAIL/PARTIAL Lint report | Read-only | Required files/check capability unavailable; report NOT RUN and block gate |
@@ -61,7 +61,7 @@ Inputs: question and accepted Wiki snapshot.
 
 Outputs: direct answer, Process/Profile scope, evidence references, assumptions, limitations, and unknowns.
 
-Default to published content only. Exclude draft, pending, rejected, stale, or contradicted claims from unqualified factual answers. Do not modify the Wiki.
+Default to pages with content_status accepted and owning Change Set status published. Exclude draft, pending, rejected, stale, or contradicted claims from unqualified factual answers. Do not modify the Wiki.
 
 ### update
 
