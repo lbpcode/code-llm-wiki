@@ -1,0 +1,43 @@
+# Lint Report
+
+## Metadata
+
+- Report ID:
+- Timestamp:
+- Candidate change ID:
+- Wiki base/candidate commit:
+- Source Manifest version/digest:
+- Scope:
+- Overall result: PASS / FAIL / PARTIAL
+
+## Check results
+
+| Check ID | Check | Result | Scope | Evidence / exact location | Finding |
+|---|---|---|---|---|---|
+| LINT-001 | Required files and schema | PASS / FAIL / NOT RUN | | | |
+| LINT-002 | Stable IDs and metadata | PASS / FAIL / NOT RUN | | | |
+| LINT-003 | Manifest and pinned commits | PASS / FAIL / NOT RUN | | | |
+| LINT-004 | Claim-Evidence mapping | PASS / FAIL / NOT RUN | | | |
+| LINT-005 | Locator resolution | PASS / FAIL / NOT RUN | | | |
+| LINT-006 | Page-source map consistency | PASS / FAIL / NOT RUN | | | |
+| LINT-007 | Internal links and references | PASS / FAIL / NOT RUN | | | |
+| LINT-008 | Profile and relationship scope | PASS / FAIL / NOT RUN | | | |
+| LINT-009 | Stale / conflicting claims | PASS / FAIL / NOT RUN | | | |
+| LINT-010 | Secret / sensitive-data scan | PASS / FAIL / NOT RUN | | | |
+
+## Findings
+
+| ID | Severity | File / locator | Problem | Required correction |
+|---|---|---|---|---|
+
+## Checks not executable
+
+For every NOT RUN check, state why it could not run and whether it blocks progression.
+
+## Recommendation
+
+- PASS: all required checks ran and passed.
+- FAIL: a required deterministic check found an unresolved violation.
+- PARTIAL: one or more checks could not execute or coverage is incomplete.
+
+Lint is not semantic approval. A Lint PASS is only permission to proceed to independent LLM Review.
