@@ -27,7 +27,7 @@ The detailed shared rules live in docs/wiki-schema.md, docs/claim-evidence-model
 | query | User question, accepted Wiki snapshot, relevant page/source references | Answer with scope, citations, uncertainty, and gaps | Read-only | No accepted evidence; report unknown rather than fabricate |
 | update | Previous manifest/map, current source revisions, Git diff/history | Impact map, stale claims, proposed page diff, update report | Candidate changes only; preserve human edits | Cannot establish old/new revisions, conflict with human edits, or impact scope unknown |
 | lint | Candidate Wiki tree, schema, manifest, map, source access where available | PASS/FAIL/PARTIAL Lint report | Read-only | Required files/check capability unavailable; report NOT RUN and block gate |
-| review | Exact candidate snapshot, source revisions/excerpts, claim map, review criteria, fresh host-native Subagent invocation | Independent PASS/REVISE/REJECT report with invocation and snapshot binding | Read-only | Host lacks Subagent delegation, isolation cannot be proven, or source evidence unavailable; report NOT RUN and block |
+| review | Exact candidate snapshot, source revisions/excerpts, claim map, review criteria, fresh host-native Subagent invocation | Independent execution status plus PASS/REVISE/REJECT decision only for a valid completed report | Read-only | Host lacks Subagent delegation or invocation fails: execution NOT_RUN; invalid returned report: INVALID; decision null; Change Status remains pending_llm_review; Run outcome BLOCKED |
 
 ## 3. Detailed input/output requirements
 
@@ -85,7 +85,7 @@ Inputs: exact candidate snapshot, source revisions and relevant excerpts, claim 
 
 Outputs: review metadata, independence declaration, pages/claims reviewed, findings with severity/evidence, unsupported/unknown claims, recommendation, and limitations.
 
-Review MUST be automatically delegated by the orchestrator to a host-native Subagent in a separate model invocation and fresh context. The reviewer must not inherit the generator transcript, must not trust the generator's conclusions, and must be read-only. If the host cannot delegate an isolated Subagent, return NOT RUN and block; there is no manual-session or same-context fallback. It must not approve, merge, or publish.
+Review MUST be automatically delegated by the orchestrator to a host-native Subagent in a separate model invocation and fresh context. The reviewer must not inherit the generator transcript, must not trust the generator's conclusions, and must be read-only. If the host cannot delegate an isolated Subagent, set execution status NOT_RUN, decision null, keep Change Status at pending_llm_review, and set Run outcome BLOCKED; an invalid returned report uses execution status INVALID. There is no manual-session or same-context fallback. It must not approve, merge, or publish.
 
 ## 4. Handoff rules
 
