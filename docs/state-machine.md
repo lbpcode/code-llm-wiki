@@ -64,7 +64,19 @@ Canonical values:
 
 A page's content status is not the same as a Change Set status. The candidate's workflow state is recorded by its Change Set; publication changes page content status to accepted. Source changes can make accepted pages stale without deleting their historical acceptance record.
 
-## 5. Change-set status
+Page content transitions:
+
+| From | To | Condition |
+|---|---|---|
+| candidate | accepted | The owning Change Set is approved and explicitly published |
+| accepted | stale | Supporting source evidence changes or becomes unavailable |
+| accepted | superseded | A replacement page/change is accepted and published |
+| stale | accepted | A new candidate revalidates affected claims, passes all gates, and is published |
+| stale | superseded | A corrected replacement is published |
+
+A rejected candidate never changes an already accepted page. A proposed deletion keeps the current accepted page until the deletion Change Set is approved and published; the old page then becomes superseded or is retained as a historical page.
+
+## 6. Change-set status
 
 Canonical values:
 
@@ -84,7 +96,7 @@ Canonical values:
 
 A failed or unavailable check MUST NOT be represented as PASS. If a required check cannot run, the candidate remains blocked or the check result is PARTIAL; it cannot advance to human approval.
 
-## 6. Review decisions
+## 7. Review decisions
 
 LLM review uses exactly:
 
@@ -102,7 +114,7 @@ Human decisions use exactly:
 
 Only an authorized human can create a human decision. LLM PASS is a recommendation, not an approval.
 
-## 7. Gate order and invariants
+## 8. Gate order and invariants
 
 1. Generate candidate pages and reports.
 2. Run structural/provenance Lint.
@@ -122,7 +134,7 @@ Invariants:
 - No Skill may approve its own generated content or silently publish/merge it.
 - A missing independent review session is NOT RUN/BLOCKED, never PASS.
 
-## 8. Approval binding and invalidation
+## 9. Approval binding and invalidation
 
 Each approval record MUST bind:
 - change_id;
@@ -137,7 +149,7 @@ Each approval record MUST bind:
 
 Approval becomes stale if the approved Wiki diff/candidate commit, reviewed page scope, relevant source revision, relevant manifest mapping, review report, or impact set changes. An unrelated source repository update need not invalidate approval if the approved scope's source snapshot and dependencies are demonstrably unchanged. Record that impact assessment; when uncertain, invalidate conservatively.
 
-## 9. Re-review scope
+## 10. Re-review scope
 
 After a change request or stale approval:
 - rerun Lint over the complete candidate Wiki structure and all affected references;
