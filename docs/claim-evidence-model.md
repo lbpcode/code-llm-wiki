@@ -13,7 +13,7 @@ For v0.1.0, store:
 - Page-Source Map at `wiki/_meta/page-source-map.yaml`;
 - Change Set and run reports under `wiki/_meta/changes/<change-id>/`.
 
-Human-readable Wiki pages reference stable Claim IDs in frontmatter or inline metadata. Do not duplicate the full Claim/Evidence record into multiple pages; link to the canonical record.
+Human-readable Wiki pages reference stable Claim IDs in frontmatter or inline metadata. Do not duplicate the full Claim/Evidence record into multiple pages; link to the canonical record.\n\nFor approval binding, compute `source_manifest_digest` as SHA-256 over the exact UTF-8 bytes (LF line endings) of the committed `wiki/_meta/source-manifest.yaml`. Compute `diff_digest` as SHA-256 over the exact patch bytes for the recorded base/candidate Wiki commits. Store both digests in the Change Set and Human Decision record; do not embed a self-referential digest inside the manifest.
 
 ## 3. Claim
 
