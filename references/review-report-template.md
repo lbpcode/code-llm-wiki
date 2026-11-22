@@ -9,15 +9,17 @@
 - Base Wiki commit:
 - Source Manifest version/digest:
 - Relevant source revisions:
-- Reviewer model/session identifier (when available):
-- Generator model/session identifier (when available):
+- Reviewer Subagent invocation/run ID:
+- Reviewer Skill revision:
+- Reviewer model identifier (when available):
+- Host-native delegation capability:
+- Fresh context: true / false:
+- Generator transcript inherited: true / false:
+- Read-only: true / false:
 
 ## Independence declaration
 
-- [ ] Fresh, separate invocation/context was used.
-- [ ] Reviewer did not rely on generator conclusions as trusted facts.
-- [ ] Exact source revisions and relevant evidence were available.
-- [ ] If independence could not be established, result is NOT RUN and no PASS is issued.
+Record whether the reviewer was launched by a host-native Subagent delegation in a fresh context, without inheriting the generator transcript, and with read-only access. If any mandatory condition is false or unverified, result is NOT RUN and no PASS is issued.
 
 ## Review scope
 
@@ -54,6 +56,7 @@ List each claim that cannot be verified, with the source inspection needed to re
 - PASS: no BLOCKER or MAJOR findings.
 - REVISE: fixable issues remain.
 - REJECT: fundamental reliability problems exist.
+- NOT RUN: the host could not provide an isolated Subagent invocation, the invocation failed, or snapshot binding could not be verified.
 
 ## Reviewer limitations
 
