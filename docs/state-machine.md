@@ -94,6 +94,28 @@ Canonical values:
 | `rejected` | Candidate was rejected; it is immutable audit history | terminal |
 | `superseded` | A later accepted revision replaces this published revision | terminal |
 
+Transition guards:
+
+| Transition | Required condition |
+|---|---|
+| draft → lint_failed | Lint reports an unresolved required failure |
+| draft → pending_llm_review | Full required Lint scope returns PASS |
+| lint_failed → draft | Blocking Lint findings have been corrected |
+| pending_llm_review → llm_changes_requested | Independent reviewer returns REVISE |
+| pending_llm_review → pending_human_review | Independent reviewer returns PASS with no BLOCKER/MAJOR findings |
+| pending_llm_review → rejected | Independent reviewer returns REJECT |
+| llm_changes_requested → draft | Findings are acknowledged and a revised candidate is prepared |
+| pending_human_review → human_changes_requested | Human records request_changes |
+| pending_human_review → approved | Human records approve for the exact snapshot |
+| pending_human_review → rejected | Human records reject |
+| human_changes_requested → draft | Requested changes are accepted for implementation |
+| approved → published | Human explicitly authorizes publication and the exact approved candidate is published |
+| approved → approval_stale | A bound revision, diff, scope, or relevant source changes |
+| approval_stale → draft | Impact is re-evaluated and a new candidate is prepared |
+| published → superseded | A later accepted revision replaces it |
+
+A required check that is NOT RUN or PARTIAL cannot satisfy the Lint PASS guard. LLM Review must run independently; a missing independent context leaves the change blocked. Human approval is never inferred from an LLM decision.
+
 A failed or unavailable check MUST NOT be represented as PASS. If a required check cannot run, the candidate remains blocked or the check result is PARTIAL; it cannot advance to human approval.
 
 ## 7. Review decisions
