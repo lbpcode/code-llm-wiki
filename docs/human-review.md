@@ -10,7 +10,7 @@ The three quality gates have different responsibilities. Independent LLM Review 
 | Independent LLM Review | Automatically delegated host-native Subagent with fresh context | Challenge factual claims, evidence fit, scope, omissions, and contradictions | No |
 | Human Review | Authorized human reviewer | Judge engineering correctness, usefulness, unresolved risk, and exact proposed diff | Yes, for the reviewed snapshot |
 
-An LLM PASS is not a human approval. A human approval does not excuse missing required evidence or a skipped independent review. The orchestrator must automatically launch and await the Subagent; the user is not asked to manually open another conversation. If the host cannot delegate an isolated Subagent, the Change Set remains BLOCKED.
+An LLM PASS is not a human approval. A human approval does not excuse missing required evidence or a skipped independent review. The orchestrator must automatically launch and await the Subagent; the user is not asked to manually open another conversation. If the host cannot delegate an isolated Subagent, set Review execution status to NOT_RUN, leave Review decision null, keep Change Status at pending_llm_review, and set Run outcome to BLOCKED; do not present the candidate for human approval.
 
 ## 2. Required review package
 
