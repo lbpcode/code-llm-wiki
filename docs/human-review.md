@@ -68,7 +68,9 @@ A human approval record MUST include:
 - `comments`;
 - `waivers` with explicit reason, scope, and expiry/revalidation condition where applicable.
 
-A waiver cannot override fabricated evidence, a BLOCKER, or a mandatory gate that did not run.\n\nFor reproducible binding, compute `source_manifest_digest` as SHA-256 over the exact UTF-8 bytes (LF line endings) of the committed `wiki/_meta/source-manifest.yaml`. Compute `diff_digest` as SHA-256 over the exact patch bytes between the recorded base and candidate Wiki commits. The Change Set and Human Decision record must store the same values.
+A waiver cannot override fabricated evidence, a BLOCKER, or a mandatory gate that did not run.
+
+For reproducible binding, compute `source_manifest_digest` as SHA-256 over the exact UTF-8 bytes (LF line endings) of the committed `wiki/_meta/source-manifest.yaml`. Compute `diff_digest` as SHA-256 over the exact patch bytes between the recorded base and candidate Wiki commits. The Change Set and Human Decision record must store the same values.
 
 ## 5. Approval invalidation
 
