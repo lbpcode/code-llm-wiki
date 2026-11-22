@@ -128,7 +128,34 @@ Every substantive page is mapped to:
 
 This reverse index is required for reliable incremental updates. See references/page-source-map-template.md.
 
-## 10. State domains
+## 10. Canonical metadata storage
+
+Use the following default layout in the Engineering Wiki repository:
+
+    wiki/
+      _meta/
+        source-manifest.yaml
+        page-source-map.yaml
+        claims/<claim-id>.yaml
+        evidence/<evidence-id>.yaml
+        changes/<change-id>/
+          change-set.yaml
+          ingestion-report.md
+          integration-report.md
+          lint-report.md
+          independent-review.md
+          human-decision.md
+      system/
+      processes/
+      repositories/
+      interfaces/
+      workflows/
+      platform-profiles/
+      decisions/
+
+Keep human-readable knowledge pages under their entity directories. Keep machine-readable provenance and workflow records under `wiki/_meta/`. Store only the reports applicable to a change. This layout is the v0.1.0 default; a different layout requires an explicit schema decision and corresponding template updates.
+
+## 11. State domains
 
 Keep these independent:
 - Claim status: verified / inferred / unknown / stale / contradicted.
@@ -140,7 +167,7 @@ Keep these independent:
 
 See docs/state-machine.md for transition rules and invariants.
 
-## 11. Cross-profile rules
+## 12. Cross-profile rules
 
 - A profile-specific claim must name its profile.
 - A common claim must be supported in every applicable profile.
@@ -148,7 +175,7 @@ See docs/state-machine.md for transition rules and invariants.
 - If a profile has not been inspected, its behavior is unknown.
 - Do not create profiles outside qnx, android, linux-tbox without an explicit project decision.
 
-## 12. Change and approval metadata
+## 13. Change and approval metadata
 
 Each candidate Change Set records change_id, base_wiki_commit, candidate_wiki_commit or diff_digest, changed pages/claims, source manifest version/digest, relevant source revisions, Lint report, independent Review report, current change status, and human_decision_id.
 
