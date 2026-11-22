@@ -11,7 +11,7 @@ Build accurate process-level knowledge from pinned source revisions. Prefer unde
 
 ## Normative references
 
-Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/source-evidence.md, docs/state-machine.md, docs/failure-handling.md, and docs/language-policy.md. Use references/process-template.md, references/claim-template.md, and references/ingestion-report-template.md.
+Follow docs/skill-contracts.md, docs/independent-review-execution.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/source-evidence.md, docs/state-machine.md, docs/failure-handling.md, and docs/language-policy.md. Use references/process-template.md, references/claim-template.md, and references/ingestion-report-template.md.
 
 ## Required inputs
 
@@ -40,7 +40,7 @@ If the source commit does not match the manifest, stop ingestion for that reposi
 12. Mark each Claim verified, inferred, unknown, stale, or contradicted. Inferred claims require explicit reasoning; unknown claims require a gap description.
 13. Inspect both sides of interfaces when possible. A one-sided interface remains candidate/unknown.
 14. Create Process pages and substantial Interface/Workflow candidates using the templates. Update Page-Source Map entries only for sources actually inspected.
-15. Run Lint and request independent Review. Keep all generated content as a candidate diff until human approval.
+15. Run Lint. If Lint PASS, the orchestrator MUST automatically delegate a fresh host-native Review Subagent using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Wait for a completed, snapshot-bound report. Do not ask the user to open a second conversation. If Subagent delegation/isolation is unavailable, mark Review NOT RUN and the Change Set BLOCKED. Keep all generated content as a candidate diff until human approval.
 
 ## Required outputs
 
@@ -50,7 +50,7 @@ If the source commit does not match the manifest, stop ingestion for that reposi
 - Interface/Workflow candidates where needed.
 - Page-Source Map entries.
 - Ingestion report with coverage, failures, unknowns, and open questions.
-- Proposed Wiki diff.
+- Proposed Wiki diff.\n- Lint report and automatically delegated independent Review report, or explicit BLOCKED/NOT RUN result.
 
 ## Failure behavior
 
