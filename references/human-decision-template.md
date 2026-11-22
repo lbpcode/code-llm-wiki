@@ -1,7 +1,7 @@
 # Human Review Decision Record
 
 ```yaml
-decision_id: <stable-decision-id>
+human_decision_id: <stable-decision-id>
 change_id: <candidate-change-id>
 decision: approve # approve | request_changes | reject
 reviewer: <authorized-human-identity>
