@@ -10,7 +10,7 @@ The workflow MUST NOT ask the user to manually open a second IDE conversation, c
 
 A Skill or Prompt cannot create a new model context by itself. The IDE/Agent host must expose a native delegation capability that can start a separate model invocation with a fresh context and return its result to the orchestrator. This is a host capability requirement, not a custom runtime requirement of Code LLM Wiki.
 
-If the host does not provide this capability, or the invocation cannot prove context isolation, independent Review is `NOT RUN` and the Change Set is `BLOCKED`. Do not claim PASS, proceed to human approval, or silently fall back to same-context self-review.
+If the host does not provide this capability, or the invocation cannot prove context isolation, set Review execution status to `NOT_RUN` (or `INVALID` when an untrusted report was returned), leave Review decision null, keep Change Status at `pending_llm_review`, and set Run outcome to `BLOCKED`. Do not write `BLOCKED` into Change Status, claim PASS, proceed to human approval, or silently fall back to same-context self-review.
 
 ## 2. Roles
 
@@ -39,7 +39,7 @@ The host may expose these capabilities under any native name. This specification
 After a candidate-producing workflow (Ingest, Integrate, or Update):
 
 1. The orchestrator runs the required Lint scope.
-2. If Lint is FAIL, fix findings before proceeding. If Lint is PARTIAL or a required check is NOT RUN, block the Change Set.
+2. If Lint is FAIL, fix findings before proceeding. If Lint is PARTIAL or a required check is NOT RUN, do not enter `pending_llm_review`: retain Change Status `draft` (or `lint_failed` when blocking findings exist) and set Run outcome to `PARTIAL` or `BLOCKED` as appropriate.
 3. If Lint is PASS, the orchestrator creates an immutable Review Package for the exact candidate snapshot.
 4. The orchestrator automatically delegates a new Subagent invocation using the task contract in `references/review-agent-task-template.md` and the `code-wiki-review` Skill.
 5. The orchestrator waits for the Subagent to finish. It must not treat an invocation request/accepted state as a completed review.
@@ -88,7 +88,7 @@ The reviewer report MUST record:
 
 Do not include hidden chain-of-thought. Provide concise findings and verifiable evidence only.
 
-The orchestrator MUST reject a report as invalid / NOT RUN if:
+The orchestrator MUST reject a report as invalid and set Review execution status to `INVALID`, Review decision to null, and Run outcome to `BLOCKED` if:
 - the host cannot establish a fresh independent invocation;
 - the report is missing or identifies the wrong candidate/source snapshot;
 - the reviewer modified the candidate or source;
@@ -101,7 +101,7 @@ The orchestrator MUST reject a report as invalid / NOT RUN if:
 - Never reuse a PASS report for a changed candidate, changed source snapshot, or changed review scope.
 - A reviewer REVISE result returns the Change Set to draft; Lint and independent Review both run again after correction.
 - A reviewer REJECT result is terminal for that Change Set; a new attempt receives a new Change ID.
-- If the host cannot launch the Subagent, returns an error, or cannot prove isolation, record `NOT RUN` and keep the Change Set blocked.
+- If the host cannot launch the Subagent, returns an error, or cannot prove isolation, set Review execution status to `NOT_RUN`, Review decision to null, keep Change Status at `pending_llm_review`, and set Run outcome to `BLOCKED`.
 - There is no manual new-session fallback and no same-context fallback.
 
 ## 8. Boundary
