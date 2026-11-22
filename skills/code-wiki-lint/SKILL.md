@@ -1,58 +1,87 @@
 ---
 name: code-wiki-lint
-description: Validate Code LLM Wiki structure, metadata, links, source manifest, evidence locators, profile scopes, and stale references before semantic review or human approval.
+description: Validate Code LLM Wiki structure, metadata, mappings, links, Claim-Evidence records, Page-Source Map, profile scopes, state consistency, and stale references before semantic review or human approval.
 ---
 
 # code-wiki-lint
 
-
 ## Goal
 
-Perform a rule-based structural and provenance audit. This Skill does not require a custom TypeScript/Python runtime. Use available file listing, search, read, and Git operations.
+Perform a rule-driven structural and provenance audit. This Skill does not require a custom TypeScript/Python runtime. Use available file listing, search, read, and Git operations.
 
+## Normative references
 
-## Output language
+Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/quality-gate.md, docs/failure-handling.md, and docs/language-policy.md. Use references/lint-report-template.md.
 
-Follow `docs/language-policy.md`. Unless the user explicitly requests another language, write generated Wiki pages, query answers, review findings, and deliverables in **Simplified Chinese**. Preserve source identifiers, API names, paths, commands, configuration keys, and source excerpts verbatim. Keep schema keys, stable IDs, profile IDs, relationship types, and status enums in canonical English.
+## Inputs
+
+- Candidate Wiki tree and base revision.
+- Source Manifest.
+- Claim-Evidence records.
+- Page-Source Map.
+- Available pinned source repositories or source locator access.
+- Change ID and declared review scope.
+
+If a required input is missing, report the affected checks as FAIL or NOT RUN/PARTIAL according to whether the missing input is itself a schema violation or an unavailable capability.
 
 ## Checks
 
 ### 1. Repository and manifest
 
-- Required manifest exists.
-- Every repository has a stable ID and full pinned commit SHA.
+- Required manifest exists and schema is valid.
+- Every in-scope repository has stable ID and full pinned commit SHA.
 - Submodule paths and pins match the inspected superproject state.
-- AGENTS.md inventory is recorded.
-- No credentials or secrets are present.
-- Only approved phase-one profiles are used unless explicitly authorized.
+- Checkout mismatch/uninitialized/inaccessible states are explicit.
+- AGENTS.md inventory and read status are recorded.
+- No credentials, tokens, private keys, or sensitive payloads are copied.
+- Only approved phase-one profiles are used.
 
-### 2. Page metadata
+### 2. Mapping integrity
 
-- Every substantive page has stable ID, title, type, and status.
-- Process/profile pages reference valid IDs.
-- Source revisions are recorded.
-- Profile-specific pages use the correct profile ID.
+- Repository-to-Process mappings are explicit and many-to-many.
+- Process-to-Profile mappings are separate from Repository inventory.
+- Mapping status and evidence are present.
+- Unsupported or unknown mappings are not represented as confirmed.
+- Every referenced repository/process/profile ID resolves.
+
+### 3. Page metadata and schema
+
+- Every substantive page has stable ID, title, type, status, and source manifest/revision metadata.
+- Process/profile pages reference valid IDs and correct scope.
 - Common pages do not contain unsupported profile assumptions.
+- Claim IDs and relationship IDs are unique and resolve.
+- Change and approval metadata use canonical status values.
 
-### 3. Evidence
+### 4. Claim-Evidence integrity
 
-- Every material claim has an evidence locator.
-- Repository ID and commit resolve.
-- Paths and line/symbol/configuration locators exist at the pinned revision where the host can verify them.
-- Evidence type is appropriate to the claim.
-- Stale evidence is not marked verified.
-- Build graph evidence is not used as runtime evidence.
+- Every material claim has a stable ID, atomic statement, scope, profile IDs, and status.
+- Every non-unknown material claim has one or more evidence references.
+- Evidence has repository ID, full commit SHA, path, locator, type, profile scope, status, and checked timestamp.
+- Evidence-to-claim relation is supports/contradicts/qualifies.
+- Inferred claims include reasoning and assumptions.
+- Unknown claims identify evidence gaps.
+- Evidence locators resolve at the pinned revision where the host can verify them.
+- Build graph evidence is not used as runtime/IPC/startup evidence.
 
-### 4. Links and consistency
+### 5. Page-Source Map and incremental update
+
+- Every substantive page has a Page-Source Map entry.
+- Claim IDs and evidence/source references match the page.
+- Repository commits and changed paths are recorded at the inspected revision.
+- Dependent pages resolve.
+- Stale evidence propagates to affected claims/pages.
+- Approval binding matches the candidate diff, Wiki revision, Source Manifest, and relevant source revisions.
+
+### 6. Links and consistency
 
 - Internal Markdown links resolve.
 - IDs are unique.
 - No broken or orphaned high-value pages.
-- Process and repository references resolve.
-- Relationship types are explicit.
+- Relationship types are explicit and direction is supported.
 - Duplicate or contradictory claims are reported.
+- Query-visible/published content does not include draft, rejected, stale, or contradicted claims as current facts.
 
-### 5. Platform scope
+### 7. Platform scope
 
 - Profile IDs are qnx, android, or linux-tbox in v0.1.0.
 - Linux-TBOX remains one bound profile.
@@ -60,12 +89,21 @@ Follow `docs/language-policy.md`. Unless the user explicitly requests another la
 - Unsupported profiles are not generated.
 - Claims are not generalized across uninspected profiles.
 
+## Result semantics
+
+- PASS: all required checks ran and passed.
+- FAIL: a required deterministic check found an unresolved violation.
+- PARTIAL: one or more checks could not execute or source coverage is incomplete.
+- NOT RUN: an individual check was unavailable; this must be explained and blocks the gate when the check is required.
+
+A required NOT RUN check cannot be treated as PASS. A PARTIAL Lint result cannot advance to independent Review or human approval.
+
 ## Output
 
-Return PASS / FAIL / PARTIAL, checks performed and checks not executable, findings with file path and exact location, stale/unresolved evidence, and recommended fixes.
+Return the complete references/lint-report-template.md structure: result, checks passed/failed/NOT RUN, exact paths/locators, findings, limitations, and remediation.
 
 ## Capability honesty
 
-If file listing, Git revision inspection, or source locator resolution is unavailable, report those checks as NOT RUN. Do not claim a deterministic check passed when the required operation was unavailable.
+If file listing, Git revision inspection, source locator resolution, link checking, or secret scanning is unavailable, report that check as NOT RUN. Do not claim deterministic validation passed when the required operation was unavailable.
 
 This Skill is a rule-driven prompt workflow, not a compiled linter. A future optional script may automate repeatable checks, but it is out of scope for v0.1.0.
