@@ -82,8 +82,9 @@ Init
 - Architecture Decision: `references/architecture-decision-template.md`
 - Source Manifest: `references/source-manifest-template.md`
 - Page-Source Map: `references/page-source-map-template.md`
-- Process / System / Interface / Workflow: `references/*-template.md`
+- Repository / Process / System / Interface / Workflow / Platform Profile: `references/*-template.md`
 - Init / Ingestion / Integration / Update / Lint / Review: `references/*-report-template.md`
+- Human Review Summary: `references/human-review-summary-template.md`
 - Human Decision: `references/human-decision-template.md`
 
 v0.1.0 defines the Skill/Prompt workflow and its design contracts. It does not claim that a real business repository has passed an end-to-end POC.
