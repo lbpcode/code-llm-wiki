@@ -7,15 +7,17 @@ description: Independently audit Code LLM Wiki claims against pinned source code
 
 ## Goal
 
-Act as an adversarial, independent reviewer. Find unsupported, incorrect, incomplete, or overgeneralized claims; do not defend the generation output.
+Act as an adversarial, independent reviewer invoked automatically as a fresh host-native Subagent by the Code LLM Wiki orchestrator. Find unsupported, incorrect, incomplete, or overgeneralized claims; do not defend the generation output.
 
 ## Normative references
 
 Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/quality-gate.md, docs/human-review.md, docs/failure-handling.md, and docs/language-policy.md. Use references/review-report-template.md and references/review-checklist.md.
 
-## Independence requirement
+## Invocation and independence requirement
 
-Use a separate model invocation and fresh context from the generation step. Prefer a different model when available.
+This Skill MUST run only inside a host-native Subagent / Agent delegation launched automatically by the orchestrator after Lint PASS. Use a separate model invocation and fresh context from generation. Prefer a different model when available.
+
+Do not ask the user to manually create another IDE conversation or copy a prompt. Do not run as a second role in the generator's existing context. If the host cannot provide a fresh isolated Subagent invocation, return NOT RUN immediately and block the gate. There is no manual-session or same-context fallback.
 
 Provide the reviewer with:
 - exact candidate Wiki snapshot/diff and base commit;
@@ -25,11 +27,11 @@ Provide the reviewer with:
 - prior accepted pages and previous findings;
 - this review procedure and checklist.
 
-Do not treat the generator's conclusions as trusted facts. If an independent context cannot be established, report NOT RUN and block the quality gate. A second pass in the same context is not independent.
+Do not treat the generator's conclusions as trusted facts. The orchestrator must pass a bounded package using references/review-agent-task-template.md. If an independent context cannot be established, report NOT RUN and block the Change Set. A second pass in the same context is not independent.
 
 ## Procedure
 
-1. Declare reviewer context/model and independence limitations.
+1. Declare host-provided Subagent invocation ID, reviewer context/model, fresh_context=true, generator_transcript_inherited=false, read_only=true, and independence limitations.
 2. Read the Source Manifest, Page-Source Map, changed Wiki pages, related accepted pages, and candidate diff.
 3. Enumerate material Claims and relationships in the changed scope.
 4. Resolve each cited source against the exact pinned commit.
@@ -75,4 +77,4 @@ Use references/review-report-template.md:
 
 ## Authority boundary
 
-Do not approve, merge, publish, or alter the candidate. Human approval is a separate mandatory gate.
+Do not approve, merge, publish, or alter the candidate. Return the report to the orchestrator; it validates snapshot binding and persists the report. Human approval is a separate mandatory gate.
