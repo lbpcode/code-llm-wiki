@@ -27,7 +27,7 @@ The detailed shared rules live in docs/wiki-schema.md, docs/claim-evidence-model
 | query | User question, accepted Wiki snapshot, relevant page/source references | Answer with scope, citations, uncertainty, and gaps | Read-only | No accepted evidence; report unknown rather than fabricate |
 | update | Previous manifest/map, current source revisions, Git diff/history | Impact map, stale claims, proposed page diff, update report | Candidate changes only; preserve human edits | Cannot establish old/new revisions, conflict with human edits, or impact scope unknown |
 | lint | Candidate Wiki tree, schema, manifest, map, source access where available | PASS/FAIL/PARTIAL Lint report | Read-only | Required files/check capability unavailable; report NOT RUN and block gate |
-| review | Candidate snapshot, source revisions/excerpts, claim map, review criteria | Independent PASS/REVISE/REJECT report | Read-only | No fresh independent context or source evidence; report NOT RUN, never self-review |
+| review | Exact candidate snapshot, source revisions/excerpts, claim map, review criteria, fresh host-native Subagent invocation | Independent PASS/REVISE/REJECT report with invocation and snapshot binding | Read-only | Host lacks Subagent delegation, isolation cannot be proven, or source evidence unavailable; report NOT RUN and block |
 
 ## 3. Detailed input/output requirements
 
@@ -93,8 +93,9 @@ Review must run in a separate model invocation and fresh context. The reviewer m
 - ingest hands Process pages with explicit review/content status and Claim-Evidence mappings to integrate; candidate pages remain visibly unapproved.
 - integrate hands candidate System pages to lint and review.
 - update hands an impact-scoped candidate diff and references/update-report-template.md report to lint and review.
-- lint must pass before independent review is considered complete.
-- review PASS is required before human review.
+- lint must pass before the orchestrator automatically delegates the independent Review Subagent.
+- the orchestrator waits for a completed, snapshot-bound Subagent report; an accepted/running invocation is not a completed review.
+- review PASS is required before human review; REVISE returns to generation, then Lint and a new Subagent invocation; REJECT terminates the Change Set.
 - human approval is handled under docs/human-review.md; no Skill substitutes for it.
 - query is read-only and does not participate in candidate approval.
 
