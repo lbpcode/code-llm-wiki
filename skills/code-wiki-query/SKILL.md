@@ -15,7 +15,7 @@ Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.m
 
 ## Default trust policy
 
-- Query published Wiki content by default.
+- Query pages with `content_status: accepted` whose owning Change Set is `published` by default.
 - Exclude draft, pending, rejected, superseded, stale, and contradicted claims from unqualified factual answers.
 - Do not treat a verified Claim as proof that its page/change is approved; check page/change publication status separately.
 - If the user explicitly asks to inspect candidate or historical content, label its state and revision clearly.
