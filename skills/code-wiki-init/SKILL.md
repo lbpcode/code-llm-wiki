@@ -11,7 +11,7 @@ Create the initial source inventory and Wiki skeleton for a multi-repository sof
 
 ## Normative references
 
-Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/failure-handling.md, and docs/language-policy.md. Use references/source-manifest-template.md and the report templates.
+Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/failure-handling.md, and docs/language-policy.md. Use references/source-manifest-template.md, references/page-source-map-template.md, and references/init-report-template.md.
 
 ## Inputs
 
