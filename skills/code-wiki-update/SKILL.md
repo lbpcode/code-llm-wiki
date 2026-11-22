@@ -11,7 +11,7 @@ Refresh only the knowledge affected by source changes while keeping every accept
 
 ## Normative references
 
-Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/human-review.md, docs/failure-handling.md, and docs/language-policy.md. Use references/page-source-map-template.md and references/update-report-template.md.
+Follow docs/skill-contracts.md, docs/independent-review-execution.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/human-review.md, docs/failure-handling.md, and docs/language-policy.md. Use references/page-source-map-template.md and references/update-report-template.md.
 
 ## Preconditions
 
@@ -37,7 +37,7 @@ If the previous mapping is missing or incomplete, report impact analysis as PART
 11. Update only affected pages. Do not regenerate unrelated pages.
 12. Update Source Manifest and Page-Source Map only for source revisions and pages actually inspected.
 13. Assess whether prior approvals are invalidated. Any relevant source, diff, manifest mapping, or scope change makes the approval stale.
-14. Run Lint and independent Review on changed pages and their dependencies.
+14. Run Lint on changed pages and their dependencies. If Lint PASS, the orchestrator MUST automatically delegate a fresh host-native Review Subagent using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Wait for a completed, snapshot-bound report. Do not ask the user to open a second conversation. If Subagent delegation/isolation is unavailable, mark Review NOT RUN and the Change Set BLOCKED.
 15. Present old/new revisions, impact report, diff, findings, and open questions for a new human decision.
 
 ## Required outputs
@@ -48,7 +48,7 @@ If the previous mapping is missing or incomplete, report impact analysis as PART
 - Stale claims not yet revalidated.
 - Human-edit conflict report, if any.
 - Approval invalidation assessment.
-- Lint and independent Review results.
+- Lint and automatically delegated independent Review results, or explicit BLOCKED/NOT RUN result.
 - Proposed Git diff and update report.
 
 ## Failure behavior
