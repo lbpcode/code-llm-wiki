@@ -11,7 +11,7 @@ Refresh only the knowledge affected by source changes while keeping every accept
 
 ## Normative references
 
-Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/human-review.md, docs/failure-handling.md, and docs/language-policy.md. Use references/page-source-map-template.md and the update report requirements.
+Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/human-review.md, docs/failure-handling.md, and docs/language-policy.md. Use references/page-source-map-template.md and references/update-report-template.md.
 
 ## Preconditions
 
