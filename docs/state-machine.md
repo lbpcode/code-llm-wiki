@@ -103,9 +103,9 @@ Canonical values:
 | draft → lint_failed | Lint reports an unresolved required failure |
 | draft → pending_llm_review | Full required Lint scope returns PASS |
 | lint_failed → draft | Blocking Lint findings have been corrected |
-| pending_llm_review → llm_changes_requested | Independent reviewer returns REVISE |
-| pending_llm_review → pending_human_review | Review execution status is COMPLETED, the report is valid and bound to the exact candidate/source snapshot, and the reviewer returns PASS with no BLOCKER/MAJOR findings |
-| pending_llm_review → rejected | Independent reviewer returns REJECT |
+| pending_llm_review → llm_changes_requested | Review execution status is COMPLETED; the report is valid and bound to the exact candidate/source snapshot; reviewer returns REVISE |
+| pending_llm_review → pending_human_review | Review execution status is COMPLETED; the report is valid and bound to the exact candidate/source snapshot; reviewer returns PASS with no BLOCKER/MAJOR findings |
+| pending_llm_review → rejected | Review execution status is COMPLETED; the report is valid and bound to the exact candidate/source snapshot; reviewer returns REJECT |
 | llm_changes_requested → draft | Findings are acknowledged and a revised candidate is prepared |
 | pending_human_review → human_changes_requested | Human records request_changes |
 | pending_human_review → approved | Human records approve for the exact snapshot |
@@ -126,6 +126,18 @@ Review execution status is separate from both Change Set status and the LLM revi
 - `INVALID`: a report was returned but failed validation (for example, wrong snapshot, unproven isolation, reviewer write access, or missing mandatory scope).
 
 The LLM review decision is a separate field and has exactly `PASS`, `REVISE`, or `REJECT`. It MUST be null unless Review execution status is `COMPLETED` with a valid report. `NOT_RUN`, `RUNNING`, and `INVALID` are not review decisions.
+
+Review execution transitions:
+
+| From | To | Condition |
+|---|---|---|
+| `NOT_RUN` | `RUNNING` | The host successfully launches a fresh, isolated Subagent invocation. |
+| `RUNNING` | `COMPLETED` | A report is returned and the orchestrator validates isolation, required scope, and exact candidate/source snapshot binding. |
+| `RUNNING` | `NOT_RUN` | The invocation fails or times out, or no completed report is returned. |
+| `RUNNING` | `INVALID` | A report is returned but fails isolation, scope, read-only, or snapshot validation. |
+| `INVALID` | `RUNNING` | A new invocation starts after the review package or host issue is corrected. |
+
+A materially changed candidate or source snapshot requires a new review attempt; reset the current execution status to `NOT_RUN` and clear the current decision while retaining prior reports in audit history.
 
 Run outcome is execution-level and has exactly `PASS`, `PARTIAL`, `BLOCKED`, or `FAIL`, as defined in docs/failure-handling.md. `BLOCKED` means a required prerequisite or gate prevents safe continuation; it is never a Change Set status or an LLM review decision.
 
