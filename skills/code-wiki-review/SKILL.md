@@ -11,7 +11,7 @@ Act as an adversarial, independent reviewer invoked automatically as a fresh hos
 
 ## Normative references
 
-Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/quality-gate.md, docs/human-review.md, docs/failure-handling.md, and docs/language-policy.md. Use references/review-report-template.md and references/review-checklist.md.
+Follow docs/skill-contracts.md, docs/independent-review-execution.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/quality-gate.md, docs/human-review.md, docs/failure-handling.md, and docs/language-policy.md. Use references/review-report-template.md and references/review-checklist.md.
 
 ## Invocation and independence requirement
 
