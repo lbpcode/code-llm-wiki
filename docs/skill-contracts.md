@@ -85,7 +85,7 @@ Inputs: exact candidate snapshot, source revisions and relevant excerpts, claim 
 
 Outputs: review metadata, independence declaration, pages/claims reviewed, findings with severity/evidence, unsupported/unknown claims, recommendation, and limitations.
 
-Review must run in a separate model invocation and fresh context. The reviewer must not trust the generator's conclusions. It must not approve, merge, or publish.
+Review MUST be automatically delegated by the orchestrator to a host-native Subagent in a separate model invocation and fresh context. The reviewer must not inherit the generator transcript, must not trust the generator's conclusions, and must be read-only. If the host cannot delegate an isolated Subagent, return NOT RUN and block; there is no manual-session or same-context fallback. It must not approve, merge, or publish.
 
 ## 4. Handoff rules
 
