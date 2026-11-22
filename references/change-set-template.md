@@ -27,8 +27,10 @@ impact:
     - <page-id>
   impact_assessment: "<bounded impact summary>"
 reports:
+  init_report_id: null
   ingestion_report_ids: []
   integration_report_ids: []
+  update_report_id: null
   lint_report_id: null
   review_report_id: null
 human_decision_id: null
