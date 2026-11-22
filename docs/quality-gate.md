@@ -4,7 +4,7 @@
 
 No generated Wiki content becomes accepted knowledge until it passes:
 1. source-evidence and structural validation (Lint);
-2. independent LLM Review in a separate invocation and fresh context;
+2. automatic delegation to an independent LLM Review Subagent through the host's native Agent/Subagent capability;
 3. human Review and approval of the exact candidate snapshot;
 4. explicit publication authorization/action.
 
@@ -48,9 +48,11 @@ Lint is a rule-driven structural/provenance audit, not a compiled linter in v0.1
 
 Lint result is PASS / FAIL / PARTIAL. Every check is PASS / FAIL / NOT RUN with scope and reason. Required NOT RUN checks block progression. See references/lint-report-template.md.
 
-## 6. Independent LLM Review
+## 6. Automatic Independent LLM Review
 
-The reviewer must be a separate model invocation and a fresh context from generation. Prefer a different model when available.
+After Lint PASS, the orchestrator MUST automatically delegate a fresh Subagent invocation using `references/review-agent-task-template.md` and `skills/code-wiki-review/SKILL.md`. The reviewer must be a separate model invocation and fresh context from generation. Prefer a different model when available.
+
+The host must expose native Subagent/Agent delegation and return a completed result. The Skill package does not create a new model context by itself. The reviewer must not inherit the Generation Agent transcript or hidden reasoning. There is no manual new-session or same-context fallback. If the host cannot launch the Subagent or prove isolation, Review is NOT RUN and the Change Set remains BLOCKED.
 
 The reviewer must:
 - receive exact source revisions, relevant source excerpts, candidate pages, Claim-Evidence mapping, Page-Source Map, and prior findings;
@@ -59,7 +61,7 @@ The reviewer must:
 - challenge broad terms such as always, never, all platforms, required, and guaranteed;
 - report exact claim, evidence, problem, severity, and correction.
 
-If independent context cannot be established, report NOT RUN and block human approval. Generator self-review is not independent. See references/review-report-template.md.
+If independent context cannot be established, report NOT RUN and block the Change Set before human approval. Generator self-review is not independent. The orchestrator must wait for the completed Subagent report and validate its candidate/source snapshot binding. See docs/independent-review-execution.md, references/review-agent-task-template.md, and references/review-report-template.md.
 
 ## 7. Severity
 
@@ -98,6 +100,7 @@ Templates:
 - references/integration-report-template.md
 - references/update-report-template.md
 - references/lint-report-template.md
+- references/review-agent-task-template.md
 - references/review-report-template.md
 - references/human-review-summary-template.md
 - references/human-decision-template.md
