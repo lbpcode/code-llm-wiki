@@ -2,7 +2,7 @@
 
 ## Metadata
 
-- Decision ID:
+- ADR ID:
 - Title:
 - Status: proposed / accepted / rejected / superseded
 - Created:
