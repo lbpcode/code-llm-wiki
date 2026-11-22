@@ -106,4 +106,6 @@ Return the complete references/lint-report-template.md structure: result, checks
 
 If file listing, Git revision inspection, source locator resolution, link checking, or secret scanning is unavailable, report that check as NOT RUN. Do not claim deterministic validation passed when the required operation was unavailable.
 
-When the required Lint scope returns PASS, hand control to the orchestrator, which MUST automatically delegate the independent Review Subagent as specified in docs/independent-review-execution.md. This Skill does not ask the user to create another session and does not perform same-context semantic self-review.\n\nThis Skill is a rule-driven prompt workflow, not a compiled linter. A future optional script may automate repeatable checks, but it is out of scope for v0.1.0.
+When the required Lint scope returns PASS, hand control to the orchestrator, which MUST automatically delegate the independent Review Subagent as specified in docs/independent-review-execution.md. This Skill does not ask the user to create another session and does not perform same-context semantic self-review.
+
+This Skill is a rule-driven prompt workflow, not a compiled linter. A future optional script may automate repeatable checks, but it is out of scope for v0.1.0.
