@@ -37,7 +37,7 @@ If the previous mapping is missing or incomplete, report impact analysis as PART
 11. Update only affected pages. Do not regenerate unrelated pages.
 12. Update Source Manifest and Page-Source Map only for source revisions and pages actually inspected.
 13. Assess whether prior approvals are invalidated. Any relevant source, diff, manifest mapping, or scope change makes the approval stale.
-14. Run Lint on changed pages and their dependencies. If Lint PASS, the orchestrator MUST automatically delegate a fresh host-native Review Subagent using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Wait for a completed, snapshot-bound report. Do not ask the user to open a second conversation. If Subagent delegation/isolation is unavailable, mark Review NOT RUN and the Change Set BLOCKED.
+14. Run Lint on changed pages and their dependencies. If Lint PASS, the orchestrator MUST automatically delegate a fresh host-native Review Subagent using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Wait for a completed, snapshot-bound report. Do not ask the user to open a second conversation. If Subagent delegation/isolation is unavailable, set Review execution status to NOT_RUN, leave Review decision null, keep Change Status at pending_llm_review, and set Run outcome to BLOCKED.
 15. Present old/new revisions, impact report, diff, findings, and open questions for a new human decision.
 
 ## Required outputs
@@ -48,7 +48,7 @@ If the previous mapping is missing or incomplete, report impact analysis as PART
 - Stale claims not yet revalidated.
 - Human-edit conflict report, if any.
 - Approval invalidation assessment.
-- Lint and automatically delegated independent Review results, or explicit BLOCKED/NOT RUN result.
+- Lint and independent Review results; if delegation is blocked, record Review execution status, null Review decision, unchanged Change Status, and Run outcome BLOCKED.
 - Proposed Git diff and update report.
 
 ## Failure behavior
