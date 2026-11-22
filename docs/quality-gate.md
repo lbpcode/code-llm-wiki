@@ -90,11 +90,13 @@ Only the human may authorize publication/merge. The publication record links the
 
 ## 10. Required reports
 
-Each run stores the appropriate ingestion/integration report, Lint report, independent Review report, and human decision record. Reports include exact source revisions, scope, checks not run, limitations, findings, and recovery actions.
+Each run stores the appropriate Init, Ingestion, Integration, or Update report, plus Lint report, independent Review report, and human decision record when those gates apply. Reports include exact source revisions, scope, checks not run, limitations, findings, and recovery actions.
 
 Templates:
+- references/init-report-template.md
 - references/ingestion-report-template.md
 - references/integration-report-template.md
+- references/update-report-template.md
 - references/lint-report-template.md
 - references/review-report-template.md
 - references/human-decision-template.md
