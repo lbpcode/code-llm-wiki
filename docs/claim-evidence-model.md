@@ -4,7 +4,18 @@
 
 This document defines the traceability model connecting a human-readable Wiki statement to the exact source revision and locator that supports it. A page-level bibliography alone is insufficient: material claims MUST map to specific evidence records.
 
-## 2. Claim
+## 2. Canonical storage
+
+For v0.1.0, store:
+- Source Manifest at `wiki/_meta/source-manifest.yaml`;
+- each Claim at `wiki/_meta/claims/<claim-id>.yaml`;
+- each Evidence record at `wiki/_meta/evidence/<evidence-id>.yaml`;
+- Page-Source Map at `wiki/_meta/page-source-map.yaml`;
+- Change Set and run reports under `wiki/_meta/changes/<change-id>/`.
+
+Human-readable Wiki pages reference stable Claim IDs in frontmatter or inline metadata. Do not duplicate the full Claim/Evidence record into multiple pages; link to the canonical record.
+
+## 3. Claim
 
 A Claim is one atomic, reviewable statement. Split a paragraph when it contains independently verifiable facts.
 
@@ -25,7 +36,7 @@ Required fields:
 
 Claim IDs MUST remain stable when wording is refined. Create a new ID when the underlying fact or scope changes materially.
 
-## 3. Evidence record
+## 4. Evidence record
 
 Required fields:
 
@@ -45,7 +56,7 @@ Required fields:
 
 An evidence-to-claim link MUST also state its role: `supports`, `contradicts`, or `qualifies`.
 
-## 4. Claim-to-evidence rules
+## 5. Claim-to-evidence rules
 
 - The evidence must support the exact wording, not merely the general topic.
 - Behavior claims should prefer implementation, configuration, and tests over comments or README text.
@@ -59,7 +70,7 @@ An evidence-to-claim link MUST also state its role: `supports`, `contradicts`, o
 - Unknown claims must identify the missing evidence or unresolved question.
 - Do not copy secrets, tokens, private keys, personal data, or sensitive payloads into evidence excerpts. Preserve the locator and mark the evidence redacted where necessary.
 
-## 5. Repository / Process / Profile mapping
+## 6. Repository / Process / Profile mapping
 
 Do not store platform applicability only at Repository level. A repository may contain multiple processes with different platform support.
 
@@ -85,7 +96,7 @@ Process profile support statuses:
 
 Never infer Process support from a repository name, folder, macro, or build option alone.
 
-## 6. Page-source map
+## 7. Page-source map
 
 The Page-Source Map is the reverse index used by incremental update. It maps each Wiki page to the claims it contains, source repositories/revisions/paths, and dependent pages.
 
@@ -100,7 +111,7 @@ Required fields per page:
 
 A page-source map entry MUST be updated only after its page and cited sources have actually been inspected. It is not enough to update all commits globally.
 
-## 7. Incremental invalidation
+## 8. Incremental invalidation
 
 When a source repository changes:
 
@@ -117,7 +128,7 @@ When a source repository changes:
 
 If changed paths cannot be mapped reliably, mark the impact scope unknown and broaden review conservatively.
 
-## 8. Example
+## 9. Example
 
 ```yaml
 claims:
