@@ -38,7 +38,7 @@ Candidate Process pages may be used to draft candidate System pages only if thei
 9. Compare QNX, Android, and Linux-TBOX only where both sides of the comparison have been inspected.
 10. Identify contradictions between Process pages, source configuration, interface definitions, and System-level claims.
 11. Update System pages, relationship records, Interface/Workflow pages, and Page-Source Map dependencies.
-12. Run Lint. If Lint PASS, the orchestrator MUST automatically delegate a fresh host-native Review Subagent using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Wait for a completed, snapshot-bound report. Do not ask the user to open a second conversation. If Subagent delegation/isolation is unavailable, mark Review NOT RUN and the Change Set BLOCKED. Keep results as a proposed diff until human approval.
+12. Run Lint. If Lint PASS, the orchestrator MUST automatically delegate a fresh host-native Review Subagent using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Wait for a completed, snapshot-bound report. Do not ask the user to open a second conversation. If Subagent delegation/isolation is unavailable, set Review execution status to NOT_RUN, leave Review decision null, keep Change Status at pending_llm_review, and set Run outcome to BLOCKED. Keep results as a proposed diff until human approval.
 
 ## Outputs
 
@@ -49,7 +49,7 @@ Candidate Process pages may be used to draft candidate System pages only if thei
 - Cross-profile differences and explicit unknowns.
 - Integration conflicts and open questions.
 - Integration report and proposed diff.
-- Lint report and automatically delegated independent Review report, or explicit BLOCKED/NOT RUN result.
+- Lint report and independent Review report; if delegation is blocked, record Review execution status, null Review decision, unchanged Change Status, and Run outcome BLOCKED.
 
 ## Failure behavior
 
