@@ -8,6 +8,7 @@ The workflow MUST NOT use one status field to represent both the truth of a clai
 |---|---|---|
 | Claim status | One atomic knowledge claim | How well is this statement supported by current evidence? |
 | Evidence status | One source locator | Can this exact source reference be resolved and trusted at its pinned revision? |
+| Page content status | One Wiki page | Is this page a candidate, accepted, stale, or superseded? |
 | Change status | One proposed Wiki change set | Where is this candidate in the quality and approval workflow? |
 | Review decision | One LLM review run | What is the independent review outcome? |
 | Human decision | One human decision record | What did the authorized human decide? |
@@ -32,8 +33,7 @@ Allowed transitions:
 | unknown | inferred | A traceable derivation is recorded, but direct proof is unavailable |
 | unknown | verified | Direct evidence is located and checked |
 | inferred | verified | Direct evidence now supports the exact statement |
-| verified | stale | A supporting source revision/locator changes or becomes inaccessible |
-| inferred | stale | A supporting source revision/locator changes or becomes inaccessible |
+| verified / inferred | stale | A supporting source revision/locator changes or becomes inaccessible |
 | verified / inferred | contradicted | New evidence conflicts with the statement |
 | stale | verified / inferred / unknown / contradicted | Revalidation determines the new status |
 | contradicted | verified / inferred / unknown | Conflict is resolved by inspecting authoritative evidence |
@@ -51,9 +51,20 @@ Canonical values:
 - `conflicting`: sources disagree or the locator supports incompatible interpretations.
 - `redacted`: sensitive source content was intentionally not copied; locator and redaction reason remain.
 
-Evidence status is independent from claim status. For example, a claim may be `unknown` while its available evidence references are all `valid`, because those sources do not answer the question.
+Evidence status is independent from Claim status. A claim may be `unknown` while its available evidence references are all `valid`, because those sources do not answer the question.
 
-## 4. Change-set status
+## 4. Page content status
+
+Canonical values:
+
+- `candidate`: generated or edited content not yet published.
+- `accepted`: content included in the accepted Wiki revision after required gates and human approval.
+- `stale`: one or more material claims/evidence references require revalidation.
+- `superseded`: replaced by a later accepted page/revision; retain history and links.
+
+A page's content status is not the same as a Change Set status. The candidate's workflow state is recorded by its Change Set; publication changes page content status to accepted. Source changes can make accepted pages stale without deleting their historical acceptance record.
+
+## 5. Change-set status
 
 Canonical values:
 
@@ -73,7 +84,7 @@ Canonical values:
 
 A failed or unavailable check MUST NOT be represented as PASS. If a required check cannot run, the candidate remains blocked or the check result is PARTIAL; it cannot advance to human approval.
 
-## 5. Review decisions
+## 6. Review decisions
 
 LLM review uses exactly:
 
@@ -91,9 +102,7 @@ Human decisions use exactly:
 
 Only an authorized human can create a human decision. LLM PASS is a recommendation, not an approval.
 
-## 6. Gate order and invariants
-
-The required order is:
+## 7. Gate order and invariants
 
 1. Generate candidate pages and reports.
 2. Run structural/provenance Lint.
@@ -105,44 +114,32 @@ The required order is:
 8. Publish only after explicit human approval and authorization for the publication action.
 
 Invariants:
-
 - No candidate content is treated as accepted knowledge before publication.
-- Query defaults to published knowledge only.
+- Query defaults to accepted/published knowledge only.
 - Rejected candidates and prior reports are retained as immutable audit history.
 - Every review/approval is bound to exact revisions and scope.
 - Any material change after approval invalidates that approval.
 - No Skill may approve its own generated content or silently publish/merge it.
 - A missing independent review session is NOT RUN/BLOCKED, never PASS.
 
-## 7. Approval binding and invalidation
+## 8. Approval binding and invalidation
 
 Each approval record MUST bind:
-
 - change_id;
 - candidate Wiki commit (or exact patch/diff digest when no commit exists);
 - base Wiki commit;
 - changed page IDs and paths;
-- source manifest version/digest;
+- Source Manifest version/digest;
 - relevant source repository IDs and full commit SHAs;
 - Lint report ID/digest;
 - independent Review report ID/digest;
 - human decision, reviewer, timestamp, and rationale.
 
-Approval becomes stale if any of the following changes after approval:
+Approval becomes stale if the approved Wiki diff/candidate commit, reviewed page scope, relevant source revision, relevant manifest mapping, review report, or impact set changes. An unrelated source repository update need not invalidate approval if the approved scope's source snapshot and dependencies are demonstrably unchanged. Record that impact assessment; when uncertain, invalidate conservatively.
 
-- approved Wiki diff or candidate commit;
-- approved base commit in a way that changes the reviewed result;
-- source manifest data relevant to the approved claims;
-- any relevant source repository commit or evidence locator;
-- review report or finding disposition;
-- changed-page scope or dependency impact set.
-
-An unrelated source repository update need not invalidate an approval if the approved scope's source snapshot and page dependencies are demonstrably unchanged. Record that impact assessment. When uncertain, invalidate conservatively.
-
-## 8. Re-review scope
+## 9. Re-review scope
 
 After a change request or stale approval:
-
 - rerun Lint over the complete candidate Wiki structure and all affected references;
 - rerun independent Review over changed claims/pages plus dependent pages, interfaces, workflows, and System relationships;
 - include prior findings and their disposition;
