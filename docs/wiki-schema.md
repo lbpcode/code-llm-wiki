@@ -8,7 +8,7 @@
 - Process ↔ Platform Profile applicability is recorded independently from Repository inventory.
 - Claims are atomic and mapped to exact evidence records.
 - Page-Source Map supports reverse impact analysis for incremental updates.
-- Claim truth status, evidence status, change approval status, and publication status are separate domains.
+- Claim truth status, Evidence status, Page content status, Change approval status, and Publication status are separate domains.
 - Unknown, inferred, stale, and contradicted information remains explicit.
 - Human edits and accepted history are preserved.
 
@@ -36,29 +36,17 @@ Do not represent all applicability using a Repository-level profile list.
 
 ### Repository-to-Process mapping
 
-Each mapping records:
-- repository_id;
-- process_id;
-- status: confirmed / candidate / unknown / rejected;
-- evidence_refs;
-- responsibility_note;
-- confirmed_by / confirmed_at when human-confirmed.
+Each mapping records repository_id, process_id, status (confirmed / candidate / unknown / rejected), evidence_refs, responsibility_note, and confirmed_by/confirmed_at when human-confirmed.
 
 ### Process-to-Profile mapping
 
-Each mapping records:
-- process_id;
-- profile_id;
-- support_status: supported_verified / present_unverified / unsupported_verified / unknown;
-- evidence_refs;
-- constraints and notes.
+Each mapping records process_id, profile_id, support_status (supported_verified / present_unverified / unsupported_verified / unknown), evidence_refs, and constraints.
 
 A repository can implement several processes with different profile support. A process can span repositories. Repository-level profile observations are inventory hints, not proof that every process in the repository supports that profile.
 
 ## 4. Relationship semantics
 
 Use explicit relationship types:
-
 - implements: Repository implements Process.
 - build_depends_on: build target depends on another target/library.
 - runtime_depends_on: process requires another process/service at runtime.
@@ -96,7 +84,7 @@ Every substantive page begins with metadata equivalent to:
     type: process
     process_id: telemetry
     profile_ids: [qnx, android]
-    status: draft
+    content_status: candidate
     change_id: change-2026-001
     source_manifest_version: 1
     source_revisions:
@@ -107,7 +95,7 @@ Every substantive page begins with metadata equivalent to:
     last_reviewed: null
     ---
 
-Use stable IDs. Keep machine-readable keys, IDs, profile IDs, relationship types, and status enums in canonical English. Human-readable titles and descriptions use Simplified Chinese by default.
+Use stable IDs. `content_status` is candidate / accepted / stale / superseded. Change Set status is tracked separately. Keep machine-readable keys, IDs, profile IDs, relationship types, and status enums in canonical English. Human-readable titles and descriptions use Simplified Chinese by default.
 
 ## 7. Claim representation
 
@@ -145,6 +133,7 @@ This reverse index is required for reliable incremental updates. See references/
 Keep these independent:
 - Claim status: verified / inferred / unknown / stale / contradicted.
 - Evidence status: valid / unverified / stale / inaccessible / conflicting / redacted.
+- Page content status: candidate / accepted / stale / superseded.
 - Change status: draft / lint_failed / pending_llm_review / llm_changes_requested / pending_human_review / human_changes_requested / approved / approval_stale / published / rejected / superseded.
 - LLM decision: PASS / REVISE / REJECT.
 - Human decision: approve / request_changes / reject.
