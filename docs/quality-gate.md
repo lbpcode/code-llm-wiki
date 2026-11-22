@@ -72,7 +72,7 @@ BLOCKER or MAJOR findings prohibit PASS. A waiver cannot override fabricated evi
 
 ## 8. Human approval
 
-Human decisions are approve / request_changes / reject.
+Human decisions are approve / request_changes / reject. Prepare the review package with references/human-review-summary-template.md before presenting it to the human reviewer.
 
 The human reviewer must inspect:
 - exact Wiki Diff and changed pages;
