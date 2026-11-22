@@ -17,7 +17,7 @@ Follow docs/skill-contracts.md, docs/independent-review-execution.md, docs/wiki-
 
 This Skill MUST run only inside a host-native Subagent / Agent delegation launched automatically by the orchestrator after Lint PASS. Use a separate model invocation and fresh context from generation. Prefer a different model when available.
 
-Do not ask the user to manually create another IDE conversation or copy a prompt. Do not run as a second role in the generator's existing context. If the host cannot provide a fresh isolated Subagent invocation, return NOT RUN immediately and block the gate. There is no manual-session or same-context fallback.
+Do not ask the user to manually create another IDE conversation or copy a prompt. Do not run as a second role in the generator's existing context. If the host cannot provide a fresh isolated Subagent invocation, return execution status NOT_RUN with no Review decision. The orchestrator keeps Change Status at pending_llm_review and sets Run outcome to BLOCKED. There is no manual-session or same-context fallback.
 
 Provide the reviewer with:
 - exact candidate Wiki snapshot/diff and base commit;
@@ -27,7 +27,7 @@ Provide the reviewer with:
 - prior accepted pages and previous findings;
 - this review procedure and checklist.
 
-Do not treat the generator's conclusions as trusted facts. The orchestrator must pass a bounded package using references/review-agent-task-template.md. If an independent context cannot be established, report NOT RUN and block the Change Set. A second pass in the same context is not independent.
+Do not treat the generator's conclusions as trusted facts. The orchestrator must pass a bounded package using references/review-agent-task-template.md. If an independent context cannot be established, report execution status NOT_RUN and no Review decision; the orchestrator keeps Change Status at pending_llm_review and sets Run outcome to BLOCKED. A second pass in the same context is not independent.
 
 ## Procedure
 
