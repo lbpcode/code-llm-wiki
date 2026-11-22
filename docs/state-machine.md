@@ -141,8 +141,8 @@ Only an authorized human can create a human decision. LLM PASS is a recommendati
 1. Generate candidate pages and reports.
 2. Run structural/provenance Lint.
 3. Resolve all blocking Lint findings.
-4. Run independent LLM Review in a fresh context.
-5. Resolve REVISE findings and repeat Lint + independent Review for the affected scope.
+4. After Lint PASS, the orchestrator automatically delegates a fresh host-native Review Subagent and waits for its completed, snapshot-bound report.
+5. Resolve REVISE findings and repeat Lint + a new independent Subagent invocation for the affected scope.
 6. Present the exact candidate snapshot and review materials to a human.
 7. Record a human decision bound to the candidate snapshot.
 8. Publish only after explicit human approval and authorization for the publication action.
@@ -154,7 +154,7 @@ Invariants:
 - Every review/approval is bound to exact revisions and scope.
 - Any material change after approval invalidates that approval.
 - No Skill may approve its own generated content or silently publish/merge it.
-- A missing independent review session is NOT RUN/BLOCKED, never PASS.
+- A missing, failed, or non-isolated automatic Review Subagent invocation is NOT RUN/BLOCKED, never PASS; there is no manual-session or same-context fallback.
 
 ## 8. Approval binding and invalidation
 
