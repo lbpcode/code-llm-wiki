@@ -11,7 +11,7 @@ Create the initial source inventory and Wiki skeleton for a multi-repository sof
 
 ## Normative references
 
-Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/failure-handling.md, and docs/language-policy.md. Use references/source-manifest-template.md, references/page-source-map-template.md, and references/init-report-template.md.
+Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/failure-handling.md, and docs/language-policy.md. Use references/source-manifest-template.md, references/repository-template.md, references/page-source-map-template.md, and references/init-report-template.md.
 
 ## Inputs
 
@@ -51,7 +51,7 @@ Optional:
 ## Outputs
 
 - Source Manifest.
-- Repository inventory with checkout status and AGENTS.md inventory.
+- Repository inventory with checkout status and AGENTS.md inventory; create repository pages using references/repository-template.md when they add durable value.
 - Repository-to-Process mapping table.
 - Process-to-Profile applicability table.
 - Wiki directory skeleton and index.
