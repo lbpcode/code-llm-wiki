@@ -3,21 +3,26 @@
 ## 1. Approval policy
 
 No generated Wiki content becomes accepted knowledge until it passes:
-1. source-evidence validation;
-2. independent LLM review;
-3. human approval.
+1. source-evidence and structural validation (Lint);
+2. independent LLM Review in a separate invocation and fresh context;
+3. human Review and approval of the exact candidate snapshot;
+4. explicit publication authorization/action.
 
-A high aggregate score cannot override a critical factual error or missing evidence.
+A high aggregate score cannot override a critical factual error or missing evidence. An LLM PASS is not human approval. Approval is not publication.
 
-## 2. Gate states
+## 2. Separate state domains
 
-- PASS: no blocking or major findings; evidence and scope are adequate; ready for human approval.
+Do not mix Claim status, Evidence status, Change status, LLM Review decision, Human decision, and Publication status. Their canonical values and transitions are defined in docs/state-machine.md.
+
+## 3. Gate states
+
+- PASS: no BLOCKER or MAJOR findings; evidence and scope are adequate; ready for human review.
 - REVISE: fixable factual, evidence, completeness, or consistency problems remain.
-- REJECT: fundamental unsupported architecture, fabricated evidence, or repeated/critical inaccuracies make the page unsuitable for acceptance.
+- REJECT: fundamental unsupported architecture, fabricated evidence, or repeated/critical inaccuracies make the candidate unsuitable.
 
-PASS is not the same as merged. Human approval is still mandatory.
+PASS is not the same as approved or published. A required check that did not run is NOT RUN and blocks progression; it must never be reported as PASS.
 
-## 3. Review dimensions
+## 4. Review dimensions
 
 | Dimension | Suggested weight |
 |---|---:|
@@ -27,50 +32,69 @@ PASS is not the same as merged. Human approval is still mandatory.
 | Cross-page consistency | 15% |
 | Clarity | 10% |
 
-A critical finding in factual correctness or evidence traceability blocks PASS regardless of the score.
+A critical finding in factual correctness or evidence traceability blocks PASS regardless of score.
 
-## 4. Independent LLM review
+## 5. Lint gate
+
+Lint is a rule-driven structural/provenance audit, not a compiled linter in v0.1.0. It checks:
+- required files, metadata, stable IDs, and schema;
+- Source Manifest and exact pinned commits;
+- Repository/Process/Profile mappings;
+- Claim-Evidence references and locator resolution where the host can verify;
+- Page-Source Map coverage and dependencies;
+- internal links and relationship types;
+- stale, contradictory, or overgeneralized claims;
+- sensitive-data leakage.
+
+Lint result is PASS / FAIL / PARTIAL. Every check is PASS / FAIL / NOT RUN with scope and reason. Required NOT RUN checks block progression. See references/lint-report-template.md.
+
+## 6. Independent LLM Review
 
 The reviewer must be a separate model invocation and a fresh context from generation. Prefer a different model when available.
 
-If only one model endpoint exists:
-- use a new session/context;
-- provide original source excerpts and source revision metadata;
-- provide generated Wiki pages and review criteria;
-- instruct the reviewer to distrust the generator's conclusions and independently verify each claim;
-- do not pass the generator's self-review as independent review.
+The reviewer must:
+- receive exact source revisions, relevant source excerpts, candidate pages, Claim-Evidence mapping, Page-Source Map, and prior findings;
+- enumerate material claims and verify evidence fit;
+- check profile scope, process boundaries, interface direction, relationship types, lifecycle, failure paths, security, and deployment where applicable;
+- challenge broad terms such as always, never, all platforms, required, and guaranteed;
+- report exact claim, evidence, problem, severity, and correction.
 
-The reviewer must not approve claims merely because they are confidently written or cited.
+If independent context cannot be established, report NOT RUN and block human approval. Generator self-review is not independent. See references/review-report-template.md.
 
-## 5. Review procedure
-
-1. Enumerate material claims in the changed pages.
-2. Resolve every evidence reference against the exact repository commit.
-3. Check that each source supports the associated claim.
-4. Verify profile scope and deployment context.
-5. Check relationship types: build dependency vs runtime dependency vs IPC vs startup ordering.
-6. Check lifecycle, failure paths, constraints, and relevant feature/configuration guards.
-7. Compare claims with related pages and previous reviewed knowledge.
-8. Identify missing, contradictory, stale, or overgeneralized statements.
-9. Return findings and a PASS/REVISE/REJECT recommendation.
-
-## 6. Severity
+## 7. Severity
 
 - BLOCKER: fabricated source/commit, material false architecture claim, unsafe security claim, or unsupported cross-process/runtime relationship.
-- MAJOR: important claim lacks evidence, wrong profile scope, significant lifecycle/interface omission, or a build edge presented as runtime behavior.
+- MAJOR: important claim lacks evidence, wrong profile scope, significant lifecycle/interface omission, or build/runtime confusion.
 - MINOR: incomplete detail, weak locator, small inconsistency, or unclear wording.
 - INFO: optional improvement or follow-up investigation.
 
-BLOCKER or MAJOR findings prohibit PASS.
+BLOCKER or MAJOR findings prohibit PASS. A waiver cannot override fabricated evidence, BLOCKER, or a mandatory check that did not run.
 
-## 7. Human approval
+## 8. Human approval
 
-The human reviewer checks changed pages and diffs, the independent review report, unresolved/unknown claims, source revision changes, platform/profile applicability, and engineering usefulness.
+Human decisions are approve / request_changes / reject.
 
-Only the human may approve/merge the change into the accepted Wiki branch.
+The human reviewer must inspect:
+- exact Wiki Diff and changed pages;
+- Source Manifest and relevant source commits;
+- Claim-Evidence mapping;
+- Lint and independent Review reports;
+- unresolved/unknown claims and impact pages;
+- prior requests, findings, and waivers.
 
-## 8. Required review report
+Approval MUST bind to the candidate Wiki commit or diff digest, base commit, changed page scope, Source Manifest version/digest, relevant source revisions, and report IDs. Any material change invalidates approval. Full rules and the decision record are in docs/human-review.md and references/human-decision-template.md.
 
-Each report records review ID and timestamp, Wiki commit/branch, source repository commits, reviewer model identifier when available, independence declaration, pages/claims reviewed, findings with severity and evidence, recommendation, and human approval status.
+## 9. Publication
 
-Do not expose private source content in public review artifacts. The Engineering Wiki repository is expected to be Private.
+Only the human may authorize publication/merge. The publication record links the resulting Wiki commit to the approval decision. Do not push, merge, or publish without explicit authorization. If a published change is wrong, create a corrective change or revert commit; do not rewrite published history.
+
+## 10. Required reports
+
+Each run stores the appropriate ingestion/integration report, Lint report, independent Review report, and human decision record. Reports include exact source revisions, scope, checks not run, limitations, findings, and recovery actions.
+
+Templates:
+- references/ingestion-report-template.md
+- references/integration-report-template.md
+- references/lint-report-template.md
+- references/review-report-template.md
+- references/human-decision-template.md
