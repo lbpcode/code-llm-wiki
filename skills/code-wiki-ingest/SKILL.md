@@ -50,7 +50,8 @@ If the source commit does not match the manifest, stop ingestion for that reposi
 - Interface/Workflow candidates where needed.
 - Page-Source Map entries.
 - Ingestion report with coverage, failures, unknowns, and open questions.
-- Proposed Wiki diff.\n- Lint report and automatically delegated independent Review report, or explicit BLOCKED/NOT RUN result.
+- Proposed Wiki diff.
+- Lint report and automatically delegated independent Review report, or explicit BLOCKED/NOT RUN result.
 
 ## Failure behavior
 
