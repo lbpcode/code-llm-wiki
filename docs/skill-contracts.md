@@ -15,7 +15,7 @@ Every independently invokable Skill MUST follow this contract:
 9. Never self-approve, bypass required review, or publish without explicit human authorization.
 10. Retain prior accepted content and human edits; stop on unresolved conflicts.
 
-The detailed shared rules live in docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/quality-gate.md, docs/human-review.md, and docs/failure-handling.md. Use references/init-report-template.md, references/ingestion-report-template.md, references/integration-report-template.md, references/update-report-template.md, references/lint-report-template.md, and references/review-report-template.md for run reports.
+The detailed shared rules live in docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/quality-gate.md, docs/human-review.md, and docs/failure-handling.md. Use references/repository-template.md for repository inventory pages; references/init-report-template.md, references/ingestion-report-template.md, references/integration-report-template.md, references/update-report-template.md, references/lint-report-template.md, references/review-report-template.md, and references/human-review-summary-template.md for reports.
 
 ## 2. Skill contract matrix
 
@@ -35,7 +35,7 @@ The detailed shared rules live in docs/wiki-schema.md, docs/claim-evidence-model
 
 Inputs: source superproject path, destination Wiki worktree, known system metadata, optional confirmed mappings.
 
-Outputs: pinned source inventory, submodule state, AGENTS.md inventory, repository/process candidate map, Process/Profile support map, skipped/inaccessible inventory, open questions.
+Outputs: pinned source inventory, submodule state, AGENTS.md inventory, repository inventory pages where useful, repository/process candidate map, Process/Profile support map, skipped/inaccessible inventory, open questions.
 
 Do not infer a Process solely from a repository or directory name. Do not create substantive architecture claims during inventory.
 
