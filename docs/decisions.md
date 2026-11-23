@@ -79,3 +79,9 @@ AI updates must not overwrite human edits. Overlapping semantic changes stop for
 **Status:** Accepted for v0.1.0
 
 Independent repositories may be processed separately, but inaccessible or failed scopes must be reported. PARTIAL/BLOCKED runs cannot be treated as complete System knowledge or published. Optional CMake DOT failure alone does not block unrelated work.
+
+## ADR-014: Bounded and resumable repository ingestion
+
+**Status:** Accepted
+
+Ingest MUST discover repository structure before deep source inspection, plan bounded Analysis Tasks by engineering concern, read only task-relevant source ranges, and persist Task Reports plus a compact Checkpoint. Tasks are not split mechanically by file. Resume verifies pinned source revisions and the Wiki candidate/base before reusing results. Process Integration consumes durable reports first and performs targeted source re-reads only when needed. Host-native isolated Subagents may execute independent Ingest tasks; sequential Checkpoint/Resume remains the portable fallback. This workflow does not introduce a custom runtime, token service, database, or AST dependency.

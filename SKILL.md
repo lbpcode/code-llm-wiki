@@ -35,6 +35,8 @@ All Skills MUST follow:
 - docs/human-review.md
 - docs/language-policy.md
 
+The Ingest Skill MUST additionally follow docs/context-management.md.
+
 ## Output language policy
 
 Unless the user explicitly requests another language, all generated Wiki pages, architecture documentation, analysis/integration reports, update summaries, query answers, review reports, and user-facing deliverables MUST use **Simplified Chinese**.
@@ -44,7 +46,7 @@ Keep Skill instructions and reusable prompt templates in this repository in Engl
 ## Route the task
 
 - Initialize a source superproject/Wiki pair: use skills/code-wiki-init/SKILL.md.
-- Analyze one repository or process: use skills/code-wiki-ingest/SKILL.md.
+- Analyze one repository or process: use skills/code-wiki-ingest/SKILL.md. Ingest uses bounded Analysis Tasks and durable Checkpoint/Resume; do not load an entire repository into one context.
 - Synthesize multiple processes: use skills/code-wiki-integrate/SKILL.md.
 - Answer an engineering question: use skills/code-wiki-query/SKILL.md.
 - Refresh knowledge after source changes: use skills/code-wiki-update/SKILL.md.

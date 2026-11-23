@@ -22,7 +22,7 @@ The detailed shared rules live in docs/wiki-schema.md, docs/claim-evidence-model
 | Skill | Required inputs | Primary outputs | Mutation boundary | Stop / blocked conditions |
 |---|---|---|---|---|
 | init | Source superproject, Wiki destination, Git/submodule state | Source Manifest, repository inventory, candidate mappings, Wiki skeleton, init report | Creates inventory and skeleton in authorized Wiki only | Missing source access, unsafe Git state, unresolved source snapshot; unresolved mappings stay candidate/unknown |
-| ingest | Manifest, repository ID, pinned commit, process/profile scope, applicable instructions | Process pages, claims/evidence, page-source map entries, ingestion report | Candidate Wiki pages only | Commit mismatch, missing required scope, inaccessible repository, sensitive data exposure |
+| ingest | Manifest, repository ID, pinned commit, process/profile scope, applicable instructions, prior plan/checkpoint when resuming | Repository Map, bounded Analysis Plan/Task Reports, checkpoint, Process pages, claims/evidence, page-source map entries, ingestion report | Candidate Wiki pages and Change Set-scoped workflow artifacts only | Commit mismatch, missing required scope, inaccessible repository, context/task cannot be safely recovered, unresolved conflict, sensitive data exposure |
 | integrate | Process pages with explicit review/content status, manifest, profile mappings, interface evidence | System pages, relationship records, interface/workflow pages, integration report | Candidate System-level Wiki pages only | Missing prerequisites or unresolved critical relationship evidence; produce gap report instead |
 | query | User question, accepted Wiki snapshot, relevant page/source references | Answer with scope, citations, uncertainty, and gaps | Read-only | No accepted evidence; report unknown rather than fabricate |
 | update | Previous manifest/map, current source revisions, Git diff/history | Impact map, stale claims, proposed page diff, update report | Candidate changes only; preserve human edits | Cannot establish old/new revisions, conflict with human edits, or impact scope unknown |
@@ -100,3 +100,19 @@ Review MUST be automatically delegated by the orchestrator to a host-native Suba
 - query is read-only and does not participate in candidate approval.
 
 A Skill may recommend the next Skill, but it must not silently expand scope or perform a destructive action.
+
+
+## 5. Context-bounded Ingest contract
+
+The Ingest Skill MUST follow docs/context-management.md.
+
+- Discovery inventories the repository and identifies candidate Process boundaries; it MUST NOT bulk-read all source files.
+- Deep source analysis MUST be planned as bounded Analysis Tasks with explicit objectives, scope, pinned revisions, input candidates, dependencies, and acceptance criteria.
+- Tasks are organized by engineering concern, not one task per file. Small repositories may use fewer tasks; large repositories may use more.
+- Each completed or partial task MUST produce a durable Task Report with exact source evidence, coverage, unknowns, and limitations.
+- The orchestrator MUST update a compact Checkpoint after task completion and before context/session handoff.
+- Resume MUST verify the Source Manifest revisions and Wiki candidate/base before reusing prior task results.
+- Integration MUST consume Task Reports and Claim/Evidence records first, and re-read source only for targeted validation or unresolved cross-boundary questions.
+- Host-native Subagents MAY execute independent Ingest tasks when they provide genuinely isolated contexts. Subagent output remains provisional until the orchestrator validates evidence and reconciles results. Without Subagents, execute sequentially with Checkpoint/Resume.
+- Ingest task execution/coverage statuses are workflow metadata; they MUST NOT be added to or conflated with the canonical Claim, Evidence, Change Set, Review, Human Decision, or Publication state domains.
+- Context exhaustion, truncated tool output, interruption, or missing task artifacts MUST never be interpreted as successful completion.
