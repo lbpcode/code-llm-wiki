@@ -78,7 +78,9 @@ AI updates must not overwrite human edits. Overlapping semantic changes stop for
 
 **Status:** Accepted for v0.1.0
 
-Independent repositories may be processed separately, but inaccessible or failed scopes must be reported. PARTIAL/BLOCKED runs cannot be treated as complete System knowledge or published. Optional CMake DOT failure alone does not block unrelated work.\n\n## ADR-014: Bounded and resumable repository ingestion
+Independent repositories may be processed separately, but inaccessible or failed scopes must be reported. PARTIAL/BLOCKED runs cannot be treated as complete System knowledge or published. Optional CMake DOT failure alone does not block unrelated work.
+
+## ADR-014: Bounded and resumable repository ingestion
 
 **Status:** Accepted
 

@@ -100,7 +100,7 @@ Subagent delegation is optional for Ingest. If unavailable, execute tasks sequen
 
 When resuming, read the Source Manifest, candidate Change Set, Analysis Plan, and Checkpoint first. Verify the Wiki base revision and all relevant source commits before trusting prior results.
 
-Load only the Task Reports required for the next task and the minimal Context Pack. Continue pending tasks; do not repeat completed tasks unless their source revision changed, evidence no longer resolves, or a conflict requires revalidation.
+Load only the Task Reports required for the next task (including relevant partial reports) and the minimal Context Pack. Continue pending tasks and resume blocked/in-progress tasks only after their blocker or interruption is resolved. Do not repeat completed tasks unless their source revision changed, evidence no longer resolves, or a conflict requires revalidation.
 
 If the Checkpoint is missing or inconsistent, reconstruct task state from durable reports and pinned source revisions. Mark uncertain work partial; never guess that a task completed.
 

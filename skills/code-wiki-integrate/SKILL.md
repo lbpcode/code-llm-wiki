@@ -16,7 +16,7 @@ Follow docs/skill-contracts.md, docs/independent-review-execution.md, docs/wiki-
 ## Preconditions
 
 - Source Manifest pins the relevant repositories.
-- Ingestion Plans and Task Reports are available for the selected Process scope, or their absence is explicitly reported as a coverage gap.
+- Ingestion Plans and Task Reports are available for the selected Process scope, or their absence is explicitly reported as a coverage gap. Legacy Process pages without task artifacts may still be used as candidate inputs, but their ingestion coverage MUST remain unverified/partial.
 - Repository-to-Process and Process-to-Profile mappings have explicit status.
 - Process pages exist for the in-scope processes.
 - Each input page has a content/review status and Claim-Evidence mapping.

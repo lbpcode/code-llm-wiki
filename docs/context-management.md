@@ -120,7 +120,7 @@ Keep the Checkpoint compact. Store task details and evidence in Task Reports; re
 On resume:
 1. read the Source Manifest, current candidate Change Set, Analysis Plan, and Checkpoint;
 2. verify that every relevant repository still matches its pinned full commit SHA and that the Wiki base/candidate workspace is the expected one;
-3. load only completed Task Reports needed by the next task and the Context Pack for pending work;
+3. load only the Task Reports needed by the next task, including relevant completed or partial reports, plus the minimal Context Pack;
 4. continue pending tasks without repeating completed tasks;
 5. if a source revision or relevant candidate artifact changed, mark affected task results stale and revalidate before using them.
 
