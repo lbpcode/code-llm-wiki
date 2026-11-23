@@ -103,7 +103,7 @@ A **Session** is one sequential execution segment for an Ingest run, backed by o
 - A new Session exists only when execution actually continues in a fresh model context. Sending another message in the same conversation does not create a new Session.
 - Sessions execute sequentially in this workflow. Session Handoff does not require, imply, or create parallel Subagents.
 - Each Session consumes a bounded Context Pack and writes durable Task Reports and Checkpoint updates.
-- Session IDs are run-local logical IDs such as \`session-0001\`; do not invent host conversation IDs.
+- Session IDs are run-local logical IDs such as `session-0001`; do not invent host conversation IDs.
 - Increment the session sequence only after a genuinely fresh context has been opened.
 
 ### 6.3 Handoff triggers
@@ -126,10 +126,10 @@ Do not create a new Session after every small task. Keep a small number of close
 When a handoff is warranted:
 
 1. Stop expanding the source scope. Finish the current logical analysis unit only if it can be completed safely.
-2. Persist the current Task Report, including verified findings, exact Evidence locators, completed logical units, unresolved questions, and the next safe cursor. If the task is unfinished, set coverage to \`partial\`; use execution status \`blocked\` unless it is safe to resume directly from the recorded cursor.
-3. Build a Context Pack for the next Session using \`references/context-pack-template.md\`. Include only the next task's objective, acceptance criteria, pinned revisions, necessary policy instructions, relevant prior report references, and exact source locators. Do not copy the full conversation or all prior reports.
-4. Write a concise Handoff Note using \`references/session-handoff-template.md\`. The note points to the authoritative Checkpoint and next Context Pack; it does not duplicate the full Task Reports.
-5. Update the Checkpoint last: mark the current Session \`handed_off\`, record the handoff reason and artifact paths, and set the next action. The Checkpoint must not point to a missing or unwritten artifact.
+2. Persist the current Task Report, including verified findings, exact Evidence locators, completed logical units, unresolved questions, and the next safe cursor. If the task is unfinished, set coverage to `partial`; use execution status `blocked` unless it is safe to resume directly from the recorded cursor.
+3. Build a Context Pack for the next Session using `references/context-pack-template.md`. Include only the next task's objective, acceptance criteria, pinned revisions, necessary policy instructions, relevant prior report references, and exact source locators. Do not copy the full conversation or all prior reports.
+4. Write a concise Handoff Note using `references/session-handoff-template.md`. The note points to the authoritative Checkpoint and next Context Pack; it does not duplicate the full Task Reports.
+5. Update the Checkpoint last: mark the current Session `handed_off`, record the handoff reason and artifact paths, and set the next action. The Checkpoint must not point to a missing or unwritten artifact.
 6. Stop the current Session after the handoff is committed. Do not continue source inspection in the same context while claiming a fresh Session has started.
 
 If context pressure is urgent and a full Task Report cannot be completed, persist a partial report and the last verified logical unit. Never manufacture a complete task result from unsaved reasoning.
@@ -142,7 +142,7 @@ At the start of a genuinely new Session:
 2. Read the Context Pack for the new Session. Treat the Checkpoint as the authoritative execution state, the Task Reports as the authoritative analysis record, and the Context Pack as a selective loading plan.
 3. Verify the Source Manifest revisions and Wiki base/candidate revision before trusting prior findings.
 4. Load only the task definition, required instructions, explicitly referenced Task Report sections, relevant Claims/Evidence, and source ranges needed for the next action.
-5. Increment the logical Session sequence and mark the new Session \`active\`. Preserve the previous Session ID and last Handoff Note path.
+5. Increment the logical Session sequence and mark the new Session `active`. Preserve the previous Session ID and last Handoff Note path.
 6. Continue from the recorded cursor. Do not repeat completed tasks or reread completed source ranges unless a revision change, unresolved conflict, or evidence-validation requirement makes it necessary.
 
 If the current conversation is continuing in the same model context, do not increment the Session sequence or pretend a rollover occurred.
@@ -151,7 +151,7 @@ If the current conversation is continuing in the same model context, do not incr
 
 A Skill can prepare handoff artifacts and a resume instruction, but it cannot create a new IDE/chat conversation unless the host explicitly provides that capability. When no such host operation exists, the Skill MUST save the handoff artifacts, print a concise instruction for opening a fresh conversation and resuming from the Context Pack, then stop. The user starts the new conversation.
 
-This manual fresh-session handoff is supported for sequential Ingest work only. It is not a fallback for the independent Review gate: \`docs/independent-review-execution.md\` still requires automatic host-native isolated Subagent delegation and explicitly prohibits manual-session or same-context Review.
+This manual fresh-session handoff is supported for sequential Ingest work only. It is not a fallback for the independent Review gate: `docs/independent-review-execution.md` still requires automatic host-native isolated Subagent delegation and explicitly prohibits manual-session or same-context Review.
 
 ## 7. Durable artifacts and resume
 

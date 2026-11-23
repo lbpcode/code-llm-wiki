@@ -2,7 +2,7 @@
 
 The Checkpoint is the authoritative, compact execution-state index. Keep detailed findings in Task Reports, session handoff details in Handoff Notes, and task-specific loading instructions in Context Packs. Do not duplicate full analysis text here.
 
-\`\`\`yaml
+```yaml
 checkpoint_version: 2
 run_id: ""
 change_id: ""
@@ -53,16 +53,16 @@ resume:
   context_pack_path: null
   handoff_note_path: null
   next_action: ""
-\`\`\`
+```
 
 ## Update rules
 
 - Update after every meaningful logical analysis unit, every completed task, every partial/blocked transition, and every Session Handoff.
-- Persist the corresponding Task Report before updating the Checkpoint's \`last_persisted_unit_id\` or \`report_path\`.
-- For a handoff, write the next Context Pack and Handoff Note before updating the Checkpoint to \`session.status=handed_off\`. The Checkpoint must never point to missing artifacts.
-- On a fresh Session resume, increment \`sequence\`, set \`current_session_id\` to the next run-local ID, set \`previous_session_id\` to the handed-off Session, set status to \`active\`, and preserve \`last_handoff\` for traceability.
+- Persist the corresponding Task Report before updating the Checkpoint's `last_persisted_unit_id` or `report_path`.
+- For a handoff, write the next Context Pack and Handoff Note before updating the Checkpoint to `session.status=handed_off`. The Checkpoint must never point to missing artifacts.
+- On a fresh Session resume, increment `sequence`, set `current_session_id` to the next run-local ID, set `previous_session_id` to the handed-off Session, set status to `active`, and preserve `last_handoff` for traceability.
 - Do not increment the Session sequence when continuing in the same model context.
-- If interrupted mid-task, set coverage to \`partial\`; use execution status \`blocked\` unless the task can safely resume directly from its persisted cursor.
+- If interrupted mid-task, set coverage to `partial`; use execution status `blocked` unless the task can safely resume directly from its persisted cursor.
 - Never mark a task completed because the model conversation ended, a Session was handed off, or a summary was generated.
 - On resume, verify pinned source commits and the expected Wiki candidate/base before trusting prior results.
 - If a source revision changed, mark affected reports and their Claims/Evidence stale until revalidated.
