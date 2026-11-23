@@ -93,11 +93,11 @@ Keep sufficient room for reasoning, report generation, tool results, and the nex
 Do not rely on automatic context compaction as a lossless memory mechanism. When the host indicates context pressure, tool output becomes unwieldy, or the current task starts accumulating unrelated concerns:
 1. stop expanding the source scope;
 2. finish the current atomic unit only if it can be completed safely;
-3. save its Task Report or mark it partial;
+3. save its Task Report with coverage_status=partial when the task is not complete;
 4. update the Checkpoint;
 5. continue in a fresh isolated context/session when available, loading only the Checkpoint, relevant Task Reports, and the next Context Pack.
 
-If there is not enough context to finish safely, stop and checkpoint the task as partial or blocked. Never manufacture a complete result from a partial read.
+If there is not enough context to finish safely, stop and checkpoint the task with coverage_status=partial and execution_status=blocked (or in_progress only when it remains safely resumable). Never manufacture a complete result from a partial read.
 
 ## 7. Durable artifacts and resume
 
@@ -111,7 +111,7 @@ Use the exact paths available in the authorized Wiki workspace if its layout dif
 
 Update the Checkpoint:
 - after each completed task;
-- whenever a task becomes partial or blocked;
+- whenever task coverage becomes partial or task execution becomes blocked;
 - before handing work to another context or Subagent;
 - before stopping because of context pressure or interruption.
 

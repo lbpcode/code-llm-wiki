@@ -36,7 +36,7 @@ resume:
 ## Update rules
 
 - Update after every completed task and before every context/session handoff.
-- If interrupted mid-task, keep that task in_progress only when its durable state is clear; otherwise mark it partial in its Task Report and leave it resumable.
+- If interrupted mid-task, set coverage_status to partial. Use execution_status=blocked when work cannot safely continue now, or in_progress only when it remains safely resumable; record the next action in the Checkpoint.
 - Never mark a task completed because the model conversation ended or because a summary was generated.
 - On resume, verify pinned source commits and the expected Wiki candidate/base before trusting prior results.
 - If a source revision changed, mark affected reports and their Claims/Evidence stale until revalidated.

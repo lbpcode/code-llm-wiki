@@ -4,7 +4,7 @@
 
 核心目标：从 Superproject、Git Submodules、源码和现有工程文档中提取有证据支撑的知识，以 Process 为基本单元组织，再整合成 System 级架构知识，最终沉淀到独立 Wiki 仓库。
 
-## v0.1.0 设计范围
+## 当前设计范围
 
 - **知识模型**：Process 为核心，System 为跨进程知识整合层。
 - **仓库关系**：Repository 与 Process 为多对多关系；Process/Profile 映射独立记录。

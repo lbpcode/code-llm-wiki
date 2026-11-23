@@ -29,12 +29,13 @@ All Skills MUST follow:
 - docs/claim-evidence-model.md
 - docs/state-machine.md
 - docs/skill-contracts.md
-- docs/context-management.md
 - docs/failure-handling.md
 - docs/quality-gate.md
 - docs/independent-review-execution.md
 - docs/human-review.md
 - docs/language-policy.md
+
+The Ingest Skill MUST additionally follow docs/context-management.md.
 
 ## Output language policy
 
