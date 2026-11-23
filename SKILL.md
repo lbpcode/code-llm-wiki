@@ -29,6 +29,7 @@ All Skills MUST follow:
 - docs/claim-evidence-model.md
 - docs/state-machine.md
 - docs/skill-contracts.md
+- docs/context-management.md
 - docs/failure-handling.md
 - docs/quality-gate.md
 - docs/independent-review-execution.md
@@ -44,7 +45,7 @@ Keep Skill instructions and reusable prompt templates in this repository in Engl
 ## Route the task
 
 - Initialize a source superproject/Wiki pair: use skills/code-wiki-init/SKILL.md.
-- Analyze one repository or process: use skills/code-wiki-ingest/SKILL.md.
+- Analyze one repository or process: use skills/code-wiki-ingest/SKILL.md. Ingest uses bounded Analysis Tasks and durable Checkpoint/Resume; do not load an entire repository into one context.
 - Synthesize multiple processes: use skills/code-wiki-integrate/SKILL.md.
 - Answer an engineering question: use skills/code-wiki-query/SKILL.md.
 - Refresh knowledge after source changes: use skills/code-wiki-update/SKILL.md.

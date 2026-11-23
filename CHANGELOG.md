@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Refactor Ingest into repository discovery, bounded Analysis Tasks, targeted source reading, Task Reports, and Checkpoint/Resume.
+- Add context-management rules and reusable Analysis Task / Checkpoint templates without introducing a runtime, database, AST extractor, or token-counting service.
+- Update Process Integration to consume durable task results first and re-read source only for targeted validation or unresolved cross-boundary questions.
+- Define optional host-native Subagent delegation for independent Ingest tasks while preserving the mandatory isolated Review gate.
+
 ## v0.1.0
 
 - Establish a Process-centric, multi-repository Code LLM Wiki.
