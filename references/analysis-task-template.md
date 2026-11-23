@@ -24,6 +24,15 @@ Use one task per bounded engineering question or concern, not one task per file.
 - Context handoff / Subagent invocation (if applicable):
 - Tool/output limitations:
 
+## Progress ledger
+
+Record each meaningful logical analysis unit when its result and evidence have been persisted. Do not create one row per file or trivial tool call.
+
+| Unit ID | Question / symbol / behavior traced | Status | Durable findings / Evidence IDs | Resume cursor |
+|---|---|---|---|---|
+
+Statuses are workflow metadata: not_started / partial / completed.
+
 ## Findings
 
 | Claim ID / finding | Statement | Status | Evidence IDs | Limitations |

@@ -14,7 +14,9 @@ This is a workflow contract, not a new runtime. It does not require a database, 
 - **Analysis Task:** one bounded engineering question or concern, such as process entry, startup lifecycle, suspend/resume, IPC contract, thread/resource ownership, security, or deployment.
 - **Task Report:** the durable result of one task, including findings, exact evidence, unknowns, coverage, and follow-up work.
 - **Checkpoint:** a compact, durable pointer to the plan, task states, source revisions, completed reports, and the next safe action.
-- **Context Pack:** the minimum set of instructions, accepted Wiki knowledge, task inputs, and source excerpts required to execute one task.
+- **Context Pack:** the minimum set of instructions, accepted Wiki knowledge, task inputs, and source locators required to execute one task in a fresh Session.
+- **Session:** one sequential execution segment backed by one fresh model context; it is not a Subagent or a provider-specific conversation ID.
+- **Session Handoff:** the durable transfer of execution state from the current Session to a later fresh Session through a Checkpoint, Handoff Note, and Context Pack.
 
 Analysis Tasks are not files, classes, or arbitrary line ranges. A task is defined by an objective and acceptance criteria. Do not create one task per file. A small repository may need only a few tasks; a large or multi-process repository may need many.
 
@@ -79,25 +81,77 @@ A task is complete only when:
 
 Do not mark an entire Process complete merely because one task or one group of files was inspected.
 
-## 6. Context budget and handoff
+## 6. Context budget and sequential session handoff
 
-Use the host's context-usage indicator when available. Do not claim an exact token count when the host does not expose one.
+### 6.1 Context budget
 
-Keep sufficient room for reasoning, report generation, tool results, and the next handoff. Reduce context growth by:
+Use the host's context-usage indicator when available. Do not claim an exact token count or percentage when the host does not expose it.
+
+Keep sufficient room for reasoning, tool results, report generation, and a safe handoff. Reduce context growth by:
 - loading only the Context Pack for the active task;
 - limiting tool output and avoiding bulk file dumps;
 - not pasting entire previous Task Reports when their paths/IDs and relevant sections suffice;
 - writing durable findings to Task Reports instead of carrying them only in conversation history;
 - avoiding repeated source reads and duplicate summaries.
 
-Do not rely on automatic context compaction as a lossless memory mechanism. When the host indicates context pressure, tool output becomes unwieldy, or the current task starts accumulating unrelated concerns:
-1. stop expanding the source scope;
-2. finish the current atomic unit only if it can be completed safely;
-3. save its Task Report with coverage_status=partial when the task is not complete;
-4. update the Checkpoint;
-5. continue in a fresh isolated context/session when available, loading only the Checkpoint, relevant Task Reports, and the next Context Pack.
+Do not rely on automatic context compaction as a lossless memory mechanism. Session handoff reduces dependence on the current conversation context; it does not prevent the host from compacting context before the handoff occurs.
 
-If there is not enough context to finish safely, stop and checkpoint the task with coverage_status=partial and execution_status=blocked (or in_progress only when it remains safely resumable). Never manufacture a complete result from a partial read.
+### 6.2 Session model
+
+A **Session** is one sequential execution segment for an Ingest run, backed by one fresh model context. It is a workflow concept, not a provider-specific conversation ID, a Subagent, or a new runtime.
+
+- A new Session exists only when execution actually continues in a fresh model context. Sending another message in the same conversation does not create a new Session.
+- Sessions execute sequentially in this workflow. Session Handoff does not require, imply, or create parallel Subagents.
+- Each Session consumes a bounded Context Pack and writes durable Task Reports and Checkpoint updates.
+- Session IDs are run-local logical IDs such as \`session-0001\`; do not invent host conversation IDs.
+- Increment the session sequence only after a genuinely fresh context has been opened.
+
+### 6.3 Handoff triggers
+
+Prefer handoff at a safe task or phase boundary. Handoff is useful when:
+- the host reports context usage at or above a configured project/host threshold;
+- the host warns that context is nearing its limit;
+- repeated large tool outputs or truncation indicate that the remaining work cannot be completed safely in the current context;
+- Discovery and Analysis Planning are complete and deep source analysis is about to begin;
+- the current task or a small group of related tasks is complete and the next work has a materially different focus;
+- Process Integration is about to begin after a large set of Ingest tasks;
+- the user requests a pause or the work must be resumed later.
+
+Do not impose a universal utilization percentage. Use a configured threshold only when the host exposes a trustworthy usage indicator. If no indicator exists, use phase boundaries and qualitative warning signs; never claim to know the exact remaining budget.
+
+Do not create a new Session after every small task. Keep a small number of closely related tasks together when their combined Context Pack and expected tool output remain safely bounded.
+
+### 6.4 Handoff protocol
+
+When a handoff is warranted:
+
+1. Stop expanding the source scope. Finish the current logical analysis unit only if it can be completed safely.
+2. Persist the current Task Report, including verified findings, exact Evidence locators, completed logical units, unresolved questions, and the next safe cursor. If the task is unfinished, set coverage to \`partial\`; use execution status \`blocked\` unless it is safe to resume directly from the recorded cursor.
+3. Build a Context Pack for the next Session using \`references/context-pack-template.md\`. Include only the next task's objective, acceptance criteria, pinned revisions, necessary policy instructions, relevant prior report references, and exact source locators. Do not copy the full conversation or all prior reports.
+4. Write a concise Handoff Note using \`references/session-handoff-template.md\`. The note points to the authoritative Checkpoint and next Context Pack; it does not duplicate the full Task Reports.
+5. Update the Checkpoint last: mark the current Session \`handed_off\`, record the handoff reason and artifact paths, and set the next action. The Checkpoint must not point to a missing or unwritten artifact.
+6. Stop the current Session after the handoff is committed. Do not continue source inspection in the same context while claiming a fresh Session has started.
+
+If context pressure is urgent and a full Task Report cannot be completed, persist a partial report and the last verified logical unit. Never manufacture a complete task result from unsaved reasoning.
+
+### 6.5 Resume protocol
+
+At the start of a genuinely new Session:
+
+1. Read the Checkpoint and the Handoff Note it references.
+2. Read the Context Pack for the new Session. Treat the Checkpoint as the authoritative execution state, the Task Reports as the authoritative analysis record, and the Context Pack as a selective loading plan.
+3. Verify the Source Manifest revisions and Wiki base/candidate revision before trusting prior findings.
+4. Load only the task definition, required instructions, explicitly referenced Task Report sections, relevant Claims/Evidence, and source ranges needed for the next action.
+5. Increment the logical Session sequence and mark the new Session \`active\`. Preserve the previous Session ID and last Handoff Note path.
+6. Continue from the recorded cursor. Do not repeat completed tasks or reread completed source ranges unless a revision change, unresolved conflict, or evidence-validation requirement makes it necessary.
+
+If the current conversation is continuing in the same model context, do not increment the Session sequence or pretend a rollover occurred.
+
+### 6.6 Host capability boundary
+
+A Skill can prepare handoff artifacts and a resume instruction, but it cannot create a new IDE/chat conversation unless the host explicitly provides that capability. When no such host operation exists, the Skill MUST save the handoff artifacts, print a concise instruction for opening a fresh conversation and resuming from the Context Pack, then stop. The user starts the new conversation.
+
+This manual fresh-session handoff is supported for sequential Ingest work only. It is not a fallback for the independent Review gate: \`docs/independent-review-execution.md\` still requires automatic host-native isolated Subagent delegation and explicitly prohibits manual-session or same-context Review.
 
 ## 7. Durable artifacts and resume
 
@@ -106,23 +160,30 @@ Store working artifacts under the candidate Change Set, not in accepted Wiki pag
 - wiki/_meta/changes/<change-id>/ingestion/analysis-plan.md
 - wiki/_meta/changes/<change-id>/ingestion/tasks/<task-id>.md
 - wiki/_meta/changes/<change-id>/ingestion/checkpoint.yaml
+- wiki/_meta/changes/<change-id>/ingestion/sessions/session-<sequence>-handoff.md
+- wiki/_meta/changes/<change-id>/ingestion/sessions/session-<next-sequence>-context-pack.md
 
 Use the exact paths available in the authorized Wiki workspace if its layout differs, and record that layout in the Ingestion Report.
 
 Update the Checkpoint:
+- after each meaningful logical analysis unit has been persisted to its Task Report;
 - after each completed task;
 - whenever task coverage becomes partial or task execution becomes blocked;
 - before handing work to another context or Subagent;
 - before stopping because of context pressure or interruption.
 
+For a Session Handoff, write the Task Report first, then the next Session's Context Pack, then the Handoff Note, and update the Checkpoint last. The Checkpoint is the commit marker and MUST NOT reference an artifact that has not been written.
+
 Keep the Checkpoint compact. Store task details and evidence in Task Reports; reference those artifacts by path rather than copying their contents into the Checkpoint.
 
 On resume:
-1. read the Source Manifest, current candidate Change Set, Analysis Plan, and Checkpoint;
-2. verify that every relevant repository still matches its pinned full commit SHA and that the Wiki base/candidate workspace is the expected one;
-3. load only the Task Reports needed by the next task, including relevant completed or partial reports, plus the minimal Context Pack;
-4. continue pending tasks without repeating completed tasks;
+1. read the Checkpoint, referenced Handoff Note, and Context Pack for the new Session;
+2. verify the Source Manifest, every relevant full source commit SHA, and the expected Wiki base/candidate workspace;
+3. load only the task definition and Task Report sections, Claims/Evidence, instructions, and source locators named by the Context Pack;
+4. continue from the recorded logical-unit cursor without repeating completed tasks or source reads;
 5. if a source revision or relevant candidate artifact changed, mark affected task results stale and revalidate before using them.
+
+A Checkpoint created by version 1 of this template may be resumed. Preserve its existing task state, initialize Session metadata as a migrated active Session, and upgrade it to version 2 on the next write; do not rerun completed tasks solely because the Checkpoint was upgraded.
 
 If the Checkpoint is missing or inconsistent, do not guess where execution stopped. Reconstruct the affected task state from durable Task Reports and source revisions; mark uncertain work partial and repeat only the necessary inspection.
 
@@ -141,7 +202,7 @@ If a missing relationship requires substantial additional source analysis, creat
 
 ## 9. Coverage and state boundaries
 
-Task execution status and coverage status are workflow metadata, not Claim, Evidence, Change Set, Review, Human Decision, or Publication states.
+Task execution status, coverage status, and Session metadata are workflow metadata, not Claim, Evidence, Change Set, Review, Human Decision, or Publication states.
 
 Use:
 - execution_status: pending, in_progress, completed, or blocked;
