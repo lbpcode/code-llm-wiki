@@ -132,6 +132,8 @@ When a handoff is warranted:
 5. Update the Checkpoint last: mark the current Session `handed_off`, record the handoff reason and artifact paths, and set the next action. The Checkpoint must not point to a missing or unwritten artifact.
 6. Stop the current Session after the handoff is committed. Do not continue source inspection in the same context while claiming a fresh Session has started.
 
+If no Ingest work remains, mark the Session and run completed instead of creating an unnecessary Handoff Note or Context Pack.
+
 If context pressure is urgent and a full Task Report cannot be completed, persist a partial report and the last verified logical unit. Never manufacture a complete task result from unsaved reasoning.
 
 ### 6.5 Resume protocol

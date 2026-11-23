@@ -35,7 +35,11 @@ Describe one concrete action for the next Session, including the task ID and the
 
 ## Resume instruction
 
-Start a genuinely fresh model context, then:
+Copy this resume instruction into a genuinely fresh conversation:
+
+> Resume Code LLM Wiki Ingest from the Checkpoint at `<checkpoint path>` and Context Pack at `<next context pack path>`. Verify the Source Manifest, pinned source commits, and Wiki base/candidate revision, then continue from the recorded resume cursor without redoing completed work.
+
+In the new model context:
 1. read the Checkpoint at the path above;
 2. read this Handoff Note and the referenced Context Pack;
 3. verify the Source Manifest, pinned source commits, and Wiki base/candidate revision;

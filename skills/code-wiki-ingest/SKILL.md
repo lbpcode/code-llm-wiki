@@ -149,7 +149,8 @@ Keep all generated content as a candidate diff until human approval and explicit
 
 - Repository Map and candidate Repository-to-Process / Process-to-Profile mappings.
 - Analysis Plan and per-task reports.
-- Checkpoint with source revisions, task states, and resume action.
+- Checkpoint with source revisions, task states, logical-unit cursor, and Session metadata.
+- Session Handoff Note and next Context Pack whenever execution is handed to a fresh context.
 - Process overview and boundary, with coverage status.
 - Profile-specific sections/pages for confirmed or explicitly in-scope profiles.
 - Atomic Claim-Evidence records.
