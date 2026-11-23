@@ -15,7 +15,7 @@
 - **构建关系**：可选使用 CMake Graphviz DOT 辅助分析 Target 级依赖。
 - **AST**：第一阶段暂不引入。
 - **Ingest**：Repository Discovery → bounded Analysis Tasks → Task Reports / Checkpoint → Process Integration；避免全仓库源码一次性进入模型上下文。
-- **上下文管理**：任务范围、源码读取、Checkpoint/Resume 与可选 Subagent 隔离均由 Skill/Prompt 规范，不引入独立运行时。
+- **上下文管理**：任务范围、逻辑单元级持久化、Sequential Session Handoff/Resume 与最小 Context Pack 均由 Skill/Prompt 规范；不依赖 Subagent 或独立运行时。
 - **质量门禁**：Lint → 自动委派独立 Review Subagent → Human Review → 显式授权发布。
 - **状态管理**：Claim、Evidence、Change Set、Review、Human Decision 和 Publication 状态分开管理。
 - **输出语言**：Skill 指令以英文维护；Wiki 和报告默认简体中文。
@@ -65,7 +65,7 @@ Init
 ## 设计规范索引
 
 - [Architecture](docs/architecture.md)
-- [Context-Bounded Ingestion](docs/context-management.md)
+- [Context-Bounded Ingestion and Session Handoff](docs/context-management.md)
 - [Wiki Schema](docs/wiki-schema.md)
 - [Claim / Evidence / Page-Source Map](docs/claim-evidence-model.md)
 - [Workflow State Model](docs/state-machine.md)
@@ -83,6 +83,8 @@ Init
 - Claim / Evidence: `references/claim-template.md`
 - Analysis Task: `references/analysis-task-template.md`
 - Ingestion Checkpoint: `references/checkpoint-template.md`
+- Session Handoff: `references/session-handoff-template.md`
+- Session Context Pack: `references/context-pack-template.md`
 - Change Set: `references/change-set-template.md`
 - Platform Profile: `references/platform-profile-template.md`
 - Architecture Decision: `references/architecture-decision-template.md`

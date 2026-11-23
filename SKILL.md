@@ -35,7 +35,7 @@ All Skills MUST follow:
 - docs/human-review.md
 - docs/language-policy.md
 
-The Ingest Skill MUST additionally follow docs/context-management.md.
+The Ingest Skill MUST additionally follow docs/context-management.md. Sequential Session Handoff/Resume is supported through durable Checkpoints, Handoff Notes, and minimal Context Packs; it does not require Subagents and cannot create a new host conversation unless the host exposes that capability.
 
 ## Output language policy
 

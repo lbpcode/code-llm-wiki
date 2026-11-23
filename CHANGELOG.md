@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add sequential Session Handoff/Resume for Ingest with logical-unit checkpoints, versioned session metadata, Handoff Notes, and minimal Context Packs; no Subagent or custom runtime is required.
+
 - Refactor Ingest into repository discovery, bounded Analysis Tasks, targeted source reading, Task Reports, and Checkpoint/Resume.
 - Add context-management rules and reusable Analysis Task / Checkpoint templates without introducing a runtime, database, AST extractor, or token-counting service.
 - Update Process Integration to consume durable task results first and re-read source only for targeted validation or unresolved cross-boundary questions.

@@ -85,3 +85,10 @@ Independent repositories may be processed separately, but inaccessible or failed
 **Status:** Accepted
 
 Ingest MUST discover repository structure before deep source inspection, plan bounded Analysis Tasks by engineering concern, read only task-relevant source ranges, and persist Task Reports plus a compact Checkpoint. Tasks are not split mechanically by file. Resume verifies pinned source revisions and the Wiki candidate/base before reusing results. Process Integration consumes durable reports first and performs targeted source re-reads only when needed. Host-native isolated Subagents may execute independent Ingest tasks; sequential Checkpoint/Resume remains the portable fallback. This workflow does not introduce a custom runtime, token service, database, or AST dependency.
+
+
+## ADR-015: Sequential Session Handoff for bounded Ingest
+
+**Status:** Accepted
+
+Large Ingest runs may outlive a single model context. The workflow therefore supports sequential Sessions backed by fresh model contexts, with durable Task Reports, a versioned Checkpoint, a Handoff Note, and a minimal Context Pack. The Skill does not assume it can create a new IDE/chat conversation; when the host lacks that capability, it writes the handoff artifacts, prints a resume instruction, and stops for the user to open a fresh conversation. Session Handoff is not Subagent delegation and is not a fallback for the mandatory independent Review gate. Automatic context compaction may still occur; correctness must rely on persisted artifacts rather than chat history.
