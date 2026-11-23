@@ -27,6 +27,8 @@ Use:
 - references/claim-template.md
 - references/analysis-task-template.md
 - references/checkpoint-template.md
+- references/context-pack-template.md
+- references/session-handoff-template.md
 - references/ingestion-report-template.md
 
 ## Required inputs
@@ -78,11 +80,27 @@ For each task:
 7. Stop when acceptance criteria are met. If the investigation expands into another independent concern, create a follow-up task instead of broadening the current task indefinitely.
 8. Split a task when it spans multiple independent outcomes, repeatedly expands, or approaches the host context limit. Do not rely on automatic context compaction to preserve facts.
 9. Create a Task Report using references/analysis-task-template.md. Record verified findings, inferred findings with reasoning, unknowns, contradictions, inspected scope, limitations, and evidence.
-10. Update the Checkpoint after each completed task, after a partial/blocked task, and before any context/session handoff.
+10. After each meaningful logical analysis unit, persist its findings and Evidence locators to the Task Report, then update the Checkpoint's last persisted unit/cursor. Also update after task completion, partial/blocked transitions, and before any context/session handoff. Do not wait until the entire Task is complete to persist all findings.
 
 Use execution_status pending/in_progress/completed/blocked and coverage_status not_started/partial/complete as workflow metadata only. These are not Wiki Claim or Change Set states.
 
-### 4. Optional Subagent delegation
+### 4. Sequential Session Handoff (no Subagent required)
+
+Use Session Handoff when the current model context should be retired before the Ingest run is complete. This is a sequential execution mechanism and does not require or invoke Subagents.
+
+1. Prefer safe boundaries: after Discovery/Planning, after one or a small number of related Analysis Tasks, or before Process Integration. Do not create a new Session after every small task.
+2. If the host exposes a trustworthy context-usage indicator, follow the configured handoff threshold. Do not invent an exact percentage. Without an indicator, use host warnings, repeated output truncation, scope expansion, and planned phase boundaries.
+3. Persist the current Task Report at logical-unit granularity. If the active task is unfinished, record partial coverage, the last persisted unit, exact resume cursor, unresolved questions, and verified Evidence only.
+4. Create the next Session's Context Pack using references/context-pack-template.md. Include only the next task's required instructions, task definition, necessary report sections/Claim/Evidence references, pinned source revisions, and source locators.
+5. Create a Handoff Note using references/session-handoff-template.md.
+6. Update the Checkpoint last, mark the current Session handed_off, and record the Handoff Note, Context Pack, handoff reason, and next action. Verify that both referenced artifacts exist.
+7. Stop the current Session. Do not continue reading source or claim that the context has been reset.
+
+A Skill cannot open a new IDE/chat conversation unless the host explicitly exposes that operation. If it does not, output the exact resume instruction and ask the user to start a fresh conversation. The next conversation resumes from the Context Pack and Checkpoint, not the old chat transcript.
+
+Do not use this mechanism as a fallback for the independent Review gate. Review still requires automatic host-native isolated Subagent delegation under docs/independent-review-execution.md.
+
+### 5. Optional Subagent delegation
 
 If the host supports isolated Subagents, delegate independent Analysis Tasks with a bounded task packet containing:
 - exact objective and acceptance criteria;
@@ -96,15 +114,17 @@ Prefer a small number of independent, high-value tasks. Do not parallelize depen
 
 Subagent delegation is optional for Ingest. If unavailable, execute tasks sequentially with Checkpoint/Resume. This does not change the mandatory isolated Subagent requirement for the later independent Review gate.
 
-### 5. Resume interrupted ingestion
+### 6. Resume interrupted ingestion
 
-When resuming, read the Source Manifest, candidate Change Set, Analysis Plan, and Checkpoint first. Verify the Wiki base revision and all relevant source commits before trusting prior results.
+When resuming in a fresh Session, read the Checkpoint, referenced Handoff Note, and next Context Pack first. Verify the Source Manifest, Wiki base revision, and all relevant source commits before trusting prior results. If the Checkpoint is version 1, preserve its task states and upgrade it to version 2 without redoing completed work.
 
-Load only the Task Reports required for the next task (including relevant partial reports) and the minimal Context Pack. Continue pending tasks and resume blocked/in-progress tasks only after their blocker or interruption is resolved. Do not repeat completed tasks unless their source revision changed, evidence no longer resolves, or a conflict requires revalidation.
+Load only the current task definition, required policy instructions, relevant sections of Task Reports, necessary Claims/Evidence, and source locators listed in the Context Pack. Do not load the full prior conversation or every completed report. Continue pending tasks and resume blocked/in-progress tasks only after their blocker or interruption is resolved. Do not repeat completed tasks or reread completed source ranges unless a revision changed, evidence no longer resolves, or a conflict requires revalidation.
+
+Increment the logical Session sequence only when this is a genuinely new model context. If continuing in the same context, retain the current Session ID.
 
 If the Checkpoint is missing or inconsistent, reconstruct task state from durable reports and pinned source revisions. Mark uncertain work partial; never guess that a task completed.
 
-### 6. Process integration and Wiki generation
+### 7. Process integration and Wiki generation
 
 1. Integrate Task Reports, Claims/Evidence, Repository Map, and relevant existing Wiki knowledge.
 2. Do not reread the entire repository during integration. Reopen source only to validate evidence, resolve conflicts, inspect both sides of an interface, or answer a specific cross-module/cross-repository question.
@@ -117,7 +137,7 @@ If the Checkpoint is missing or inconsistent, reconstruct task state from durabl
 9. Inspect both sides of interfaces when possible. A one-sided interface remains candidate/unknown.
 10. Update Page-Source Map entries only for pages and sources actually inspected. Preserve human edits and all existing candidate/accepted state boundaries.
 
-### 7. Quality gates
+### 8. Quality gates
 
 Run Lint. If Lint PASS, the orchestrator MUST automatically delegate a fresh host-native Review Subagent using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Wait for a completed, snapshot-bound report.
 
@@ -129,7 +149,8 @@ Keep all generated content as a candidate diff until human approval and explicit
 
 - Repository Map and candidate Repository-to-Process / Process-to-Profile mappings.
 - Analysis Plan and per-task reports.
-- Checkpoint with source revisions, task states, and resume action.
+- Checkpoint with source revisions, task states, logical-unit cursor, and Session metadata.
+- Session Handoff Note and next Context Pack whenever execution is handed to a fresh context.
 - Process overview and boundary, with coverage status.
 - Profile-specific sections/pages for confirmed or explicitly in-scope profiles.
 - Atomic Claim-Evidence records.

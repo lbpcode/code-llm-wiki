@@ -22,7 +22,7 @@ The detailed shared rules live in docs/wiki-schema.md, docs/claim-evidence-model
 | Skill | Required inputs | Primary outputs | Mutation boundary | Stop / blocked conditions |
 |---|---|---|---|---|
 | init | Source superproject, Wiki destination, Git/submodule state | Source Manifest, repository inventory, candidate mappings, Wiki skeleton, init report | Creates inventory and skeleton in authorized Wiki only | Missing source access, unsafe Git state, unresolved source snapshot; unresolved mappings stay candidate/unknown |
-| ingest | Manifest, repository ID, pinned commit, process/profile scope, applicable instructions, prior plan/checkpoint when resuming | Repository Map, bounded Analysis Plan/Task Reports, checkpoint, Process pages, claims/evidence, page-source map entries, ingestion report | Candidate Wiki pages and Change Set-scoped workflow artifacts only | Commit mismatch, missing required scope, inaccessible repository, context/task cannot be safely recovered, unresolved conflict, sensitive data exposure |
+| ingest | Manifest, repository ID, pinned commit, process/profile scope, applicable instructions, prior plan/checkpoint/context pack when resuming | Repository Map, bounded Analysis Plan/Task Reports, Checkpoint, Session Handoff Note, next Context Pack, Process pages, claims/evidence, page-source map entries, ingestion report | Candidate Wiki pages and Change Set-scoped workflow artifacts only | Commit mismatch, missing required scope, inaccessible repository, context/task cannot be safely recovered, stale/missing handoff artifacts, unresolved conflict, sensitive data exposure |
 | integrate | Process pages with explicit review/content status, manifest, profile mappings, interface evidence | System pages, relationship records, interface/workflow pages, integration report | Candidate System-level Wiki pages only | Missing prerequisites or unresolved critical relationship evidence; produce gap report instead |
 | query | User question, accepted Wiki snapshot, relevant page/source references | Answer with scope, citations, uncertainty, and gaps | Read-only | No accepted evidence; report unknown rather than fabricate |
 | update | Previous manifest/map, current source revisions, Git diff/history | Impact map, stale claims, proposed page diff, update report | Candidate changes only; preserve human edits | Cannot establish old/new revisions, conflict with human edits, or impact scope unknown |
@@ -116,3 +116,16 @@ The Ingest Skill MUST follow docs/context-management.md.
 - Host-native Subagents MAY execute independent Ingest tasks when they provide genuinely isolated contexts. Subagent output remains provisional until the orchestrator validates evidence and reconciles results. Without Subagents, execute sequentially with Checkpoint/Resume.
 - Ingest task execution/coverage statuses are workflow metadata; they MUST NOT be added to or conflated with the canonical Claim, Evidence, Change Set, Review, Human Decision, or Publication state domains.
 - Context exhaustion, truncated tool output, interruption, or missing task artifacts MUST never be interpreted as successful completion.
+
+
+## 6. Sequential Session Handoff contract
+
+The Ingest Skill MUST support sequential Session Handoff and Resume without requiring Subagent delegation.
+
+- A Session is a logical execution segment backed by one genuinely fresh model context; it is not a host conversation ID or a parallel worker.
+- The orchestrator MUST persist meaningful logical-unit findings to the Task Report before advancing the Checkpoint cursor.
+- Before handoff, it MUST write the next Context Pack and Handoff Note, then update the Checkpoint last to mark the current Session handed_off and reference those artifacts.
+- The next Session MUST verify source revisions and Wiki base/candidate revision, load only the Context Pack's required inputs, and continue from the recorded cursor.
+- If the host cannot create a fresh conversation, the Skill MUST provide a resume instruction and stop; the user starts a new conversation. It MUST NOT claim that the current context was reset.
+- Session metadata, Task execution status, and coverage status are workflow metadata. They MUST NOT be conflated with Claim, Evidence, Change Set, Review, Human Decision, or Publication states.
+- This manual fresh-session mechanism applies to sequential Ingest only. It MUST NOT be used as a manual-session or same-context fallback for the independent Review gate.
