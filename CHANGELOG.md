@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add a destination Wiki AGENTS.md entry with portable package provenance and self-contained read-only query guidance; preserve existing human instructions.
+- Define synchronized index summaries, status-aware navigation, contextual cross-links, and append-only operation events without mutating frozen review snapshots.
+- Add explicit Query → Update capture using original evidence and the existing quality/publication gates, including when source revisions are unchanged; keep ordinary queries read-only and query logging opt-in.
+- Extend Init, Ingest, Integrate, Query, Update, Lint, and Review contracts and templates for the maintenance loop.
+- Clarify explicitly requested stage boundaries and exact external bindings for uncommitted candidates, with frozen reports and publication metadata kept separate from reviewed knowledge.
+
 - Add sequential Session Handoff/Resume for Ingest with logical-unit checkpoints, versioned session metadata, Handoff Notes, and minimal Context Packs; no Subagent or custom runtime is required.
 
 - Refactor Ingest into repository discovery, bounded Analysis Tasks, targeted source reading, Task Reports, and Checkpoint/Resume.

@@ -24,6 +24,12 @@
 | LINT-008 | Profile and relationship scope | PASS / FAIL / NOT RUN | | | |
 | LINT-009 | Stale / conflicting claims | PASS / FAIL / NOT RUN | | | |
 | LINT-010 | Secret / sensitive-data scan | PASS / FAIL / NOT RUN | | | |
+| LINT-011 | Wiki-local entry paths, policy, and package provenance | PASS / FAIL / NOT RUN | | | |
+| LINT-012 | Index coverage, summaries, page/change visibility, cross-links | PASS / FAIL / NOT RUN | | | |
+| LINT-013 | Append-only log, unique events, observed outcomes, snapshot isolation | PASS / FAIL / NOT RUN | | | |
+| LINT-014 | Query-capture scope, deduplication, original evidence, and candidate gates | PASS / FAIL / NOT RUN | | | |
+
+For LINT-014, PASS may mean verified not applicable when this is not a query-capture change; record that scope decision. Do not invent a capture record. For LINT-013, absence of a disabled query log or a disclosed deferred post-freeze event is not a missing required event. Lint returns its own event to the orchestrator without changing this snapshot.
 
 ## Findings
 

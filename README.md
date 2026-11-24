@@ -19,6 +19,7 @@
 - **质量门禁**：Lint → 自动委派独立 Review Subagent → Human Review → 显式授权发布。
 - **状态管理**：Claim、Evidence、Change Set、Review、Human Decision 和 Publication 状态分开管理。
 - **输出语言**：Skill 指令以英文维护；Wiki 和报告默认简体中文。
+- **知识维护**：目标 Wiki 自带 `AGENTS.md` 维护入口、持续同步的 `index.md` 和追加式 `log.md`；普通查询默认只读，用户要求保存的问答成果进入候选更新与评审。
 
 ## 工作流
 
@@ -36,8 +37,8 @@ Init
 - `init`：盘点 Superproject、Submodules、AGENTS.md、commit 和候选映射。
 - `ingest`：分析单个 Repository / Process，生成 Claim-Evidence 对应的知识页面。
 - `integrate`：整合多个 Process，形成 System 级架构知识。
-- `query`：默认只查询已发布知识，显式区分推断、未知和过期内容。
-- `update`：根据源码变化和 Page-Source Map 生成候选更新。
+- `query`：从索引定位已发布知识，显式区分推断、未知和过期内容；需要保存答案时转入 `update`。
+- `update`：根据源码变化和 Page-Source Map，或明确要求保存的查询发现，生成候选更新；同步页面链接和索引。
 - `review`：由入口 Skill 自动委派独立 Subagent，在新上下文中复核知识结论、证据和关系；不支持手动新建会话的回退流程。
 - `lint`：检查结构、链接、证据、映射、状态和一致性。
 
@@ -62,11 +63,34 @@ Init
 - 增量更新不得覆盖未经确认的人工修订。
 - 失败、跳过、不可访问和未执行的检查必须显式报告，不能伪装成 PASS。
 
+## 使用入口与生成物
+
+保留本仓库的完整目录，让具备文件、Git 和隔离子 Agent 能力的 Coding Agent 读取根目录 `SKILL.md`，并提供源码工作区、独立 Wiki Git 仓库和首轮分析范围。工作流引用路径以本 Skill 仓库根目录为基准。当前没有独立 CLI 或后台服务。
+
+`init` 在目标 Wiki 仓库生成维护入口和骨架：
+
+```text
+AGENTS.md                    # 本地维护规则、路径和完整 Skill 的版本化定位信息
+wiki/
+  index.md                   # 页面链接、摘要、范围及发布状态
+  log.md                     # 已发生操作的追加式时间线
+  system/ processes/         # 系统与进程知识
+  interfaces/ workflows/     # 接口与跨进程流程
+  _meta/                     # 源码清单、结论/证据、变更与评审记录
+```
+
+后续 Agent 从目标仓库的 `AGENTS.md` 开始，查询先读索引。用户要求“把这个分析保存到 Wiki”时，先复用已有页面与原始证据，再生成候选变更并通过原有检查、评审和发布流程。源码版本不变也可能产生新的知识变更。
+
+普通查询默认不写文件，也不写日志；可在目标 Wiki 明确启用仅记录查询日志的策略。检查与评审后产生的事件由主 Agent 记录在冻结快照之外，不得修改已经评审的候选内容。详情见 [Wiki 维护规则](docs/wiki-maintenance.md)。
+
+这套结构采用 [Karpathy 的 LLM Wiki 思路](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)，并针对代码工程增加证据、版本和评审约束。原文是可按领域调整的模式说明，不是固定目录标准；本项目不宣称通过官方符合性认证。
+
 ## 设计规范索引
 
 - [Architecture](docs/architecture.md)
 - [Context-Bounded Ingestion and Session Handoff](docs/context-management.md)
 - [Wiki Schema](docs/wiki-schema.md)
+- [Wiki Navigation, Logging, and Query Capture](docs/wiki-maintenance.md)
 - [Claim / Evidence / Page-Source Map](docs/claim-evidence-model.md)
 - [Workflow State Model](docs/state-machine.md)
 - [Failure Handling](docs/failure-handling.md)
@@ -95,5 +119,8 @@ Init
 - Automatic Review Subagent Task: `references/review-agent-task-template.md`
 - Human Review Summary: `references/human-review-summary-template.md`
 - Human Decision: `references/human-decision-template.md`
+- Destination Wiki Entry: `references/wiki-agents-template.md`
+- Content Index / Operation Log: `references/wiki-index-template.md`, `references/wiki-log-template.md`
+- Query Capture: `references/query-capture-template.md`
 
 The current design defines a context-bounded, resumable Skill/Prompt workflow and its design contracts. It does not claim that a real business repository has passed an end-to-end POC.

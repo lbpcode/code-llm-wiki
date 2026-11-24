@@ -21,6 +21,7 @@ Follow:
 - docs/state-machine.md
 - docs/failure-handling.md
 - docs/language-policy.md
+- docs/wiki-maintenance.md
 
 Use:
 - references/process-template.md
@@ -136,6 +137,7 @@ If the Checkpoint is missing or inconsistent, reconstruct task state from durabl
 8. Mark claims verified, inferred, unknown, stale, or contradicted. Inferred claims require explicit reasoning; unknown claims require a gap description.
 9. Inspect both sides of interfaces when possible. A one-sided interface remains candidate/unknown.
 10. Update Page-Source Map entries only for pages and sources actually inspected. Preserve human edits and all existing candidate/accepted state boundaries.
+11. Add contextual links between related knowledge pages and synchronize wiki/index.md with candidate pages and actual page/change status. Persist the ingestion report and append the observed ingest event before freezing the candidate; deferred gate events follow docs/wiki-maintenance.md.
 
 ### 8. Quality gates
 
@@ -158,6 +160,7 @@ Keep all generated content as a candidate diff until human approval and explicit
 - Page-Source Map entries for inspected sources only.
 - Ingestion report with planned/completed/partial/blocked tasks, coverage, failures, unknowns, and open questions.
 - Proposed Wiki diff.
+- Synchronized index, contextual page links, and ingestion event or explicit deferred-event location.
 - Lint report and independent Review report; if delegation is blocked, record Review execution status, null Review decision, unchanged Change Status, and Run outcome BLOCKED.
 
 ## Failure behavior

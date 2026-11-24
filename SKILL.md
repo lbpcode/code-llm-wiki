@@ -34,6 +34,7 @@ All Skills MUST follow:
 - docs/independent-review-execution.md
 - docs/human-review.md
 - docs/language-policy.md
+- docs/wiki-maintenance.md
 
 The Ingest Skill MUST additionally follow docs/context-management.md. Sequential Session Handoff/Resume is supported through durable Checkpoints, Handoff Notes, and minimal Context Packs; it does not require Subagents and cannot create a new host conversation unless the host exposes that capability.
 
@@ -48,8 +49,8 @@ Keep Skill instructions and reusable prompt templates in this repository in Engl
 - Initialize a source superproject/Wiki pair: use skills/code-wiki-init/SKILL.md.
 - Analyze one repository or process: use skills/code-wiki-ingest/SKILL.md. Ingest uses bounded Analysis Tasks and durable Checkpoint/Resume; do not load an entire repository into one context.
 - Synthesize multiple processes: use skills/code-wiki-integrate/SKILL.md.
-- Answer an engineering question: use skills/code-wiki-query/SKILL.md.
-- Refresh knowledge after source changes: use skills/code-wiki-update/SKILL.md.
+- Answer an engineering question: use skills/code-wiki-query/SKILL.md; navigate from the index and keep ordinary queries read-only.
+- Refresh knowledge after source changes or save a requested query result: use skills/code-wiki-update/SKILL.md. Query capture produces a candidate change even when source commits have not changed.
 - Perform strict semantic review: the orchestrator automatically delegates skills/code-wiki-review/SKILL.md to an isolated Subagent; do not invoke it as same-context self-review.
 - Check structure, links, manifests, evidence, and state consistency: use skills/code-wiki-lint/SKILL.md.
 
@@ -57,7 +58,13 @@ Keep Skill instructions and reusable prompt templates in this repository in Engl
 
 Init → Ingest per repository/process → Integrate → Lint → Automatic Independent Review Subagent → Human Review → Explicitly Authorized Publication.
 
+Honor an explicitly requested stage boundary, such as Init-only or candidate-only. Complete that scope and report later gates as not run because they were not requested; do not misreport missing host capability or automatically advance beyond the requested boundary. Candidate-only output remains unpublished. Without such a boundary, execute the applicable workflow and its automatic gates as specified below.
+
 Query is read-only by default. Update produces a proposed diff and must pass the same quality gates. After Lint PASS, the orchestrator MUST automatically delegate a fresh Subagent invocation using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Do not ask the user to open a second conversation or copy a prompt. If the host lacks native Subagent delegation or cannot prove isolation, set Review execution status to NOT_RUN, leave Review decision null, keep Change Status at pending_llm_review, and set Run outcome to BLOCKED; there is no manual-session or same-context fallback. A missing check is NOT RUN, not PASS. A partial run cannot be published.
+
+## Wiki-local maintenance
+
+Init creates a destination-root AGENTS.md, wiki/index.md, and wiki/log.md using the templates in references/wiki-agents-template.md, references/wiki-index-template.md, and references/wiki-log-template.md. Preserve existing human instructions. Follow docs/wiki-maintenance.md for index synchronization, contextual page links, append-only events, query logging opt-in, and immutable review snapshots. All paths in this package's workflow references resolve from this package root, not the nested Skill directory.
 
 ## Safety and authority
 

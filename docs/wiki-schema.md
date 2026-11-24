@@ -59,8 +59,11 @@ Every relationship record includes relationship_id, from_id, relationship_type, 
 
 ## 5. Page organization
 
+The destination repository root also contains `AGENTS.md`, the Wiki-local maintenance entry point. Its paths and package provenance follow docs/wiki-maintenance.md.
+
     wiki/
       index.md
+      log.md
       system/
       processes/<process-id>/
         overview.md
@@ -76,7 +79,7 @@ Only create profile pages for confirmed/in-scope profiles. Do not create empty p
 
 ## 6. Page metadata
 
-Every substantive page begins with metadata equivalent to:
+Every substantive page begins with metadata equivalent to the following. Root AGENTS.md, wiki/index.md, and wiki/log.md are administrative files exempt from knowledge-page metadata and Claim/Evidence mapping; validate them under docs/wiki-maintenance.md.
 
     ---
     id: process.telemetry.overview
@@ -133,6 +136,8 @@ This reverse index is required for reliable incremental updates. See references/
 Use the following default layout in the Engineering Wiki repository:
 
     wiki/
+      index.md
+      log.md
       _meta/
         source-manifest.yaml
         page-source-map.yaml
@@ -144,6 +149,7 @@ Use the following default layout in the Engineering Wiki repository:
           ingestion-report.md
           integration-report.md
           update-report.md
+          query-capture.md
           lint-report.md
           independent-review.md
           human-review-summary.md
@@ -183,5 +189,9 @@ See docs/state-machine.md for transition rules and invariants.
 ## 13. Change and approval metadata
 
 Each candidate Change Set records change_id, base_wiki_commit, candidate_wiki_commit or diff_digest, changed pages/claims, source manifest version/digest, relevant source revisions, Lint report, independent Review report, current change status, review_execution_status, review_decision (null unless a valid review completed), review_invocation_id when available, run_outcome, and human_decision_id. `BLOCKED` belongs only to run_outcome; it MUST NOT be written to the Change Set `status` field.
+
+New records also identify `origin` (init / ingest / integrate / source_update / query_capture / maintenance), `changed_artifact_paths` for administrative changes, and `query_capture_path` when applicable. These describe scope and provenance, not new states. Legacy records may omit them; preserve history and identify the origin from inspected reports only when needed. Administrative edits remain in the actual candidate diff even though they have no page/Claim IDs.
+
+`snapshot_binding_ref` may locate an immutable external candidate binding record. Resolve its base/candidate revision or complete patch digest, manifest digest, scope, and source revisions before gate decisions; null inline self-referential fields are not missing evidence when the external binding is valid. Storage, live progress, and publication finalization follow docs/human-review.md sections 4 and 7.
 
 Human approval binds to the exact candidate snapshot. Any material change invalidates the approval. See docs/human-review.md and references/human-decision-template.md.

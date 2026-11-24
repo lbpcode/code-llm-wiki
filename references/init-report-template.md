@@ -40,6 +40,11 @@ List process boundaries, profile support, deployment context, and ownership deci
 - Wiki skeleton:
 - Page-Source Map:
 - Initialization report path:
+- Destination AGENTS.md section and preserved existing instructions:
+- Full workflow package locator/revision or dirty snapshot provenance:
+- Index coverage and published/candidate navigation:
+- Query logging policy:
+- Log init event ID and persistence location:
 
 ## Result
 

@@ -45,6 +45,8 @@ After a candidate-producing workflow (Ingest, Integrate, or Update):
 5. The orchestrator waits for the Subagent to finish. It must not treat an invocation request/accepted state as a completed review.
 6. The reviewer returns a structured report. The orchestrator validates its Change ID, candidate Wiki commit/diff digest, Source Manifest digest, source revisions, reviewer invocation identity, and decision.
 7. The orchestrator persists the report under `wiki/_meta/changes/<change-id>/independent-review.md` and binds its ID/digest to the Change Set.
+
+   This is the canonical archival path. While the candidate is frozen, persist the report and live Change Set progress outside that snapshot in its authorized execution/binding workspace, then archive them through the separate audit/finalization process in docs/human-review.md. Never change the reviewed candidate to record its own review. For an uncommitted candidate, resolve and validate the complete external patch binding before reviewing it.
 8. Only a valid PASS proceeds to Human Review.
 9. REVISE returns the Change Set to draft. The Generation Agent addresses findings, reruns Lint, and delegates a **new** independent Subagent invocation against the new exact snapshot.
 10. REJECT terminates the Change Set. Preserve the report and audit history.

@@ -1,6 +1,6 @@
 ---
 name: code-wiki-query
-description: Answer engineering questions using the accepted Code LLM Wiki, preserving source provenance, Process boundaries, Platform Profile scope, and uncertainty.
+description: Answer engineering questions from the accepted Code LLM Wiki with source citations and uncertainty; route explicitly requested answer writeback to a reviewed candidate update.
 ---
 
 # code-wiki-query
@@ -13,6 +13,8 @@ Answer engineering questions from accepted Wiki knowledge without silently turni
 
 Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, and docs/language-policy.md.
 
+Follow docs/wiki-maintenance.md for index-first navigation, optional query logging, and requested knowledge capture.
+
 ## Default trust policy
 
 - Query pages with `content_status: accepted` whose owning Change Set is `published` by default.
@@ -23,7 +25,7 @@ Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.m
 
 ## Procedure
 
-1. Classify the question as system-level, process-level, interface, workflow, security, deployment, or platform comparison.
+1. Read the destination Wiki's AGENTS.md and wiki/index.md at the selected accepted snapshot. Use the index to locate relevant knowledge, then classify the question as system-level, process-level, interface, workflow, security, deployment, or platform comparison. If the index is missing or incomplete, use scoped page discovery and disclose the navigation gap without editing it.
 2. Identify relevant Process IDs and Platform Profile(s).
 3. Read the relevant published Wiki pages, Claim-Evidence records, and source references.
 4. Check page/change publication status, Claim status, Evidence status, and source revision freshness.
@@ -31,7 +33,8 @@ Follow docs/skill-contracts.md, docs/wiki-schema.md, docs/claim-evidence-model.m
 6. Cite repository, full commit, path, and line/symbol/configuration locator for material claims.
 7. If evidence is insufficient, say exactly what is unknown and identify the source or profile that must be inspected.
 8. If sources conflict, disclose the conflict; do not choose a side without a documented resolution.
-9. Do not modify the Wiki during a query unless the user explicitly requests an update.
+9. Keep ordinary queries read-only, including the log. Append a redacted query event only when an explicit request or existing local query_logging policy authorizes log-only writes; a strict read-only request overrides that policy. Do not update pages, index, Claims, or publication state as a logging side effect.
+10. If the user requests saving useful findings, use the query-capture mode in skills/code-wiki-update/SKILL.md and references/query-capture-template.md. Preserve the request's scope and existing authorization. Capture is a separate candidate write with ordinary quality gates, not immediate acceptance of this answer. Without a save request, suggest a concrete knowledge gap only when useful and create no capture file.
 
 ## Cross-platform questions
 
@@ -45,5 +48,7 @@ Compare QNX, Android, and Linux-TBOX only for profiles represented in the Source
 - Inferences and assumptions.
 - Constraints, exceptions, conflicts, and unknowns.
 - Optional follow-up investigation.
+- Query log event reference only if persisted, or an explicit not-persisted status when a requested event could not be saved.
+- If capture was requested, candidate Change ID, affected pages, and actual gate status; keep the direct answer distinct from the writeback result.
 
 Do not cite a Wiki summary as if it were the original source. Preserve underlying source provenance.

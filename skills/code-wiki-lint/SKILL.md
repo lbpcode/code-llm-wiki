@@ -13,6 +13,8 @@ Perform a rule-driven structural and provenance audit. This Skill does not requi
 
 Follow docs/skill-contracts.md, docs/independent-review-execution.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/quality-gate.md, docs/failure-handling.md, and docs/language-policy.md. Use references/lint-report-template.md.
 
+Follow docs/wiki-maintenance.md for maintenance-file validation. Administrative files do not require fabricated Claim/Evidence or Page-Source Map entries.
+
 ## Inputs
 
 - Candidate Wiki tree and base revision.
@@ -89,6 +91,15 @@ If a required input is missing, report the affected checks as FAIL or NOT RUN/PA
 - Unsupported profiles are not generated.
 - Claims are not generalized across uninspected profiles.
 
+### 8. Navigation, operation history, and capture
+
+- The destination-root AGENTS.md contains actual paths, self-contained query rules, a reproducible package locator/provenance, and an explicit query logging policy. Existing human instructions are preserved; unresolved placeholders or contradictory instructions are findings.
+- The selected snapshot's index covers every substantive page once with working links, summaries, scope, and accurate page/change state. Candidate/stale/history entries are distinguished from accepted/published knowledge. Missing entries and falsely trusted status fail the check.
+- Related pages have meaningful contextual links. Report index-only orphan pages, missing cross-references, and important unrepresented concepts; accept an explicit standalone-page rationale rather than forcing empty pages.
+- Existing log content is an unchanged prefix of the new log relative to the base snapshot. New event IDs are unique; outcomes, revisions, and report links reflect observed operations. Corrections append rather than rewrite. No future PASS/publication is pre-recorded.
+- Read-only queries have no required log event when query logging is disabled. Deferred gate events outside the frozen snapshot are explicitly reported; do not require editing the candidate to log its own Lint result.
+- Query capture has an authorized scope, duplication check, original evidence, candidate status, and ordinary gate bindings. Unchanged source commits do not exempt new claims from review.
+
 ## Result semantics
 
 - PASS: all required checks ran and passed.
@@ -101,6 +112,8 @@ A required NOT RUN check cannot be treated as PASS. A PARTIAL Lint result cannot
 ## Output
 
 Return the complete references/lint-report-template.md structure: result, checks passed/failed/NOT RUN, exact paths/locators, findings, limitations, and remediation.
+
+Return the observed lint event to the orchestrator. Lint does not append the log or repair the index it is checking.
 
 ## Capability honesty
 

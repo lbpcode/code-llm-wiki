@@ -179,8 +179,10 @@ Only an authorized human can create a human decision. LLM PASS is a recommendati
 Invariants:
 - No candidate content is treated as accepted knowledge before publication.
 - Query defaults to accepted/published knowledge only.
+- Query capture is a new draft Change Set using the same gates, including when source commits are unchanged. Index visibility reflects page/change state; a log event never grants approval or publication. See docs/wiki-maintenance.md for read-only query logging and frozen-snapshot handling.
 - Rejected candidates and prior reports are retained as immutable audit history.
 - Every review/approval is bound to exact revisions and scope.
+- Frozen candidate records are snapshots; live state progress and post-freeze reports use the external binding/execution record until archival. Publication metadata finalization follows docs/human-review.md and cannot change reviewed knowledge content.
 - Any material change after approval invalidates that approval.
 - No Skill may approve its own generated content or silently publish/merge it.
 - A missing, failed, or non-isolated automatic Review Subagent invocation sets Review execution status to `NOT_RUN` or `INVALID`, Review decision to null, and Run outcome to `BLOCKED`; Change Status remains `pending_llm_review`. There is no manual-session or same-context fallback.

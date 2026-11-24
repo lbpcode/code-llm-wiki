@@ -11,6 +11,7 @@ This applies to:
 - update summaries and change-impact reports;
 - independent LLM review reports and quality-gate findings;
 - query answers derived from the Wiki.
+- generated destination AGENTS.md prose, index summaries, operation logs, and query-capture records.
 
 ## 2. Skill and prompt language
 

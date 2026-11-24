@@ -13,6 +13,8 @@ Act as an adversarial, independent reviewer invoked automatically as a fresh hos
 
 Follow docs/skill-contracts.md, docs/independent-review-execution.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/quality-gate.md, docs/human-review.md, docs/failure-handling.md, and docs/language-policy.md. Use references/review-report-template.md and references/review-checklist.md.
 
+Follow docs/wiki-maintenance.md when checking navigation, captured findings, and operation history. Return a review event to the orchestrator; do not append the log yourself.
+
 ## Invocation and independence requirement
 
 This Skill MUST run only inside a host-native Subagent / Agent delegation launched automatically by the orchestrator after Lint PASS. Use a separate model invocation and fresh context from generation. Prefer a different model when available.
@@ -45,7 +47,8 @@ Do not treat the generator's conclusions as trusted facts. The orchestrator must
 12. Check Page-Source Map coverage and whether affected dependent pages are included.
 13. Check that human edits, accepted content, and approval records have not been overwritten or reused for a different snapshot.
 14. Compare related pages for contradictions, duplicate concepts, stale claims, and unsupported common/profile-specific statements.
-15. Return findings with exact Claim ID, page/locator, evidence, problem, severity, and required correction.
+15. Check index summaries and page/change visibility against this snapshot. For query capture, independently verify the new findings against original evidence and check duplication, inference, and scope; the generator's prior answer is not evidence. Check that maintenance entry instructions preserve the same trust and publication boundaries.
+16. Return findings with exact Claim ID, page/locator, evidence, problem, severity, and required correction.
 
 ## Severity
 

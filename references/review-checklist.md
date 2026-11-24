@@ -58,6 +58,8 @@
 
 ## G. Human approval and publication
 
+Check completed steps only; before human review, approval/publication items below are pending rather than prerequisites for the independent reviewer's PASS.
+
 - [ ] Human reviewer inspected exact Wiki Diff and changed pages.
 - [ ] Source Manifest and relevant source revisions were inspected.
 - [ ] Claim-Evidence mapping and both gate reports were inspected.
@@ -65,3 +67,12 @@
 - [ ] Decision record binds reviewer, timestamp, diff/Wiki commit, source snapshot, reports, comments, and waivers.
 - [ ] Publication waits for explicit human authorization.
 - [ ] Rejected candidates and prior decisions remain in audit history.
+
+## H. Maintenance and captured knowledge
+
+- [ ] Destination instructions locate the Wiki and full workflow package and preserve the same trust/publication boundaries.
+- [ ] Index summaries add no unsupported claims; page/change visibility matches the reviewed snapshot.
+- [ ] Related knowledge pages are navigable through contextual links, with intentional standalone pages explained.
+- [ ] Operation history preserves prior entries and does not claim unobserved outcomes or modify frozen snapshots.
+- [ ] Captured query findings have an authorized scope, avoid duplicate pages, and use original evidence rather than treating the prior answer as proof.
+- [ ] Query-capture changes retain ordinary candidate/review/publication states even when source commits are unchanged.

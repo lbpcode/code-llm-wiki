@@ -27,6 +27,7 @@ Before human review, present one immutable candidate package using references/hu
 - unresolved questions, unknowns, stale evidence, and contradictions;
 - impact analysis for dependent pages;
 - prior human decisions and change-request dispositions, if any.
+- administrative changes (entry instructions, index, and pre-freeze log events), query-capture origin when applicable, and intended publication metadata transitions. Index summaries must not promote candidate content before publication.
 
 Do not ask a human to approve a summary without access to the actual diff and supporting evidence.
 
@@ -72,6 +73,16 @@ A waiver cannot override fabricated evidence, a BLOCKER, or a mandatory gate tha
 
 For reproducible binding, compute `source_manifest_digest` as SHA-256 over the exact UTF-8 bytes (LF line endings) of the committed `wiki/_meta/source-manifest.yaml`. Compute `diff_digest` as SHA-256 over the exact output bytes of `git diff --binary --no-ext-diff --no-renames <base_wiki_commit> <candidate_wiki_commit>`. The Change Set and Human Decision record must store the same values.
 
+### Uncommitted candidates and binding storage
+
+For an uncommitted candidate, hash the exact manifest bytes in the frozen candidate. Build the complete binary patch against the base commit using an **isolated temporary Git index**, seeded from that base and populated with every in-scope candidate addition, modification, and deletion. Generate `git diff --cached --binary --no-ext-diff --no-renames <base_wiki_commit>` with that temporary index, save its exact bytes, and hash those bytes with SHA-256. Do not alter the user's staging area. A plain worktree diff that omits untracked files is not a complete binding.
+
+Store the patch, base revision, patch digest, manifest digest, file scope, and source revisions in an immutable **binding record outside the candidate snapshot**. The candidate Change Set may name this record with `snapshot_binding_ref` established before freezing; its inline `candidate_wiki_commit` and `diff_digest` may remain null to avoid embedding a digest inside its own preimage. Review and human decision records must reference and repeat the resolved binding values, not interpret null as proof. If no complete binding is available, candidate-only output is allowed but cannot proceed to approval/publication.
+
+The same external-record rule applies to commit-backed candidates: candidate content and report/state progress are distinct. After freezing, write reports and live Change Set progress to the authorized execution/report workspace linked by the binding record. The frozen draft Change Set is an initial snapshot, not a mutable progress file. Canonical `_meta/changes/<change-id>/` paths are archival destinations when those records can be incorporated without rewriting the reviewed snapshot. Do not attempt to include a commit's own SHA or a patch's own digest inside that frozen commit/patch.
+
+Any candidate content change requires a new binding and revalidation. Reports must identify which binding they reviewed; a subsequent audit commit does not silently become the reviewed candidate.
+
 ## 5. Approval invalidation
 
 Set change status to `approval_stale` if:
@@ -106,6 +117,8 @@ Approval and publication are separate events.
 - Publication means the approved candidate is explicitly incorporated into the accepted Wiki branch.
 - No Skill may push, merge, or publish without explicit authorization for that action.
 - Record the publication commit and link it to the approval decision.
+- Finalize only the administrative transitions declared in the reviewed package and covered by publication authorization: page/change publication status, the corresponding index placement/status, and bound decision/report/publication records. Preserve the frozen candidate and its binding; retain these transitions as a separately identifiable audit change. Do not alter page bodies, Claim/Evidence, source revisions, scope, or index summary wording under this allowance. Any such knowledge change requires a new candidate and review. If finalization is incomplete, report publication as incomplete rather than serving the new content as accepted knowledge.
+- Record the observed publication event only after success. Follow docs/wiki-maintenance.md to keep post-freeze log/report writes outside the approved candidate; never append an event and silently treat the altered diff as already approved.
 - If a published change is later found incorrect, create a corrective change or revert commit. Do not rewrite published Git history.
 - Mark the previous published change as superseded only after the replacement/revert is accepted.
 

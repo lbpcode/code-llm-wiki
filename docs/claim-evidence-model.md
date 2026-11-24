@@ -17,6 +17,8 @@ Human-readable Wiki pages reference stable Claim IDs in frontmatter or inline me
 
 For approval binding, compute `source_manifest_digest` as SHA-256 over the exact UTF-8 bytes (LF line endings) of the committed `wiki/_meta/source-manifest.yaml`. Compute `diff_digest` as SHA-256 over the exact output bytes of `git diff --binary --no-ext-diff --no-renames <base_wiki_commit> <candidate_wiki_commit>`. Store both digests in the Change Set and Human Decision record; do not embed a self-referential digest inside the manifest.
 
+For uncommitted candidates and external binding storage, follow docs/human-review.md section 4. Include new/deleted files through a temporary Git index and keep the resulting patch digest outside its own preimage. The frozen Change Set may reference an immutable external binding record instead of embedding its own commit/digest; reports and decisions use the resolved values.
+
 ## 3. Claim
 
 A Claim is one atomic, reviewable statement. Split a paragraph when it contains independently verifiable facts.

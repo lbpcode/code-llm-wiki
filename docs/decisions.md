@@ -92,3 +92,9 @@ Ingest MUST discover repository structure before deep source inspection, plan bo
 **Status:** Accepted
 
 Large Ingest runs may outlive a single model context. The workflow therefore supports sequential Sessions backed by fresh model contexts, with durable Task Reports, a versioned Checkpoint, a Handoff Note, and a minimal Context Pack. The Skill does not assume it can create a new IDE/chat conversation; when the host lacks that capability, it writes the handoff artifacts, prints a resume instruction, and stops for the user to open a fresh conversation. Session Handoff is not Subagent delegation and is not a fallback for the mandatory independent Review gate. Automatic context compaction may still occur; correctness must rely on persisted artifacts rather than chat history.
+
+## ADR-016: Portable Wiki maintenance and query capture
+
+**Status:** Accepted
+
+Adapt the configurable LLM Wiki pattern with a destination-root AGENTS.md, a synchronized content index, contextual page links, an append-only operation log, and explicit query-to-Update capture. Keep Process/System entities and source-evidence gates. Source repositories at pinned commits serve as raw sources. Query remains read-only by default; opt-in logging permits log-only writes, and requested answer retention creates a reviewed candidate even when source commits are unchanged. Preserve existing human instructions and history. Operational events never establish knowledge validity and must not mutate frozen review/approval snapshots. See docs/wiki-maintenance.md.

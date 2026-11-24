@@ -13,6 +13,8 @@ Build the system-level view across independent processes and repositories withou
 
 Follow docs/skill-contracts.md, docs/independent-review-execution.md, docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/failure-handling.md, and docs/language-policy.md. Use references/system-template.md, references/interface-template.md, references/workflow-template.md, and references/integration-report-template.md.
 
+Follow docs/wiki-maintenance.md for navigation, cross-links, and operation logging.
+
 ## Preconditions
 
 - Source Manifest pins the relevant repositories.
@@ -41,7 +43,7 @@ Candidate Process pages may be used to draft candidate System pages only if thei
 11. Analyze startup, shutdown, suspend/resume, recovery, and data-flow workflows separately for each applicable Platform Profile.
 12. Compare QNX, Android, and Linux-TBOX only where both sides of the comparison have been inspected.
 13. Identify contradictions between Process pages, Task Reports, source configuration, interface definitions, and System-level claims.
-14. Update System pages, relationship records, Interface/Workflow pages, and Page-Source Map dependencies.
+14. Update System pages, relationship records, Interface/Workflow pages, and Page-Source Map dependencies. Add contextual links among these pages and their Process pages, synchronize wiki/index.md, and persist the integration report and observed integrate event before freezing the candidate. Defer later gate events outside the frozen snapshot under docs/wiki-maintenance.md.
 15. Run Lint. If Lint PASS, the orchestrator MUST automatically delegate a fresh host-native Review Subagent using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Wait for a completed, snapshot-bound report. Do not ask the user to open a second conversation. If Subagent delegation/isolation is unavailable, set Review execution status to NOT_RUN, leave Review decision null, keep Change Status at pending_llm_review, and set Run outcome to BLOCKED. Keep results as a proposed diff until human approval.
 
 ## Outputs
@@ -53,6 +55,7 @@ Candidate Process pages may be used to draft candidate System pages only if thei
 - Cross-profile differences and explicit unknowns.
 - Integration conflicts and open questions.
 - Integration report and proposed diff.
+- Synchronized navigation and an integrate event or explicit deferred-event location.
 - Lint report and independent Review report; if delegation is blocked, record Review execution status, null Review decision, unchanged Change Status, and Run outcome BLOCKED.
 
 ## Failure behavior

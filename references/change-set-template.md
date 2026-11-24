@@ -5,6 +5,9 @@ A Change Set groups one proposed Wiki update through Lint, independent Review, h
 ```yaml
 change_id: <stable-change-id>
 purpose: "<bounded change description>"
+origin: source_update # init | ingest | integrate | source_update | query_capture | maintenance
+query_capture_path: null # wiki/_meta/changes/<change-id>/query-capture.md when applicable
+changed_artifact_paths: [] # administrative files such as AGENTS.md, wiki/index.md, wiki/log.md
 status: draft # canonical Change Set status from docs/state-machine.md; never use BLOCKED here
 run_outcome: null # PASS | PARTIAL | BLOCKED | FAIL; execution-level, not Change Set status
 review_execution_status: NOT_RUN # NOT_RUN | RUNNING | COMPLETED | INVALID
@@ -15,6 +18,7 @@ updated_at: <ISO-8601-timestamp>
 base_wiki_commit: <full-commit-sha>
 candidate_wiki_commit: null
 diff_digest: <digest-or-null>
+snapshot_binding_ref: null # immutable external binding record; establish locator before freezing
 changed_pages:
   - page_id: <page-id>
     path: wiki/processes/<process-id>/overview.md
@@ -48,8 +52,10 @@ supersedes_change_id: null
 ## Rules
 
 - Create a new Change Set for each materially new candidate attempt.
+- Include administrative changes in the exact candidate diff and changed_artifact_paths even though those files have no knowledge-page IDs. Capture origin is not a new state or a bypass of gates.
 - Keep rejected Change Sets immutable; a retry gets a new ID and links to the rejected predecessor.
 - Bind human approval to candidate/base revisions, diff digest, changed pages, Source Manifest, relevant source commits, and gate report IDs.
+- Use docs/human-review.md section 4 for complete uncommitted patches and external bindings. Never embed the candidate's own commit SHA/diff digest inside its preimage. Null inline fields require a resolved external binding before approval, not a waiver of exact binding.
 - `BLOCKED` is valid only for `run_outcome`; never write it to `status`, `review_execution_status`, or `review_decision`.
 - If review cannot execute after Lint PASS, keep `status: pending_llm_review`, set `review_execution_status: NOT_RUN` (or `INVALID` for an invalid returned report), leave `review_decision: null`, and set `run_outcome: BLOCKED`.
 - Any material post-approval change sets status to approval_stale.

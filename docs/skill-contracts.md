@@ -14,6 +14,7 @@ Every independently invokable Skill MUST follow this contract:
 8. Never modify source code, submodule pins, source remotes, or source history.
 9. Never self-approve, bypass required review, or publish without explicit human authorization.
 10. Retain prior accepted content and human edits; stop on unresolved conflicts.
+11. Follow docs/wiki-maintenance.md for Wiki-local instructions, navigation, append-only operation events, and query capture. Read-only skills return events to the orchestrator; logging must not mutate a frozen candidate.
 
 The detailed shared rules live in docs/wiki-schema.md, docs/claim-evidence-model.md, docs/state-machine.md, docs/quality-gate.md, docs/human-review.md, and docs/failure-handling.md. Use references/repository-template.md for repository inventory pages; references/init-report-template.md, references/ingestion-report-template.md, references/integration-report-template.md, references/update-report-template.md, references/lint-report-template.md, references/review-report-template.md, and references/human-review-summary-template.md for reports.
 
@@ -21,11 +22,11 @@ The detailed shared rules live in docs/wiki-schema.md, docs/claim-evidence-model
 
 | Skill | Required inputs | Primary outputs | Mutation boundary | Stop / blocked conditions |
 |---|---|---|---|---|
-| init | Source superproject, Wiki destination, Git/submodule state | Source Manifest, repository inventory, candidate mappings, Wiki skeleton, init report | Creates inventory and skeleton in authorized Wiki only | Missing source access, unsafe Git state, unresolved source snapshot; unresolved mappings stay candidate/unknown |
+| init | Source superproject, Wiki destination, Git/submodule state | Source Manifest, repository inventory, candidate mappings, Wiki skeleton, destination AGENTS.md, index/log, init report | Creates inventory and maintenance artifacts in authorized Wiki only; preserves existing instructions | Missing source access, unsafe Git state, unresolved source snapshot; unresolved mappings stay candidate/unknown |
 | ingest | Manifest, repository ID, pinned commit, process/profile scope, applicable instructions, prior plan/checkpoint/context pack when resuming | Repository Map, bounded Analysis Plan/Task Reports, Checkpoint, Session Handoff Note, next Context Pack, Process pages, claims/evidence, page-source map entries, ingestion report | Candidate Wiki pages and Change Set-scoped workflow artifacts only | Commit mismatch, missing required scope, inaccessible repository, context/task cannot be safely recovered, stale/missing handoff artifacts, unresolved conflict, sensitive data exposure |
 | integrate | Process pages with explicit review/content status, manifest, profile mappings, interface evidence | System pages, relationship records, interface/workflow pages, integration report | Candidate System-level Wiki pages only | Missing prerequisites or unresolved critical relationship evidence; produce gap report instead |
-| query | User question, accepted Wiki snapshot, relevant page/source references | Answer with scope, citations, uncertainty, and gaps | Read-only | No accepted evidence; report unknown rather than fabricate |
-| update | Previous manifest/map, current source revisions, Git diff/history | Impact map, stale claims, proposed page diff, update report | Candidate changes only; preserve human edits | Cannot establish old/new revisions, conflict with human edits, or impact scope unknown |
+| query | User question, accepted Wiki snapshot/index, relevant page/source references | Answer with citations and gaps; route requested capture to Update | Read-only by default; explicitly enabled log-only writes do not authorize knowledge edits | No accepted evidence; report unknown rather than fabricate |
+| update | Previous manifest/map, source revisions, Git diff/history or requested query finding | Impact/capture record, proposed page/index diff, update report, operation event | Candidate changes only; preserve human edits | Cannot establish revisions, conflict with human edits, or impact scope unknown |
 | lint | Candidate Wiki tree, schema, manifest, map, source access where available | PASS/FAIL/PARTIAL Lint report | Read-only | Required files/check capability unavailable; report NOT RUN and block gate |
 | review | Exact candidate snapshot, source revisions/excerpts, claim map, review criteria, fresh host-native Subagent invocation | Independent execution status plus PASS/REVISE/REJECT decision only for a valid completed report | Read-only | Host lacks Subagent delegation or invocation fails: execution NOT_RUN; invalid returned report: INVALID; decision null; Change Status remains pending_llm_review; Run outcome BLOCKED |
 
@@ -36,6 +37,8 @@ The detailed shared rules live in docs/wiki-schema.md, docs/claim-evidence-model
 Inputs: source superproject path, destination Wiki worktree, known system metadata, optional confirmed mappings.
 
 Outputs: pinned source inventory, submodule state, AGENTS.md inventory, repository inventory pages where useful, repository/process candidate map, Process/Profile support map, skipped/inaccessible inventory, open questions.
+
+Also create the destination-root AGENTS.md, content index, and append-only log with an observed init event; source AGENTS.md inventory does not replace this destination entry point.
 
 Do not infer a Process solely from a repository or directory name. Do not create substantive architecture claims during inventory.
 
@@ -57,17 +60,19 @@ Verify both sides of interfaces where possible. If only one side is available, p
 
 ### query
 
-Inputs: question and accepted Wiki snapshot.
+Inputs: question, Wiki-local instructions, index, and accepted Wiki snapshot.
 
 Outputs: direct answer, Process/Profile scope, evidence references, assumptions, limitations, and unknowns.
 
-Default to pages with content_status accepted and owning Change Set status published. Exclude draft, pending, rejected, stale, or contradicted claims from unqualified factual answers. Do not modify the Wiki.
+Default to pages with content_status accepted and owning Change Set status published. Exclude draft, pending, rejected, stale, or contradicted claims from unqualified factual answers. Ordinary Query does not modify the Wiki. Follow docs/wiki-maintenance.md for opt-in log-only writes and requested capture; capture is executed as a separate Update candidate.
 
 ### update
 
-Inputs: prior Source Manifest and Page-Source Map, current superproject/submodule revisions, Git history/diff, accepted Wiki base.
+Inputs: prior Source Manifest and Page-Source Map, current superproject/submodule revisions, Git history/diff or explicitly requested query findings, accepted Wiki base.
 
 Outputs: old/new revision summary, changed path inventory, affected claims/pages, stale evidence, conflict report, proposed diff, and update report.
+
+Synchronize index/cross-links and record an operation event. Query capture additionally records the requested question/findings, duplication check, and original evidence; unchanged source commits do not exempt a knowledge diff from the gates.
 
 Do not overwrite human edits. If impact cannot be bounded, mark the run PARTIAL/BLOCKED and broaden the review scope.
 
@@ -97,9 +102,11 @@ Review MUST be automatically delegated by the orchestrator to a host-native Suba
 - the orchestrator waits for a completed, snapshot-bound Subagent report; an accepted/running invocation is not a completed review.
 - review PASS is required before human review; REVISE returns to generation, then Lint and a new Subagent invocation; REJECT terminates the Change Set.
 - human approval is handled under docs/human-review.md; no Skill substitutes for it.
-- query is read-only and does not participate in candidate approval.
+- query is read-only by default and does not participate in candidate approval; requested retention routes to Update and its full gates.
 
 A Skill may recommend the next Skill, but it must not silently expand scope or perform a destructive action.
+
+An explicit Init-only/candidate-only request limits execution to that stage. Describe stage completion separately from end-to-end gate completion, leave unexecuted review decision null, and keep the actual draft/lint_failed state as applicable. Do not launch later gates or claim host incapability solely because the user chose to stop earlier. A normal full workflow still automatically delegates Review after Lint PASS.
 
 
 ## 5. Context-bounded Ingest contract

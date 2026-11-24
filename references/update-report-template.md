@@ -10,11 +10,15 @@
 - Previous Wiki commit:
 - Candidate Wiki commit / diff digest:
 - Outcome: PASS / PARTIAL / BLOCKED / FAIL
+- Origin: source_update / query_capture
+- Query capture record and authorized finding scope (when applicable):
 
 ## Source revision changes
 
 | Repository ID | Old full commit | New full commit | Changed paths | Checkout status |
 |---|---|---|---|---|
+
+For query capture, source revisions may be unchanged. Record that explicitly and describe the knowledge change rather than fabricating source changes.
 
 ## Impact analysis
 
@@ -47,11 +51,15 @@
 - Claims remaining stale/unknown/contradicted:
 - Page-Source Map changes:
 - Reports and evidence records:
+- Index entries and contextual cross-links:
+- Administrative artifact paths:
+- Capture/update event ID, persistence location, and deferred events:
 
 ## Quality gates
 
 - Lint: PASS / FAIL / PARTIAL / NOT RUN
-- Independent Review: PASS / REVISE / REJECT / NOT RUN
+- Review execution: NOT_RUN / RUNNING / COMPLETED / INVALID
+- Independent Review decision: PASS / REVISE / REJECT, or null without a valid completed report
 - Human decision: pending / approve / request_changes / reject
 
 ## Gaps and recovery

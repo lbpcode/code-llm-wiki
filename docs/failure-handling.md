@@ -75,6 +75,8 @@ A failure in one independent repository may allow work on other repositories to 
 
 ## 6. Run outcome
 
+Maintenance-specific recovery follows docs/wiki-maintenance.md. A missing/incomplete index allows a disclosed read-only discovery fallback, but must be repaired before a new knowledge change passes required maintenance checks. Preserve existing AGENTS.md and log history on conflicts. If the full workflow package cannot be located, use the Wiki-local rules for read-only questions and report the missing dependency before knowledge mutation. If a log write is unauthorized or would alter a frozen snapshot, return/defer the event and report its persistence status; never fabricate a saved event or silently modify approved content.
+
 Use one overall run outcome, stored separately from Change Set status:
 
 - `PASS`: all required in-scope work and checks completed with no blocking findings.

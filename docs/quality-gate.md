@@ -45,6 +45,7 @@ Lint is a rule-driven structural/provenance audit, not a compiled linter in v0.1
 - internal links and relationship types;
 - stale, contradictory, or overgeneralized claims;
 - sensitive-data leakage.
+- Wiki-local maintenance instructions, index coverage/status, contextual links, append-only log integrity, and query-capture provenance under docs/wiki-maintenance.md. Administrative files do not need fabricated Claims.
 
 Lint result is PASS / FAIL / PARTIAL. Every check is PASS / FAIL / NOT RUN with scope and reason. Required NOT RUN checks block progression. See references/lint-report-template.md.
 
@@ -93,6 +94,8 @@ Only the human may authorize publication/merge. The publication record links the
 ## 10. Required reports
 
 Each run stores the appropriate Init, Ingestion, Integration, or Update report, plus Lint report, independent Review report, and human decision record when those gates apply. Reports include exact source revisions, scope, checks not run, limitations, findings, and recovery actions.
+
+The orchestrator records observed gate events under docs/wiki-maintenance.md. Lint/Review remain read-only, and reports/events produced after candidate freeze must not alter the reviewed snapshot. Their persistence location or deferred status is reported explicitly.
 
 Templates:
 - references/init-report-template.md

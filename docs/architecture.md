@@ -26,6 +26,8 @@ The default metadata layout is defined in docs/wiki-schema.md: keep `source-mani
 
 The Wiki is derived knowledge, not a replacement for source code. Every generated update is proposed as a diff and passes evidence validation, independent review, and human approval before publication.
 
+The destination-root AGENTS.md provides portable maintenance instructions and a versioned full-package locator. wiki/index.md is the content navigation layer; wiki/log.md is the append-only operation timeline. Query starts from the index and stays read-only by default. Requested answer writeback becomes a candidate Update even without source changes. These contracts are defined in docs/wiki-maintenance.md; metadata is not accepted engineering evidence.
+
 ## 3. Knowledge production workflow
 
 1. **Source inventory** discovers the superproject, submodules, AGENTS.md files, repository revisions, and declared process/profile mappings.
@@ -71,8 +73,10 @@ Do not assume QNX means IVI or Android means IVI. Those associations must come f
 
 ## 7. Process-centric page layout
 
+    AGENTS.md
     wiki/
       index.md
+      log.md
       _meta/
         source-manifest.yaml
         page-source-map.yaml
