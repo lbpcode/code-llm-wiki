@@ -22,6 +22,7 @@ Follow docs/wiki-maintenance.md for index-first navigation, optional query loggi
 - Do not treat a verified Claim as proof that its page/change is approved; check page/change publication status separately.
 - If the user explicitly asks to inspect candidate or historical content, label its state and revision clearly.
 - Distinguish verified facts, inferences, unknowns, and conflicts.
+- For a new publication with publication_record_ref, verify its completed receipt, binding, and observed finalization commit under docs/publication-recovery.md before exposing that change's new knowledge. Accepted/published labels alone cannot bypass an incomplete or corrupt receipt. Legacy changes without this mechanism retain their prior checks.
 
 ## Procedure
 

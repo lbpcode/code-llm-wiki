@@ -194,4 +194,6 @@ New records also identify `origin` (init / ingest / integrate / source_update / 
 
 `snapshot_binding_ref` may locate an immutable external candidate binding record. Resolve its base/candidate revision or complete patch digest, manifest digest, scope, and source revisions before gate decisions; null inline self-referential fields are not missing evidence when the external binding is valid. Storage, live progress, and publication finalization follow docs/human-review.md sections 4 and 7.
 
+The reference shape, schema version, payload hashes, portable registry locator, and cross-session verification are canonical in docs/snapshot-binding.md and references/snapshot-binding-template.md. Review and Human Decision repeat the same reference and binding-record digest. New publication finalization also installs `publication_record_ref` shaped by references/publication-progress-template.md; visibility requires a verified completed receipt under docs/publication-recovery.md. These execution records do not add Change, Claim, Evidence, or Review status enums. Registry archives under `wiki/_meta/record-archives/` are administrative artifacts, not indexed knowledge pages.
+
 Human approval binds to the exact candidate snapshot. Any material change invalidates the approval. See docs/human-review.md and references/human-decision-template.md.

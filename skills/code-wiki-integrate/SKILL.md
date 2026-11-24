@@ -15,6 +15,8 @@ Follow docs/skill-contracts.md, docs/independent-review-execution.md, docs/wiki-
 
 Follow docs/wiki-maintenance.md for navigation, cross-links, and operation logging.
 
+Apply the execution boundary in docs/skill-contracts.md before later checks, including direct invocation and nested tasks. Candidate-only stops before Lint; no-Review never delegates a reviewer. Report skipped gates as NOT RUN due to user scope rather than missing capability. A full-workflow request retains automatic Review after Lint PASS.
+
 ## Preconditions
 
 - Source Manifest pins the relevant repositories.
@@ -44,7 +46,7 @@ Candidate Process pages may be used to draft candidate System pages only if thei
 12. Compare QNX, Android, and Linux-TBOX only where both sides of the comparison have been inspected.
 13. Identify contradictions between Process pages, Task Reports, source configuration, interface definitions, and System-level claims.
 14. Update System pages, relationship records, Interface/Workflow pages, and Page-Source Map dependencies. Add contextual links among these pages and their Process pages, synchronize wiki/index.md, and persist the integration report and observed integrate event before freezing the candidate. Defer later gate events outside the frozen snapshot under docs/wiki-maintenance.md.
-15. Run Lint. If Lint PASS, the orchestrator MUST automatically delegate a fresh host-native Review Subagent using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Wait for a completed, snapshot-bound report. Do not ask the user to open a second conversation. If Subagent delegation/isolation is unavailable, set Review execution status to NOT_RUN, leave Review decision null, keep Change Status at pending_llm_review, and set Run outcome to BLOCKED. Keep results as a proposed diff until human approval.
+15. Check the requested execution boundary first. Run Lint only if in scope; after PASS, verify the immutable binding under docs/snapshot-binding.md and automatically delegate skills/code-wiki-review/SKILL.md through references/review-agent-task-template.md only if Review is in scope. Wait for a completed, snapshot-bound report. When requested Review cannot be delegated/isolated, set execution NOT_RUN, decision null, Change Status pending_llm_review, and run outcome BLOCKED; never misclassify a user-selected stop this way. Keep results as a proposed diff until human approval and authorized publication.
 
 ## Outputs
 
@@ -56,7 +58,7 @@ Candidate Process pages may be used to draft candidate System pages only if thei
 - Integration conflicts and open questions.
 - Integration report and proposed diff.
 - Synchronized navigation and an integrate event or explicit deferred-event location.
-- Lint report and independent Review report; if delegation is blocked, record Review execution status, null Review decision, unchanged Change Status, and Run outcome BLOCKED.
+- Reports for gates actually requested and run. For a user-selected stop, list omitted gates as NOT RUN due to scope without fabricating reports. If requested Review delegation is blocked after Lint PASS, record execution NOT_RUN, decision null, Change Status pending_llm_review, and Run outcome BLOCKED.
 
 ## Failure behavior
 

@@ -38,12 +38,14 @@ The host may expose these capabilities under any native name. This specification
 
 After a candidate-producing workflow (Ingest, Integrate, or Update):
 
+First apply the explicit execution boundary in docs/skill-contracts.md. The automatic sequence below applies only to the requested stages; candidate-only or no-Review requests do not silently launch Review.
+
 1. The orchestrator runs the required Lint scope.
 2. If Lint is FAIL, fix findings before proceeding. If Lint is PARTIAL or a required check is NOT RUN, do not enter `pending_llm_review`: retain Change Status `draft` (or `lint_failed` when blocking findings exist) and set Run outcome to `PARTIAL` or `BLOCKED` as appropriate.
 3. If Lint is PASS, the orchestrator creates an immutable Review Package for the exact candidate snapshot.
 4. The orchestrator automatically delegates a new Subagent invocation using the task contract in `references/review-agent-task-template.md` and the `code-wiki-review` Skill.
 5. The orchestrator waits for the Subagent to finish. It must not treat an invocation request/accepted state as a completed review.
-6. The reviewer returns a structured report. The orchestrator validates its Change ID, candidate Wiki commit/diff digest, Source Manifest digest, source revisions, reviewer invocation identity, and decision.
+6. The reviewer returns a structured report. The orchestrator validates its Change ID, snapshot_binding_ref and snapshot_binding_sha256 under docs/snapshot-binding.md, candidate Wiki commit/diff digest, Source Manifest digest, source revisions, reviewer invocation identity, and decision. Resolve and validate the immutable bundle independently in each new session.
 7. The orchestrator persists the report under `wiki/_meta/changes/<change-id>/independent-review.md` and binds its ID/digest to the Change Set.
 
    This is the canonical archival path. While the candidate is frozen, persist the report and live Change Set progress outside that snapshot in its authorized execution/binding workspace, then archive them through the separate audit/finalization process in docs/human-review.md. Never change the reviewed candidate to record its own review. For an uncommitted candidate, resolve and validate the complete external patch binding before reviewing it.
@@ -58,6 +60,7 @@ No reviewer may edit the candidate. All corrections are applied by the Generatio
 The orchestrator passes only the material needed for independent verification:
 
 - Change ID and bounded review scope.
+- Snapshot binding reference/digest, portable registry locator, and immutable payload access under docs/snapshot-binding.md.
 - Base Wiki commit and exact candidate Wiki commit, or exact diff digest.
 - Candidate diff and changed page paths/IDs.
 - Source Manifest content and digest.
@@ -75,6 +78,7 @@ Do not pass the generator's private reasoning or ask the reviewer to trust its c
 
 The reviewer report MUST record:
 - `review_id` and `change_id`;
+- `snapshot_binding_ref`, `snapshot_binding_sha256`, and binding integrity/reconstruction checks;
 - host-provided reviewer invocation / Subagent run identifier;
 - reviewer Skill revision;
 - model identifier when available;

@@ -178,6 +178,7 @@ Only an authorized human can create a human decision. LLM PASS is a recommendati
 
 Invariants:
 - No candidate content is treated as accepted knowledge before publication.
+- For new publications carrying publication_record_ref, even accepted/published labels remain unexposed until the matching external receipt is completed and verified against actual Git state. Publication progress uses booleans/commit observations, not new canonical states; see docs/publication-recovery.md.
 - Query defaults to accepted/published knowledge only.
 - Query capture is a new draft Change Set using the same gates, including when source commits are unchanged. Index visibility reflects page/change state; a log event never grants approval or publication. See docs/wiki-maintenance.md for read-only query logging and frozen-snapshot handling.
 - Rejected candidates and prior reports are retained as immutable audit history.
@@ -186,6 +187,7 @@ Invariants:
 - Any material change after approval invalidates that approval.
 - No Skill may approve its own generated content or silently publish/merge it.
 - A missing, failed, or non-isolated automatic Review Subagent invocation sets Review execution status to `NOT_RUN` or `INVALID`, Review decision to null, and Run outcome to `BLOCKED`; Change Status remains `pending_llm_review`. There is no manual-session or same-context fallback.
+- An explicitly scoped stop follows docs/skill-contracts.md rather than the capability-failure rule: candidate-only stays draft before Lint; a scoped Lint PASS with Review omitted stays pending_llm_review, execution NOT_RUN, decision null, and overall workflow PARTIAL with the requested stage completion described separately.
 
 ## 8. Approval binding and invalidation
 

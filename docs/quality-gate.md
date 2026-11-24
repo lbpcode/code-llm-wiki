@@ -49,6 +49,8 @@ Lint is a rule-driven structural/provenance audit, not a compiled linter in v0.1
 
 Lint result is PASS / FAIL / PARTIAL. Every check is PASS / FAIL / NOT RUN with scope and reason. Required NOT RUN checks block progression. See references/lint-report-template.md.
 
+Before any gate that relies on a frozen snapshot, validate the binding under docs/snapshot-binding.md. A required corrupt/missing binding blocks advancement rather than being accepted as an alternative snapshot. Publication and retry additionally require docs/publication-recovery.md; labels alone do not establish completion.
+
 ## 6. Automatic Independent LLM Review
 
 After Lint PASS, the orchestrator MUST automatically delegate a fresh Subagent invocation using `references/review-agent-task-template.md` and `skills/code-wiki-review/SKILL.md`. The reviewer must be a separate model invocation and fresh context from generation. Prefer a different model when available.

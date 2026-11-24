@@ -5,6 +5,9 @@
 - Report ID:
 - Timestamp:
 - Candidate change ID:
+- Snapshot binding reference (registry ID / binding ID / record path):
+- Expected binding record SHA-256:
+- Binding verification result and reconstructed tree:
 - Wiki base/candidate commit:
 - Source Manifest version/digest:
 - Scope:
@@ -46,4 +49,4 @@ For every NOT RUN check, state why it could not run and whether it blocks progre
 - FAIL: a required deterministic check found an unresolved violation.
 - PARTIAL: one or more checks could not execute or coverage is incomplete.
 
-Lint is not semantic approval. A Lint PASS is only permission to proceed to independent LLM Review.
+For a frozen candidate, verify and record the binding under docs/snapshot-binding.md. Missing or mismatched binding data blocks the gate. Lint is not semantic approval. A Lint PASS permits independent LLM Review only when Review is within the requested scope.

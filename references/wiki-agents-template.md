@@ -18,10 +18,13 @@ Render this section in the destination Wiki repository's root `AGENTS.md`. Prese
 - Package revision/digest: <verified-revision-or-snapshot-digest-and-dirty-provenance>
 - Package entry: SKILL.md
 - Query logging policy: `query_logging: disabled`
+- Records registry: <registry-id-and-portable-workspace-relative-or-shared-locator>
 
 ### Answering questions
 
 Read the index of the selected accepted Wiki revision first, then relevant pages and their Claim/Evidence records. Use pages marked accepted only when the owning Change Set is published. Verify the underlying source revision and locator; identify stale, inferred, unknown, or conflicting information. Cite original repository, full commit, path, and line/symbol/configuration locator.
+
+For changes carrying publication_record_ref, also resolve their durable receipt and require a verified completed publication matching the selected Wiki history. Withhold new knowledge from incomplete or mismatched publications. Read docs/publication-recovery.md in the full package when that check is needed; never invent receipts for legacy changes.
 
 Query is read-only by default, including index and log. If navigation is incomplete, search relevant pages and disclose the gap without repairing files. An explicit read-only request overrides any logging policy. With query logging explicitly enabled, append only a redacted operation event; this grants no authority to edit knowledge, commit, or publish.
 
@@ -32,6 +35,8 @@ When the user requests retaining an answer, load the full workflow package and u
 For source changes, use Update with the previous manifest/map and the new pinned revisions. Read source only; preserve source code, submodule pins, human Wiki edits, and accepted history. On conflicting human changes, report the conflict rather than replacing their text.
 
 Before a knowledge mutation, load the package's applicable schema, maintenance, state, evidence, and quality rules. If they cannot be located, explain the missing dependency; do not invent the workflow. These local instructions still support read-only navigation and answers.
+
+For frozen candidates, load docs/snapshot-binding.md and verify the stable registry reference, expected digest, payloads, and reconstructed tree in every new session. For publication/retry, load docs/publication-recovery.md, inspect durable progress plus actual target history, and perform only missing authorized actions. Preserve bundle IDs and bytes when moving records to a verified archive.
 
 ### Checks and publication
 

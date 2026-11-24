@@ -34,7 +34,7 @@ Do not treat the generator's conclusions as trusted facts. The orchestrator must
 ## Procedure
 
 1. Declare host-provided Subagent invocation ID, reviewer context/model, fresh_context=true, generator_transcript_inherited=false, read_only=true, and independence limitations.
-2. Read the Source Manifest, Page-Source Map, changed Wiki pages, related accepted pages, and candidate diff.
+2. Resolve and verify the immutable binding reference/digest under docs/snapshot-binding.md, reconstruct its exact candidate, then read the Source Manifest, Page-Source Map, changed Wiki pages, related accepted pages, and diff. Do not rely on the generator's prior verification or replace an upstream expected digest.
 3. Enumerate material Claims and relationships in the changed scope.
 4. Resolve each cited source against the exact pinned commit.
 5. Verify that evidence supports the exact wording, relationship type, direction, and Platform Profile.

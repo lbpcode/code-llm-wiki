@@ -141,9 +141,11 @@ If the Checkpoint is missing or inconsistent, reconstruct task state from durabl
 
 ### 8. Quality gates
 
-Run Lint. If Lint PASS, the orchestrator MUST automatically delegate a fresh host-native Review Subagent using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Wait for a completed, snapshot-bound report.
+First apply the execution boundary in docs/skill-contracts.md, even for direct invocation. Candidate-only stops before Lint; no-Review never delegates a reviewer. Preserve the boundary for any nested task and report later gates as NOT RUN due to scope, not missing host capability.
 
-Do not ask the user to open a second conversation or copy a prompt. If Subagent delegation/isolation is unavailable, set Review execution status to NOT_RUN, leave Review decision null, keep Change Status at pending_llm_review, and set Run outcome to BLOCKED. There is no manual-session or same-context fallback for independent Review.
+If Lint is in scope, run it. If it passes and Review is also in scope, verify the immutable binding under docs/snapshot-binding.md and automatically delegate a fresh host-native Review Subagent using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Wait for a completed, snapshot-bound report. A full-workflow request still requires this automatic delegation.
+
+For Review within the requested scope, do not ask the user to open a second conversation or copy a prompt. If Subagent delegation/isolation is unavailable, set Review execution status to NOT_RUN, leave Review decision null, keep Change Status at pending_llm_review, and set Run outcome to BLOCKED. There is no manual-session or same-context fallback for independent Review.
 
 Keep all generated content as a candidate diff until human approval and explicit publication authorization.
 
@@ -161,7 +163,7 @@ Keep all generated content as a candidate diff until human approval and explicit
 - Ingestion report with planned/completed/partial/blocked tasks, coverage, failures, unknowns, and open questions.
 - Proposed Wiki diff.
 - Synchronized index, contextual page links, and ingestion event or explicit deferred-event location.
-- Lint report and independent Review report; if delegation is blocked, record Review execution status, null Review decision, unchanged Change Status, and Run outcome BLOCKED.
+- Reports for gates actually requested and run. For a user-selected stop, list omitted gates as NOT RUN due to scope without fabricating reports. If requested Review delegation is blocked after Lint PASS, record execution NOT_RUN, decision null, Change Status pending_llm_review, and Run outcome BLOCKED.
 
 ## Failure behavior
 

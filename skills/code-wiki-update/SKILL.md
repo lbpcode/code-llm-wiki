@@ -63,8 +63,8 @@ If the previous mapping is missing or incomplete, report impact analysis as PART
 
 1. Synchronize contextual page links and wiki/index.md in the candidate diff. Include actual content/change state and keep unpublished findings out of accepted navigation. Record changed administrative paths as well as knowledge pages.
 2. Persist the update report and an observed update or capture event. Freeze the candidate snapshot; Lint/Review and later publication events are returned to the orchestrator and persisted outside that frozen snapshot under docs/wiki-maintenance.md.
-3. Run Lint on changed pages and their dependencies. If Lint PASS, the orchestrator MUST automatically delegate a fresh host-native Review Subagent using references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md. Wait for a completed, snapshot-bound report. Do not ask the user to open a second conversation. If Subagent delegation/isolation is unavailable, set Review execution status to NOT_RUN, leave Review decision null, keep Change Status at pending_llm_review, and set Run outcome to BLOCKED.
-4. Present the source revision summary, impact/capture report, actual diff, findings, and open questions for a human decision. Retain existing approval/publication boundaries.
+3. Recheck the execution boundary in docs/skill-contracts.md: candidate-only stops before Lint; no-Review never delegates a reviewer. If Lint is in scope, run it on changed pages and dependencies. After PASS, verify the binding under docs/snapshot-binding.md and automatically delegate a fresh host-native Review Subagent through references/review-agent-task-template.md and skills/code-wiki-review/SKILL.md only if Review is in scope. Wait for a completed, bound report. For requested Review that cannot execute, use execution NOT_RUN, decision null, Change Status pending_llm_review, and run outcome BLOCKED; a user-selected stop is reported separately as scoped completion with later gates not run.
+4. Present the source revision summary, impact/capture report, actual diff, findings, open questions, and the reached stop boundary. Proceed to human review only when it is in scope and the required gates passed. Retain existing approval/publication boundaries.
 
 ## Required outputs
 
@@ -74,7 +74,7 @@ If the previous mapping is missing or incomplete, report impact analysis as PART
 - Stale claims not yet revalidated.
 - Human-edit conflict report, if any.
 - Approval invalidation assessment.
-- Lint and independent Review results; if delegation is blocked, record Review execution status, null Review decision, unchanged Change Status, and Run outcome BLOCKED.
+- Reports for gates actually requested and run. For a user-selected stop, list omitted gates as NOT RUN due to scope without fabricating reports. If requested Review delegation is blocked after Lint PASS, record execution NOT_RUN, decision null, Change Status pending_llm_review, and Run outcome BLOCKED.
 - Proposed Git diff and update report.
 - Update origin (source_update or query_capture), capture record when applicable, synchronized index/cross-links, and operation event persistence status.
 

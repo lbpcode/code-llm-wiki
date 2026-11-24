@@ -18,7 +18,11 @@ updated_at: <ISO-8601-timestamp>
 base_wiki_commit: <full-commit-sha>
 candidate_wiki_commit: null
 diff_digest: <digest-or-null>
-snapshot_binding_ref: null # immutable external binding record; establish locator before freezing
+snapshot_binding_ref: # establish before freezing; resolve via the authorized registry
+  registry_id: <registry-id>
+  binding_id: <binding-id>
+  record_path: bindings/<binding-id>/binding.yaml
+snapshot_binding_sha256: null # external live record resolves this; avoid self-reference in frozen candidate
 changed_pages:
   - page_id: <page-id>
     path: wiki/processes/<process-id>/overview.md
@@ -46,6 +50,7 @@ publication:
   authorized: false
   published_commit: null
   published_at: null
+publication_record_ref: null # {registry_id, publication_id, record_path}; required for new publications
 supersedes_change_id: null
 ```
 
@@ -61,3 +66,4 @@ supersedes_change_id: null
 - Any material post-approval change sets status to approval_stale.
 - Do not set publication.authorized or published_commit until a human explicitly authorizes the publication action.
 - A candidate is not accepted knowledge until publication is recorded.
+- Use docs/snapshot-binding.md and docs/publication-recovery.md for the common reference shapes, integrity checks, live progress, and retry behavior. New publication visibility requires a verified completed receipt; `status: published` alone is insufficient. Legacy records are not retrospectively assigned fabricated receipts.

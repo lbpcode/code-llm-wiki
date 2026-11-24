@@ -1,6 +1,8 @@
 # Examples
 
-This directory will contain synthetic examples illustrating the Wiki schema and Skill outputs.
+This directory contains synthetic examples illustrating the Wiki schema and Skill outputs.
+
+- [Snapshot and publication recovery validation](recovery-validation.md): reproducible local fixtures, a fresh-Agent task, and artifact checks.
 
 Examples must remain clearly labeled as illustrative. They must not be presented as facts about the actual QNX, Android, or Linux-TBOX system.
 

@@ -53,10 +53,13 @@ A rejected candidate is immutable audit history. Do not silently reopen or rewri
 
 ## 4. Approval binding
 
+The canonical format, durable registry, references, cross-session validation, and archival rules are in docs/snapshot-binding.md and references/snapshot-binding-template.md. They apply to both commit-backed and patch-backed candidates. Resolve and verify the exact binding before accepting Review, human approval, or publication; missing/damaged bindings block those gates.
+
 A human approval record MUST include:
 
 - `human_decision_id`;
 - `change_id`;
+- `snapshot_binding_ref` and externally recorded `snapshot_binding_sha256`;
 - `decision`;
 - `reviewer` (human identity as configured by the project);
 - `timestamp`;
@@ -79,7 +82,7 @@ For an uncommitted candidate, hash the exact manifest bytes in the frozen candid
 
 Store the patch, base revision, patch digest, manifest digest, file scope, and source revisions in an immutable **binding record outside the candidate snapshot**. The candidate Change Set may name this record with `snapshot_binding_ref` established before freezing; its inline `candidate_wiki_commit` and `diff_digest` may remain null to avoid embedding a digest inside its own preimage. Review and human decision records must reference and repeat the resolved binding values, not interpret null as proof. If no complete binding is available, candidate-only output is allowed but cannot proceed to approval/publication.
 
-The same external-record rule applies to commit-backed candidates: candidate content and report/state progress are distinct. After freezing, write reports and live Change Set progress to the authorized execution/report workspace linked by the binding record. The frozen draft Change Set is an initial snapshot, not a mutable progress file. Canonical `_meta/changes/<change-id>/` paths are archival destinations when those records can be incorporated without rewriting the reviewed snapshot. Do not attempt to include a commit's own SHA or a patch's own digest inside that frozen commit/patch.
+The same external-record rule applies to commit-backed candidates: candidate content and report/state progress are distinct. After freezing, write reports and live Change Set progress to the authorized registry resolved from `snapshot_binding_ref`. The frozen draft Change Set is an initial snapshot, not a mutable progress file. Canonical `_meta/changes/<change-id>/` paths are archival destinations when those records can be incorporated without rewriting the reviewed snapshot. Do not attempt to include a commit's own SHA or a patch's own digest inside that frozen commit/patch.
 
 Any candidate content change requires a new binding and revalidation. Reports must identify which binding they reviewed; a subsequent audit commit does not silently become the reviewed candidate.
 
@@ -110,6 +113,8 @@ An approval is never transferred to a new commit merely because the text appears
 - Record the origin of substantive human edits in the page-source map or decision history when it affects future update behavior.
 
 ## 7. Publication and rollback
+
+Execute and resume publication under docs/publication-recovery.md using the immutable plan and durable external progress record. Record the target, approval/authorization, prepared and observed commits before/after side effects. A retry verifies actual Git state and completes only missing steps; it never repeats incorporation or creates a duplicate publication event. New published changes carry `publication_record_ref`; Query withholds their new knowledge until the receipt is complete and verified.
 
 Approval and publication are separate events.
 

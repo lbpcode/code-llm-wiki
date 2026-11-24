@@ -49,6 +49,7 @@ Init
 - `docs/`：架构、Schema、Claim/Evidence、状态机、失败处理、质量门禁、人工审批和 Skill 合约。
 - `references/`：知识模板、Manifest、Page-Source Map、各类报告和决策记录模板。
 - `examples/`：合成示例材料。
+- `tests/recovery_fixture.py`：生成和检查恢复演练的数据，不执行 Wiki 工作流；见 [合成恢复验证](examples/recovery-validation.md)。
 
 ## 核心约束
 
@@ -91,6 +92,8 @@ wiki/
 - [Context-Bounded Ingestion and Session Handoff](docs/context-management.md)
 - [Wiki Schema](docs/wiki-schema.md)
 - [Wiki Navigation, Logging, and Query Capture](docs/wiki-maintenance.md)
+- [Snapshot Binding and Cross-session Recovery](docs/snapshot-binding.md)
+- [Publication Progress and Safe Retry](docs/publication-recovery.md)
 - [Claim / Evidence / Page-Source Map](docs/claim-evidence-model.md)
 - [Workflow State Model](docs/state-machine.md)
 - [Failure Handling](docs/failure-handling.md)
@@ -122,5 +125,7 @@ wiki/
 - Destination Wiki Entry: `references/wiki-agents-template.md`
 - Content Index / Operation Log: `references/wiki-index-template.md`, `references/wiki-log-template.md`
 - Query Capture: `references/query-capture-template.md`
+- Snapshot Binding: `references/snapshot-binding-template.md`
+- Publication Plan / Progress and Authorization: `references/publication-plan-template.md`, `references/publication-progress-template.md`
 
 The current design defines a context-bounded, resumable Skill/Prompt workflow and its design contracts. It does not claim that a real business repository has passed an end-to-end POC.

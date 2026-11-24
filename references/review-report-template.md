@@ -8,6 +8,9 @@
 - Change Status (orchestrator-owned):
 - Timestamp:
 - Candidate change ID:
+- Snapshot binding reference (registry ID / binding ID / record path):
+- Expected binding record SHA-256:
+- Binding verification result, reconstructed tree, and payload/scope checks:
 - Candidate Wiki commit / diff digest:
 - Base Wiki commit:
 - Source Manifest version/digest:
@@ -24,6 +27,8 @@
 ## Independence declaration
 
 Record whether the reviewer was launched by a host-native Subagent delegation in a fresh context, without inheriting the generator transcript, and with read-only access. If no valid isolated invocation completed, execution status is NOT_RUN. If a report was returned but any mandatory condition is false or cannot be verified, execution status is INVALID. Neither status permits a Review decision.
+
+Follow docs/snapshot-binding.md before reusing any candidate. Repeat the resolved reference/digest in the report; do not replace an upstream digest with the digest of altered payloads. Missing, corrupted, or mismatched binding data prevents a valid PASS.
 
 ## Review scope
 

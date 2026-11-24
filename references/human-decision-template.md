@@ -3,6 +3,11 @@
 ```yaml
 human_decision_id: <stable-decision-id>
 change_id: <candidate-change-id>
+snapshot_binding_ref:
+  registry_id: <registry-id>
+  binding_id: <binding-id>
+  record_path: bindings/<binding-id>/binding.yaml
+snapshot_binding_sha256: <verified-binding-record-digest>
 decision: approve # approve | request_changes | reject
 reviewer: <authorized-human-identity>
 timestamp: <ISO-8601-timestamp>
@@ -29,6 +34,7 @@ publication:
   authorized: false
   published_commit: null
   timestamp: null
+  authorization_ref: null # separate immutable authorization matching the reviewed plan and target
 ```
 
 ## Decision rules
@@ -39,3 +45,4 @@ publication:
 - Waivers cannot override fabricated evidence, BLOCKER findings, or mandatory checks that did not run.
 - Approval is invalid if its bound candidate, relevant source snapshot, or review scope changes.
 - Publication is a separate explicit action and must record the resulting commit.
+- Verify the binding under docs/snapshot-binding.md and match the same reference/digest in the Review report. Publication authorization and progress follow docs/publication-recovery.md and references/publication-progress-template.md; they must not introduce self-digests into this decision record.

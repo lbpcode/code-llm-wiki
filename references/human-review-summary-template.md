@@ -3,6 +3,7 @@
 ## Candidate identity
 
 - Change ID:
+- Snapshot binding reference/digest and last verification:
 - Purpose:
 - Base Wiki commit:
 - Candidate Wiki commit / diff digest:
@@ -63,6 +64,8 @@
 
 ## Publication
 
+- Reviewed publication plan reference/digest and target repository/branch:
+- Publication progress reference and observed completion (if started):
 - Explicit publication authorization: yes / no
 - Published commit:
 - Publication timestamp:

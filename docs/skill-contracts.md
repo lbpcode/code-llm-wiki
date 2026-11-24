@@ -64,7 +64,7 @@ Inputs: question, Wiki-local instructions, index, and accepted Wiki snapshot.
 
 Outputs: direct answer, Process/Profile scope, evidence references, assumptions, limitations, and unknowns.
 
-Default to pages with content_status accepted and owning Change Set status published. Exclude draft, pending, rejected, stale, or contradicted claims from unqualified factual answers. Ordinary Query does not modify the Wiki. Follow docs/wiki-maintenance.md for opt-in log-only writes and requested capture; capture is executed as a separate Update candidate.
+Default to pages with content_status accepted and owning Change Set status published. For new publications with publication_record_ref, also verify the completion receipt under docs/publication-recovery.md. Exclude draft, pending, rejected, stale, or contradicted claims from unqualified factual answers. Ordinary Query does not modify the Wiki. Follow docs/wiki-maintenance.md for opt-in log-only writes and requested capture; capture is executed as a separate Update candidate.
 
 ### update
 
@@ -106,7 +106,16 @@ Review MUST be automatically delegated by the orchestrator to a host-native Suba
 
 A Skill may recommend the next Skill, but it must not silently expand scope or perform a destructive action.
 
-An explicit Init-only/candidate-only request limits execution to that stage. Describe stage completion separately from end-to-end gate completion, leave unexecuted review decision null, and keep the actual draft/lint_failed state as applicable. Do not launch later gates or claim host incapability solely because the user chose to stop earlier. A normal full workflow still automatically delegates Review after Lint PASS.
+### Execution boundary takes precedence over later gate steps
+
+Apply the user's requested boundary before each Lint, Review, human-review, or publication step, including when a sub-Skill is invoked directly or by another Skill. Child tasks inherit that boundary. The unconditional wording of a later full-workflow step never overrides it.
+
+- Init-only stops after the inventory and initialization artifacts.
+- Candidate-only stops after the candidate diff and applicable generation/capture reports. Do not start Lint or Review; keep the candidate draft (or retain a previously observed lint_failed state).
+- An explicit request to run Lint but not Review runs Lint only. On PASS, leave Change Status pending_llm_review, execution NOT_RUN, and decision null; explain the user-selected boundary, not a missing host capability. On failure retain the actual lint_failed/draft state as applicable.
+- A no-Review request never delegates a reviewer. Run earlier checks only within the stated scope; if the request also says candidate-only, that earlier boundary wins.
+
+Describe completed requested work separately from overall gate completion. Unfinished full-workflow gates imply PARTIAL for that workflow, not a fabricated PASS or a host-capability BLOCKED error. Report omitted checks as NOT RUN with reason user-selected scope; do not create reports claiming they ran. Without an explicit boundary, execute the full applicable workflow and automatically delegate Review after Lint PASS. No boundary permits unreviewed publication.
 
 
 ## 5. Context-bounded Ingest contract

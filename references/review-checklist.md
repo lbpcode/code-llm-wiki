@@ -2,6 +2,7 @@
 
 ## A. Provenance and Claim-Evidence
 
+- [ ] Snapshot binding identity/digest and complete patch/tree reconstruction match the review package; payloads are available through the portable registry.
 - [ ] Every material claim is atomic and has a stable Claim ID.
 - [ ] Every material claim maps to specific supporting/contradicting/qualifying evidence.
 - [ ] Repository IDs and full commit SHAs are valid.
@@ -66,6 +67,7 @@ Check completed steps only; before human review, approval/publication items belo
 - [ ] Human decision is approve / request_changes / reject.
 - [ ] Decision record binds reviewer, timestamp, diff/Wiki commit, source snapshot, reports, comments, and waivers.
 - [ ] Publication waits for explicit human authorization.
+- [ ] The publication plan/progress references bind the same candidate, target, and actual authorization; interrupted publication cannot become query-visible before a verified completion receipt.
 - [ ] Rejected candidates and prior decisions remain in audit history.
 
 ## H. Maintenance and captured knowledge

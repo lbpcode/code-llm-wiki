@@ -19,6 +19,9 @@ If you are not running in a fresh isolated context, stop and return `NOT RUN`. D
 ## Review package
 
 - Change ID: <change-id>
+- Snapshot binding reference: <registry-id / binding-id / record-path>
+- Expected binding record SHA-256: <sha256>
+- Portable registry locator / local mapping: <authorized-locator>
 - Review scope: <bounded-scope>
 - Base Wiki commit: <full-commit-sha>
 - Candidate Wiki commit: <full-commit-sha-or-null>
@@ -38,7 +41,7 @@ If you are not running in a fresh isolated context, stop and return `NOT RUN`. D
 
 ## Required review actions
 
-1. Verify the exact candidate and source revisions before reviewing.
+1. Verify and reconstruct the exact candidate under docs/snapshot-binding.md, then verify source revisions before reviewing. Read the actual immutable bundle; do not inherit the generator's integrity result.
 2. Independently inspect every material Claim and relationship in the declared scope.
 3. Resolve cited evidence against pinned source revisions.
 4. Challenge evidence fit, process boundaries, platform applicability, runtime/build relationship types, interfaces, lifecycle, security, deployment, failure paths, and cross-page consistency.
@@ -50,6 +53,7 @@ If you are not running in a fresh isolated context, stop and return `NOT RUN`. D
 
 - Review ID:
 - Change ID:
+- Snapshot binding reference/digest and integrity verification:
 - Reviewer invocation / Subagent run ID:
 - Reviewer Skill revision:
 - Model identifier (if available):

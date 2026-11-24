@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Define versioned snapshot-binding bundles, portable registry references, integrity/reconstruction checks, and cross-session recovery/archival; bind Change Set, Review, and Human Decision to the same record digest.
+- Define publication plans and durable progress/authorization records with write-ahead commit identities, checked target updates, idempotent retry, and receipt-gated visibility for new publications.
+- Apply explicit candidate-only/no-Review boundaries before gate steps in Ingest, Integrate, and Update, including direct and nested invocation.
+- Add reproducible synthetic recovery fixtures and record fresh-context, altered-patch, interruption/retry, visibility, and preservation checks.
 - Add a destination Wiki AGENTS.md entry with portable package provenance and self-contained read-only query guidance; preserve existing human instructions.
 - Define synchronized index summaries, status-aware navigation, contextual cross-links, and append-only operation events without mutating frozen review snapshots.
 - Add explicit Query → Update capture using original evidence and the existing quality/publication gates, including when source revisions are unchanged; keep ordinary queries read-only and query logging opt-in.
